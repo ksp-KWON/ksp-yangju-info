@@ -357,7 +357,7 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
     const postItem = {
       title: course.title,
       content: `교육기관: ${course.org}, 교육장소: ${course.address} (${course.dong}), 교육기간: ${course.eduPeriod}, 신청기간: ${course.applyPeriod}, 모집정원: ${course.capacity}, 수강료: ${feeText}, 주요대상: ${course.target}, 분야: ${course.category}. 상세 교육내용 및 강의계획: ${course.intro}. 양주시 평생학습 통합플랫폼 뉴런 공식 온라인 접수.`,
-      link: course.applyUrl || 'https://lll.yangju.go.kr',
+      link: course.applyUrl || 'https://www.yangju.go.kr/edu/index.do',
       sourceId: course.id,
       expiresAt: extractExpiryDate(course.applyPeriod),
       category: '교육·청소년',

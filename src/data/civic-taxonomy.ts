@@ -150,14 +150,14 @@ export const CIVIC_TAXONOMY: CivicCategoryDefinition[] = [
   {
     name: '문화·예술',
     tagline: '축제명소 & 시립미술관',
-    officialUrl: 'https://www.yangju.go.kr/tour',
+    officialUrl: 'https://www.yangju.go.kr/tour/index.do',
     icon: 'sparkles',
     subCategories: [
       {
         id: 'nari-farm',
         name: '양주 나리농원 (천일홍 축제)',
         shortName: '나리농원',
-        officialUrl: 'https://www.yangju.go.kr/tour',
+        officialUrl: 'https://www.yangju.go.kr/tour/index.do',
         description: '가을 대표 천일홍 축제 개장, 주차장 및 온라인 예매',
       },
       {
@@ -193,14 +193,14 @@ export const CIVIC_TAXONOMY: CivicCategoryDefinition[] = [
         id: 'okjeong-park',
         name: '옥정중앙공원 & 독바위공원',
         shortName: '옥정수변공원',
-        officialUrl: 'https://www.yangju.go.kr/tour',
+        officialUrl: 'https://www.yangju.go.kr/tour/index.do',
         description: '옥정호수 음악분수 운영 일정, 맨발 황톳길 산책로',
       },
       {
         id: 'mountain-trail',
         name: '불곡산 & 감악산 명품 숲길',
         shortName: '불곡산등산로',
-        officialUrl: 'https://www.yangju.go.kr/tour',
+        officialUrl: 'https://www.yangju.go.kr/tour/index.do',
         description: '양주 진산 불곡산 등산코스 및 유아숲체험원',
       },
     ],
@@ -236,7 +236,7 @@ export const CIVIC_TAXONOMY: CivicCategoryDefinition[] = [
         id: 'air-quality',
         name: '미세먼지 알리미 & 보건소 방역',
         shortName: '미세먼지·방역',
-        officialUrl: 'https://health.yangju.go.kr',
+        officialUrl: 'https://www.yangju.go.kr/health/index.do',
         description: '실시간 양주시 대기질 정보 및 야외 방역소독 신청',
       },
     ],

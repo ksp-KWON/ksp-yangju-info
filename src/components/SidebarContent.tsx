@@ -27,7 +27,7 @@ const INITIAL_TAG_COUNT = 6;
 
 const EXTERNAL_QUICK_LINKS = [
   {
-    href: 'https://www.yangju.go.kr/tour',
+    href: 'https://www.yangju.go.kr/tour/index.do',
     title: '문화관광 포털',
     badge: '축제·명소',
     icon: 'compass' as const,
@@ -37,7 +37,7 @@ const EXTERNAL_QUICK_LINKS = [
     badgeClass: 'text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-900/50',
   },
   {
-    href: 'https://health.yangju.go.kr',
+    href: 'https://www.yangju.go.kr/health/index.do',
     title: '양주시 보건소',
     badge: '예방·진료',
     icon: 'heart' as const,
@@ -47,7 +47,7 @@ const EXTERNAL_QUICK_LINKS = [
     badgeClass: 'text-rose-700 dark:text-rose-300 bg-rose-100/70 dark:bg-rose-900/50',
   },
   {
-    href: 'https://www.yangju.go.kr/town/index.do',
+    href: 'https://www.yangju.go.kr/www/contents.do?key=390',
     title: '동 행정복지센터',
     badge: '생활민원',
     icon: 'landmark' as const,

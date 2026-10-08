@@ -57,7 +57,7 @@ const EMERGENCY_ITEMS: MenuCardProps[] = [
     watermarkIcon: 'hospital',
   },
   {
-    href: 'https://health.yangju.go.kr',
+    href: 'https://www.yangju.go.kr/health/index.do',
     icon: <AppIcon name="heart" size={20} strokeWidth={2.2} />,
     title: '양주시 보건소 (공식)',
     themeColor: 'rose',
@@ -100,7 +100,7 @@ const LEARNING_ITEMS: MenuCardProps[] = [
     watermarkIcon: 'landmark',
   },
   {
-    href: 'https://www.uilib.go.kr',
+    href: 'https://www.libyj.go.kr',
     icon: <AppIcon name="book" size={20} strokeWidth={2.2} />,
     title: '양주시 도서관 포털',
     themeColor: 'teal',
@@ -113,7 +113,7 @@ const LEARNING_ITEMS: MenuCardProps[] = [
 
 const CIVIC_ITEMS: MenuCardProps[] = [
   {
-    href: 'https://www.yangju.go.kr/town/index.do',
+    href: 'https://www.yangju.go.kr/www/contents.do?key=390',
     icon: <AppIcon name="landmark" size={20} strokeWidth={2.2} />,
     title: '동 행정복지센터 (생활민원)',
     themeColor: 'blue',
@@ -123,7 +123,7 @@ const CIVIC_ITEMS: MenuCardProps[] = [
     watermarkIcon: 'landmark',
   },
   {
-    href: 'https://www.yangju.go.kr/tour',
+    href: 'https://www.yangju.go.kr/tour/index.do',
     icon: <AppIcon name="compass" size={20} strokeWidth={2.2} />,
     title: '양주 문화관광 포털',
     themeColor: 'indigo',

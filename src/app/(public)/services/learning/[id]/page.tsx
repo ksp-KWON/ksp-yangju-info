@@ -265,7 +265,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
           </p>
           <div className="pt-2">
             <Link
-              href="https://lll.yangju.go.kr"
+              href="https://www.yangju.go.kr/edu/index.do"
               className="inline-flex items-center gap-1 font-bold text-[var(--google-blue)] dark:text-[#8ab4f8] hover:underline"
             >
               <span>양주시 평생학습포털 공식 수강신청 및 감면 안내 바로가기</span>
