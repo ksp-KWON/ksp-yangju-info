@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /**
- * fetch-public-data.js (의정부 로컬인포 v2)
- * 공공데이터포털 API에서 의정부/경기 관련 정보 1건을 수집하여
+ * fetch-public-data.js (양주인 시빅포털 v2)
+ * 공공데이터포털 API에서 양주/경기 관련 정보 1건을 수집하여
  * public/data/local-info.json에 저장합니다.
  *
  * 변경 이력:
- * v2 - 폴백 전체반환 제거: 의정부/경기 데이터가 없으면 정상 종료
+ * v2 - 폴백 전체반환 제거: 양주/경기 데이터가 없으면 정상 종료
  *    - gemini-helper.js 공통 모듈 사용 (지능형 재시도/모델 폴오버)
  */
 
@@ -17,9 +17,9 @@ const { callGemini } = require('./gemini-helper');
 const { sleep, safeFetch } = require('./pipeline-utils');
 
 // ── 필터링 상수 ─────────────────────────────────────────────────────────────
-// 1순위: 의정부 키워드
-const UIJEONGBU_KEYWORDS = ['양주', '양주시'];
-// 2순위: 경기도 키워드 (의정부 없을 때만)
+// 1순위: 양주 키워드
+const YANGJU_KEYWORDS = ['양주', '양주시'];
+// 2순위: 경기도 키워드 (양주 없을 때만)
 const GYEONGGI_KEYWORDS  = ['경기도', '경기'];
 
 /**
@@ -64,10 +64,10 @@ async function main() {
       break;
     }
 
-    filtered = items.filter(item => matchesKeywords(item, UIJEONGBU_KEYWORDS));
+    filtered = items.filter(item => matchesKeywords(item, YANGJU_KEYWORDS));
 
     if (filtered.length === 0) {
-      console.log('  [필터] 의정부 관련 데이터 없음. 경기도 범위로 재검색...');
+      console.log('  [필터] 양주 관련 데이터 없음. 경기도 범위로 재검색...');
       filtered = items.filter(item => matchesKeywords(item, GYEONGGI_KEYWORDS));
     }
 
@@ -82,7 +82,7 @@ async function main() {
   }
 
   if (filtered.length === 0) {
-    console.log('새로운 데이터가 없습니다 (최대 페이지까지 의정부/경기 관련 데이터를 찾을 수 없음)');
+    console.log('새로운 데이터가 없습니다 (최대 페이지까지 양주/경기 관련 데이터를 찾을 수 없음)');
     return;
   }
 

@@ -1,6 +1,6 @@
 /**
  * gemini-helper.js
- * Google Gemini API 공통 헬퍼 (의정부 건강·생활 정보 포털)
+ * Google Gemini API 공통 헬퍼 (양주 건강·생활 정보 포털)
  *
  * [원칙] 표준 · 범용 · 콤팩트 · 통합 · 공유 · 공통
  * - Google AI Studio 공식 권장 최신 별칭(Alias) 2종 고정:

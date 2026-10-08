@@ -36,7 +36,7 @@ function getExistingSourceIds() {
 
 function makeSlug(title, date, seq = 1) {
   const KEYWORD_MAP = {
-    '의정부': 'uijeongbu', '버스킹': 'busking', '행복로': 'haengbokro',
+    '양주': 'yangju', '양주시': 'yangjusi', '옥정': 'okjeong', '회천': 'hoecheon', '덕정': 'deokjeong', '덕계': 'deokgye', '백석': 'baekseok', '광적': 'gwangjeok', '장흥': 'jangheung', '나리농원': 'nari-farm', '회암사지': 'hoeamsaji',
     '청년': 'youth', '어르신': 'senior', '노인': 'senior', '장애인': 'disabled',
     '지원': 'support', '교육': 'education', '문화': 'culture', '축제': 'festival',
     '행사': 'event', '혜택': 'benefit', '창업': 'startup', '복지': 'welfare',

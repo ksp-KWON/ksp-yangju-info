@@ -209,7 +209,7 @@ function normalizeMarkdownBody(rawBody, sourceLink = '') {
 
   // 3-4. 수묵화 시그니처 박스 표준화
   body = body.replace(
-    />\s*###\s*(?:의정부\s*생활\s*꿀팁|의정부\s*생활포털|행정\s*인사이트|실무\s*팁|실무TIP)[^\n]*/gi,
+    />\s*###\s*(?:양주\s*생활\s*꿀팁|양주\s*생활포털|행정\s*인사이트|실무\s*팁|실무TIP)[^\n]*/gi,
     '> ### 양주 생활 꿀팁 & 행정 인사이트'
   );
 
