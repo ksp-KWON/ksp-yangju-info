@@ -21,8 +21,7 @@ const {
   isDuplicatePost,
   saveMarkdownPost,
   makeSlug,
-  getKSTDateString,
-  getKSTTimestamp
+  getKSTDateString
 } = require('./post-utils');
 const {
   PLAN_SCHEMA,
