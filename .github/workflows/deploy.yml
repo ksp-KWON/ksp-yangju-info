@@ -177,8 +177,12 @@ jobs:
       - name: 프로젝트 빌드
         run: npm run build
 
-      - name: Cloudflare Pages 배포
+      - name: Cloudflare Pages / Workers 배포
         run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "ℹ️ CLOUDFLARE_API_TOKEN 시크릿이 설정되지 않았으므로 Cloudflare Git 연동 자동 배포에 위임합니다."
+            exit 0
+          fi
           for i in 1 2 3; do
             npx wrangler pages deploy out --project-name=ksp-yangju-info --branch=main && exit 0
             sleep 15
