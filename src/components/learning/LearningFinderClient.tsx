@@ -67,7 +67,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
 
   // 필터링 계산
   const filteredCourses = useMemo(() => {
-    return initialCourses.filter((course) => {
+    const list = initialCourses.filter((course) => {
       // 1. 검색어
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
@@ -96,6 +96,15 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
       }
 
       return true;
+    });
+
+    // 스마트 시빅 정렬: 접수중 우선 ➔ 최신 등록순 (내림차순 DESC)
+    return list.sort((a, b) => {
+      if (a.status === '접수중' && b.status !== '접수중') return -1;
+      if (a.status !== '접수중' && b.status === '접수중') return 1;
+      const numA = parseInt(a.num, 10) || 0;
+      const numB = parseInt(b.num, 10) || 0;
+      return numB - numA;
     });
   }, [initialCourses, searchTerm, quickFilter, dongFilter, selectedPlace]);
 
