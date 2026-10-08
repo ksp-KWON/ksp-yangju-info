@@ -147,11 +147,18 @@ function getKSTDateString(date) {
   return formatter.format(date);
 }
 
+function getKSTTimestamp(date) {
+  date = date || new Date();
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().replace('Z', '+09:00');
+}
+
 module.exports = {
   POSTS_DIR,
   generateSourceId,
   getExistingSourceIds,
   makeSlug,
   saveMarkdownPost,
-  getKSTDateString
+  getKSTDateString,
+  getKSTTimestamp
 };

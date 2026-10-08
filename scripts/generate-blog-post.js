@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const { callGemini, isAllQuotaExhausted } = require('./gemini-helper');
 const { sleep, MIN_SOURCE_CHARS, getCleanSourceText, isSourceSufficient, validateSourceNumbers } = require('./pipeline-utils');
-const { generateSourceId, getExistingSourceIds, saveMarkdownPost, makeSlug, getKSTDateString } = require('./post-utils');
+const { generateSourceId, getExistingSourceIds, saveMarkdownPost, makeSlug, getKSTDateString, getKSTTimestamp } = require('./post-utils');
 const {
   PLAN_SCHEMA,
   CONTENT_SCHEMA,
@@ -121,7 +121,7 @@ async function generateAndSavePost(targetItem, tierLabel) {
 
   const saved = saveMarkdownPost(fileName, {
     title: plan.frontmatter.title,
-    date: getKSTDateString() + 'T09:00:00+09:00',
+    date: getKSTTimestamp(),
     summary: plan.frontmatter.summary,
     category: plan.frontmatter.category,
     tags: plan.frontmatter.tags,

@@ -1,8 +1,8 @@
-name: 양주인 자동 포스팅 & 배포 파이프라인
+name: 양주인 통합 자동화 파이프라인
 
 on:
   schedule:
-    # 매시 정각 08:00~19:00 (KST) = UTC 23:00, 00:00~10:00 (하루 12회)
+    # 매시 정각 08:00~19:00 (KST) = UTC 23:00, 00:00~10:00 (12개 슬롯)
     - cron: '0 23,0-10 * * *'
   push:
     branches:
@@ -14,23 +14,28 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # ── [1단계] 자동 글쓰기 (schedule / workflow_dispatch 트리거 시 실행) ──
+  # ── [1단계] 자동 글쓰기 (schedule / workflow_dispatch 트리거 시만 실행) ──
   generate:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: write
+    outputs:
+      new_posts_count: ${{ steps.extract_posts.outputs.new_posts_count }}
+      subject: ${{ steps.extract_posts.outputs.subject }}
+      html_body: ${{ steps.extract_posts.outputs.html_body }}
+      cache_changed: ${{ steps.cache_check.outputs.cache_changed }}
     steps:
       - name: 저장소 체크아웃
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Node.js 20 설정
+      - name: Node.js 24 설정
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: 의존성 설치
@@ -39,13 +44,13 @@ jobs:
       - name: 양주시 공식 블로그 RSS 수집
         run: node scripts/fetch-city-rss.js
 
-      - name: 공공데이터 복지 수집
+      - name: 공공데이터 수집
         env:
           PUBLIC_DATA_API_KEY: ${{ secrets.PUBLIC_DATA_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/fetch-public-data.js || true
 
-      - name: 블로그 포스트 자동 생성
+      - name: 블로그 자동글쓰기
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/generate-blog-post.js
@@ -53,8 +58,18 @@ jobs:
       - name: CQF 품질 검증 게이트
         run: node scripts/check-quality.js
 
-      - name: 스테이징
-        run: git add src/content/posts/ public/data/ src/data/
+      - name: 변경사항 스테이징
+        run: |
+          git add public/data/city-rss.json public/data/local-info.json public/data/learning-courses.json src/data/learning-courses.json src/content/posts/ || true
+
+      - name: 캐시 변경 여부
+        id: cache_check
+        run: |
+          if git diff --cached --quiet -- src/data/learning-courses.json public/data/learning-courses.json; then
+            echo "cache_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "cache_changed=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: 신규 발행 글 추출 및 메타데이터 구성
         id: extract_posts
@@ -114,19 +129,62 @@ jobs:
           }
           '
 
-      - name: 신규 포스트 커밋 및 푸시
+      - name: 변경사항 커밋 & 푸시
         run: |
-          git config user.name "ksp-KWON"
-          git config user.email "286907395+ksp-KWON@users.noreply.github.com"
-          if git diff --staged --quiet; then
-            echo "신규 생성된 포스트가 없습니다. 푸시를 건너뜁니다."
-          else
-            git commit -m "auto: 양주 시정 새소식 자동 발행 업데이트 $(date '+%Y-%m-%d %H:%M')"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: 양주 시정 새소식 자동 발행 업데이트 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
+            git pull --rebase origin main
             git push origin main
+            echo "✅ 커밋 & 푸시 완료"
+          else
+            echo "ℹ️ 변경사항 없음 — 커밋 건너뜀"
           fi
 
+  # ── [2단계] 빌드 & 배포 & 이메일 발송 ─────────────────────────────────────
+  deploy:
+    needs: [generate]
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (github.event_name == 'push' || needs.generate.outputs.new_posts_count > 0 || needs.generate.outputs.cache_changed == 'true')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Node.js 24 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 프로젝트 빌드
+        run: npm run build
+
+      - name: Cloudflare Pages 배포
+        run: |
+          for i in 1 2 3; do
+            npx wrangler pages deploy out --project-name=ksp-yangju-info --branch=main && exit 0
+            sleep 15
+          done
+          exit 1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: 배포 완료 브리핑 이메일 발송
-        if: steps.extract_posts.outputs.new_posts_count > 0 && env.GMAIL_USER != ''
+        if: needs.generate.outputs.new_posts_count > 0 && env.GMAIL_USER != ''
         continue-on-error: true
         uses: dawidd6/action-send-mail@67ce3558d613188179559c61d3565140cf389968 # v22
         with:
@@ -134,9 +192,9 @@ jobs:
           server_port: 465
           username: ${{ secrets.GMAIL_USER }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: ${{ steps.extract_posts.outputs.subject }}
+          subject: ${{ needs.generate.outputs.subject }}
           to: ${{ secrets.GMAIL_USER }}
           from: 양주인 포털 <${{ secrets.GMAIL_USER }}>
-          html_body: ${{ steps.extract_posts.outputs.html_body }}
+          html_body: ${{ needs.generate.outputs.html_body }}
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
