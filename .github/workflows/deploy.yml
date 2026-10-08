@@ -28,7 +28,7 @@ jobs:
       cache_changed: ${{ steps.cache_check.outputs.cache_changed }}
     steps:
       - name: 저장소 체크아웃
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -156,7 +156,7 @@ jobs:
       contents: read
     steps:
       - name: 저장소 체크아웃
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
 
