@@ -1,0 +1,205 @@
+name: 로컬인포 통합 자동화 파이프라인
+
+on:
+  schedule:
+    # 매시 정각 08:00~19:00 (KST) = UTC 23:00, 00:00~10:00 (12개 슬롯)
+    - cron: '0 23,0-10 * * *'
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ── [1단계] 자동 글쓰기 (schedule / workflow_dispatch 트리거 시만 실행) ──
+  generate:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    outputs:
+      new_posts_count: ${{ steps.extract_posts.outputs.new_posts_count }}
+      subject: ${{ steps.extract_posts.outputs.subject }}
+      html_body: ${{ steps.extract_posts.outputs.html_body }}
+      cache_changed: ${{ steps.cache_check.outputs.cache_changed }}
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Node.js 24 설정
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 의정부시청 공식 RSS 수집
+        env:
+          NODE_EXTRA_CA_CERTS: ${{ github.workspace }}/scripts/certs/ui4u-intermediate.pem
+        run: node scripts/fetch-city-rss.js
+
+      - name: 공공데이터 수집
+        env:
+          PUBLIC_DATA_API_KEY: ${{ secrets.PUBLIC_DATA_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/fetch-public-data.js || true
+
+      - name: 평생학습 강좌 캐시 갱신
+        timeout-minutes: 5
+        continue-on-error: true
+        run: node scripts/build-learning-cache.js
+
+      - name: 블로그 자동글쓰기
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/generate-blog-post.js
+
+      - name: CQF 품질 검증 게이트
+        run: node scripts/check-quality.js
+
+      - name: 변경사항 스테이징
+        run: |
+          git add public/data/city-rss.json public/data/local-info.json public/data/learning-courses.json src/data/learning-courses.json src/content/posts/ || true
+
+      - name: 캐시 변경 여부
+        id: cache_check
+        run: |
+          if git diff --cached --quiet -- src/data/learning-courses.json public/data/learning-courses.json; then
+            echo "cache_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "cache_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 신규 발행 글 추출 및 메타데이터 구성
+        id: extract_posts
+        run: |
+          node -e '
+          const { execSync } = require("child_process");
+          const fs = require("fs");
+          const path = require("path");
+          const matter = require("gray-matter");
+
+          let addedFiles = [];
+          try {
+            const diff = execSync("git diff --cached --name-status --diff-filter=A -- src/content/posts", { encoding: "utf8" });
+            addedFiles = diff
+              .split("\n")
+              .map(l => l.trim())
+              .filter(l => l.startsWith("A\t") || l.startsWith("A "))
+              .map(l => l.replace(/^A\s+/, ""))
+              .filter(f => f.endsWith(".md"));
+          } catch (e) {
+            console.error("git diff 실행 오류:", e.message);
+          }
+
+          const count = addedFiles.length;
+          console.log(`신규 발행 글 수: ${count}`);
+
+          let subject = "";
+          let htmlBody = "";
+
+          if (count > 0) {
+            const file = addedFiles[0];
+            const fullPath = path.resolve(file);
+            const content = fs.readFileSync(fullPath, "utf8");
+            const parsed = matter(content);
+            const title = parsed.data?.title || path.basename(file, ".md");
+            const slug = path.basename(file, ".md");
+
+            subject = `[의정부심] 자동 발행 & 배포 완료: ${title}`;
+            htmlBody = `<div style="font-family: -apple-system, BlinkMacSystemFont, \x27Segoe UI\x27, Roboto, sans-serif; line-height: 1.6; color: #222; max-width: 580px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px;">` +
+              `<h2 style="color: #111; margin-top: 0; font-size: 20px; border-bottom: 2px solid #111; padding-bottom: 12px;">🏛️ 의정부심 데일리 글쓰기 & 배포 완료</h2>` +
+              `<p style="font-size: 15px; color: #4b5563;">오늘자 신규 시정 안내 포스팅과 웹사이트 배포가 성공적으로 완료되었습니다.</p>` +
+              `<div style="background-color: #f9fafb; padding: 18px; border-left: 4px solid #111; margin: 20px 0; border-radius: 4px;">` +
+              `<p style="font-size: 13px; color: #6b7280; margin: 0 0 6px 0; font-weight: bold;">오늘 발행된 포스팅</p>` +
+              `<h3 style="margin: 0 0 14px 0; color: #111; font-size: 17px;">${title}</h3>` +
+              `<a href="https://uijeongbusim.com/blog/${slug}" style="display: inline-block; padding: 10px 18px; background-color: #111; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold;">웹사이트에서 바로 확인하기 →</a>` +
+              `</div>` +
+              `<div style="border-top: 1px solid #e5e7eb; padding-top: 14px; font-size: 12px; color: #9ca3af;">` +
+              `<p style="margin: 0;">포털 주소: <a href="https://uijeongbusim.com" style="color: #4b5563; text-decoration: underline;">uijeongbusim.com</a></p>` +
+              `<p style="margin: 4px 0 0 0;">본 메일은 의정부 건강·생활 정보 포털 GitHub Actions에서 자동 발송되었습니다.</p>` +
+              `</div></div>`;
+          }
+
+          if (process.env.GITHUB_OUTPUT) {
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `new_posts_count=${count}\n`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `subject=${subject}\n`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `html_body<<EOF_BODY\n${htmlBody}\nEOF_BODY\n`);
+          }
+          '
+
+      - name: 변경사항 커밋 & 푸시
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: 시정 새소식 자동 발행 업데이트 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
+            git pull --rebase origin main
+            git push origin main
+            echo "✅ 커밋 & 푸시 완료"
+          else
+            echo "ℹ️ 변경사항 없음 — 커밋 건너뜀"
+          fi
+
+  # ── [2단계] 빌드 & 배포 & 이메일 발송 ─────────────────────────────────────
+  deploy:
+    needs: [generate]
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (github.event_name == 'push' || needs.generate.outputs.new_posts_count > 0 || needs.generate.outputs.cache_changed == 'true')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+
+      - name: Node.js 24 설정
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 프로젝트 빌드
+        run: npm run build
+
+      - name: Cloudflare Pages 배포
+        run: |
+          for i in 1 2 3; do
+            npx wrangler pages deploy out --project-name=ksp-local-info --branch=main && exit 0
+            sleep 15
+          done
+          exit 1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: 배포 완료 브리핑 이메일 발송
+        if: needs.generate.outputs.new_posts_count > 0
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@67ce3558d613188179559c61d3565140cf389968 # v22
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: ${{ needs.generate.outputs.subject }}
+          to: ${{ secrets.GMAIL_USER }}
+          from: 의정부심 포털 <${{ secrets.GMAIL_USER }}>
+          html_body: ${{ needs.generate.outputs.html_body }}

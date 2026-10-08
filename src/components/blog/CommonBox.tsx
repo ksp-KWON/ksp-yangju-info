@@ -1,0 +1,87 @@
+import React from 'react';
+
+export type BoxTone = 'blue' | 'red' | 'green' | 'yellow' | 'purple' | 'emerald' | 'teal' | 'indigo' | 'charcoal';
+
+interface CommonBoxProps {
+  tone?: BoxTone | string;
+  title: string;
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+  headerRight?: React.ReactNode;
+  topElement?: React.ReactNode;
+  className?: string;
+}
+
+export default function CommonBox({
+  title,
+  children,
+  icon,
+  headerRight,
+  topElement,
+  tone = 'blue',
+  className = '',
+}: CommonBoxProps) {
+  const resolvedTone: BoxTone = (['blue', 'red', 'green', 'yellow', 'purple', 'emerald', 'teal', 'indigo', 'charcoal'].includes(tone as string)
+    ? tone
+    : 'blue') as BoxTone;
+
+  const boxHoverBorders: Record<BoxTone, string> = {
+    blue: 'border-blue-200 dark:border-blue-900/50 hover:border-[var(--google-blue)] hover:shadow-[0_12px_40px_rgba(26,115,232,0.18)]',
+    red: 'border-red-200 dark:border-red-900/50 hover:border-[var(--google-red)] hover:shadow-[0_12px_40px_rgba(234,67,53,0.18)]',
+    green: 'border-green-200 dark:border-green-900/50 hover:border-[var(--google-green)] hover:shadow-[0_12px_40px_rgba(52,168,83,0.18)]',
+    emerald: 'border-emerald-200 dark:border-emerald-900/50 hover:border-[var(--google-green)] hover:shadow-[0_12px_40px_rgba(52,168,83,0.18)]',
+    yellow: 'border-yellow-300 dark:border-yellow-900/50 hover:border-yellow-500 hover:shadow-[0_12px_40px_rgba(234,179,8,0.18)]',
+    purple: 'border-purple-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-[0_12px_40px_rgba(168,85,247,0.18)]',
+    indigo: 'border-indigo-200 dark:border-indigo-900/50 hover:border-indigo-500 hover:shadow-[0_12px_40px_rgba(99,102,241,0.18)]',
+    teal: 'border-teal-200 dark:border-teal-900/50 hover:border-teal-500 hover:shadow-[0_12px_40px_rgba(20,184,166,0.18)]',
+    charcoal: 'border-gray-200/90 dark:border-zinc-800 hover:border-zinc-700 hover:shadow-[0_12px_40px_rgba(24,24,27,0.08)]',
+  };
+
+  const headerGradients: Record<BoxTone, string> = {
+    blue: 'bg-gradient-to-r from-blue-50/90 to-transparent dark:from-blue-900/25 dark:to-transparent border-b border-blue-100 dark:border-blue-900/40',
+    red: 'bg-gradient-to-r from-red-50/90 to-transparent dark:from-red-900/25 dark:to-transparent border-b border-red-100 dark:border-red-900/40',
+    green: 'bg-gradient-to-r from-green-50/90 to-transparent dark:from-green-900/25 dark:to-transparent border-b border-green-100 dark:border-green-900/40',
+    emerald: 'bg-gradient-to-r from-emerald-50/90 to-transparent dark:from-emerald-900/25 dark:to-transparent border-b border-emerald-100 dark:border-emerald-900/40',
+    yellow: 'bg-gradient-to-r from-yellow-50/90 to-transparent dark:from-yellow-900/25 dark:to-transparent border-b border-yellow-200 dark:border-yellow-900/40',
+    purple: 'bg-gradient-to-r from-purple-50/90 to-transparent dark:from-purple-900/25 dark:to-transparent border-b border-purple-100 dark:border-purple-900/40',
+    indigo: 'bg-gradient-to-r from-indigo-50/90 to-transparent dark:from-indigo-900/25 dark:to-transparent border-b border-indigo-100 dark:border-indigo-900/40',
+    teal: 'bg-gradient-to-r from-teal-50/90 to-transparent dark:from-teal-900/25 dark:to-transparent border-b border-teal-100 dark:border-teal-900/40',
+    charcoal: 'bg-gradient-to-r from-zinc-100/90 to-transparent dark:from-zinc-800/40 dark:to-transparent border-b border-zinc-200 dark:border-zinc-800',
+  };
+
+  const titleStyles: Record<BoxTone, string> = {
+    blue: 'text-[var(--google-blue)] dark:text-[#8ab4f8]',
+    red: 'text-[var(--google-red)] dark:text-[#f28b82]',
+    green: 'text-[var(--google-green)] dark:text-[#81c995]',
+    emerald: 'text-[var(--google-green)] dark:text-[#81c995]',
+    yellow: 'text-yellow-700 dark:text-yellow-400',
+    purple: 'text-purple-600 dark:text-purple-400',
+    indigo: 'text-indigo-600 dark:text-indigo-400',
+    teal: 'text-teal-600 dark:text-teal-400',
+    charcoal: 'text-zinc-900 dark:text-white',
+  };
+
+  return (
+    <div
+      className={`my-10 bg-white dark:bg-[#202124] p-5 sm:p-6 shadow-[0_2px_8px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] transition-all duration-300 relative overflow-hidden group border rounded-none ${boxHoverBorders[resolvedTone]} ${className}`}
+    >
+      {topElement}
+
+      <div className="relative z-10">
+        {/* Full-width clean header strip with SVG line symbol (보상스쿨 규격) */}
+        <div className={`-mt-5 sm:-mt-6 -mx-5 sm:-mx-6 px-5 sm:px-6 py-3.5 mb-4 flex items-center justify-between gap-3 flex-wrap ${headerGradients[resolvedTone]}`}>
+          <h3 className={`text-[15.5px] font-extrabold flex items-center gap-2.5 tracking-tight ${titleStyles[resolvedTone]}`}>
+            {icon && <span className="shrink-0 flex items-center">{icon}</span>}
+            <span>{title}</span>
+          </h3>
+          {headerRight && <div>{headerRight}</div>}
+        </div>
+
+        {/* Content Area */}
+        <div className="text-[14.5px] sm:text-[15px] font-medium text-zinc-700 dark:text-[#e8eaed] leading-[1.75] tracking-tight break-keep">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}

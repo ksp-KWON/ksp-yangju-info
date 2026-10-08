@@ -1,0 +1,18 @@
+# ==============================================================================
+# Cloudflare Pages Global Standard 301 & Rewrite Rules - Uijeongbusim (SSOT)
+# ==============================================================================
+
+# [Rule 1] Next.js App Router Tree TXT Auto Rewrite (Fix 404s to 200 OK)
+/__next_tree.txt                     /__next._tree.txt            200
+/:dir/__next_tree.txt                /:dir/__next._tree.txt       200
+/:dir/:sub/__next_tree.txt           /:dir/:sub/__next._tree.txt  200
+
+# [Rule 2] Relative Next.js Static Asset Routing Normalization
+/blog/_next/*                        /_next/:splat                301
+/services/_next/*                    /_next/:splat                301
+/about/_next/*                       /_next/:splat                301
+
+# [Rule 3] Standard Feeds & Sitemaps Normalization
+/feed                                /rss.xml                     301
+/rss                                 /rss.xml                     301
+/sitemap                             /sitemap.xml                 301

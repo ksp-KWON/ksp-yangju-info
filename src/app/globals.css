@@ -1,0 +1,149 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Tailwind v4 클래스 기반 다크모드 활성화 */
+@variant dark (.dark &);
+
+:root {
+  --background: #ffffff;
+  --foreground: #202124;
+
+  /* Google Material Colors (보상스쿨 규격) */
+  --google-blue: #1a73e8;
+  --google-red: #ea4335;
+  --google-yellow: #fbbc04;
+  --google-green: #34a853;
+  --google-surface-variant: #f1f3f4;
+  --google-border: #dadce0;
+}
+
+:root.dark {
+  --background: #202124;
+  --foreground: #e8eaed;
+
+  /* Google Material Colors Dark */
+  --google-blue: #8ab4f8;
+  --google-red: #f28b82;
+  --google-yellow: #fde293;
+  --google-green: #81c995;
+  --google-surface-variant: #303134;
+  --google-border: #5f6368;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-google-blue: var(--google-blue);
+  --color-google-red: var(--google-red);
+  --color-google-yellow: var(--google-yellow);
+  --color-google-green: var(--google-green);
+  --color-google-surface: var(--google-surface-variant);
+  --color-google-border: var(--google-border);
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+/* ==========================================
+   🏛️ 의정부 건강·생활 포털 Google Material 타이포그래피 시스템
+   ========================================== */
+
+/* 1. 본문(마크다운) 모바일 화면 잘림 방지 및 단어 줄바꿈 최적화 */
+.prose {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+.prose table {
+  display: table;
+  width: 100%;
+}
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* 2. 본문 내 강조 단어(**굵게**) */
+.prose strong {
+  font-weight: 800 !important;
+}
+
+/* 3. 본문 링크 스타일 (보상스쿨 Google Blue 하이라이트 규격) */
+.prose a {
+  color: var(--google-blue) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  border-bottom: 2px solid rgba(26, 115, 232, 0.3) !important;
+  padding: 0.1rem 0.3rem;
+  margin: 0 0.1rem;
+  transition: all 0.2s ease-in-out;
+  background-color: rgba(26, 115, 232, 0.05);
+  border-radius: 0.375rem;
+  display: inline-block;
+  line-height: 1.4;
+}
+
+.prose a:hover {
+  background-color: rgba(26, 115, 232, 0.15) !important;
+  border-bottom-color: var(--google-blue) !important;
+  transform: translateY(-1px);
+}
+
+.dark .prose a {
+  color: #8ab4f8 !important;
+  border-bottom: 2px solid rgba(138, 180, 248, 0.3) !important;
+  background-color: rgba(138, 180, 248, 0.1);
+}
+
+.dark .prose a:hover {
+  background-color: rgba(138, 180, 248, 0.2) !important;
+  border-bottom-color: #8ab4f8 !important;
+}
+
+/* 4. 목록 행간 및 간격 균일화 */
+.prose ul,
+.prose ol {
+  line-height: 1.8 !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.prose li {
+  line-height: 1.8 !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+.prose li p {
+  margin: 0 !important;
+  line-height: 1.8 !important;
+}
+
+/* 5. 샤프 모던 스크롤바 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d4d4d8;
+  border-radius: 0px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3f3f46;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #a1a1aa;
+}
+.dark .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #52525b;
+}
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
