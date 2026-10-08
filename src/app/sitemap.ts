@@ -1,7 +1,6 @@
-import fs from 'fs';
-import path from 'path';
 import { MetadataRoute } from 'next';
 import { getSortedPostsData } from '@/lib/posts';
+import { getLearningData } from '@/lib/learning';
 import { EMERGENCY_PLACES } from '@/lib/data/emergency-places';
 import { SITE_URL } from '@/lib/constants';
 
@@ -60,19 +59,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 4. 양주 평생학습 실시간 강좌 상세 페이지 (전수 색인)
-  let learningRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const lPath = path.join(process.cwd(), 'src/data/learning-courses.json');
-    if (fs.existsSync(lPath)) {
-      const lData = JSON.parse(fs.readFileSync(lPath, 'utf8'));
-      learningRoutes = (lData.courses || []).map((c: { id: string }) => ({
-        url: `${baseUrl}/services/learning/${c.id}`,
-        lastModified: SITE_LAUNCH_DATE,
-      }));
-    }
-  } catch (e) {
-    console.error('Failed to add learning routes to sitemap:', e);
-  }
+  const { courses } = getLearningData();
+  const learningRoutes: MetadataRoute.Sitemap = courses.map((c) => ({
+    url: `${baseUrl}/services/learning/${c.id}`,
+    lastModified: SITE_LAUNCH_DATE,
+  }));
 
   return [...routes, ...emergencyPlaceRoutes, ...postRoutes, ...learningRoutes];
 }

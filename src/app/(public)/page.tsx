@@ -1,6 +1,5 @@
-import fs from 'fs';
-import path from 'path';
 import { getSortedPostsData } from '@/lib/posts';
+import { getLearningData } from '@/lib/learning';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import EmergencyBanner from '@/components/emergency/EmergencyBanner';
@@ -16,13 +15,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const posts = getSortedPostsData();
-  let totalCourses = 0;
-  try {
-    const lPath = path.join(process.cwd(), 'src/data/learning-courses.json');
-    if (fs.existsSync(lPath)) {
-      totalCourses = JSON.parse(fs.readFileSync(lPath, 'utf8')).totalCount || 0;
-    }
-  } catch {}
+  const { totalCount: totalCourses } = getLearningData();
 
   return (
     <div className="space-y-6 sm:space-y-8">

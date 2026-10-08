@@ -1,6 +1,5 @@
-import fs from 'fs';
-import path from 'path';
 import { getPostData, getSortedPostsData } from '@/lib/posts';
+import { getLearningData } from '@/lib/learning';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import BlogPostClient from '@/components/blog/BlogPostClient';
@@ -47,6 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       ...(post.date ? { publishedTime: post.date } : {}),
     },
     twitter: {
+      card: 'summary_large_image',
       title,
       description,
     },
@@ -63,13 +63,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   const sourceLink = post.sourceLink || '';
 
-  let totalCourses = 0;
-  try {
-    const lPath = path.join(process.cwd(), 'src/data/learning-courses.json');
-    if (fs.existsSync(lPath)) {
-      totalCourses = JSON.parse(fs.readFileSync(lPath, 'utf8')).totalCount || 0;
-    }
-  } catch {}
+  const { totalCount: totalCourses } = getLearningData();
 
   // 1. Google E-E-A-T BlogPosting & GovernmentService 스키마
   const blogSchema = {
