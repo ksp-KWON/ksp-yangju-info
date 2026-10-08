@@ -1,3 +1,4 @@
 name = "ksp-yangju-info"
+compatibility_date = "2024-09-30"
 pages_build_output_dir = "out"
 assets = { directory = "./out" }
