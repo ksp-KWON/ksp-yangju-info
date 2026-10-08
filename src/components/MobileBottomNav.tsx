@@ -10,7 +10,7 @@ import { getCategoryIcon } from '@/lib/constants';
 
 type ModalType = 'none' | 'home' | 'emergency' | 'learning' | 'civic' | 'categories';
 
-// ── [양주심 클린 & 프리미엄] 선언형 모바일 퀵 허브 데이터셋 (보상스쿨 SSOT 규격) ──
+// ── [양주인 클린 & 프리미엄] 선언형 모바일 퀵 허브 데이터셋 (보상스쿨 SSOT 규격) ──
 
 const HOME_ITEMS: MenuCardProps[] = [
   {

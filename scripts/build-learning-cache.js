@@ -123,7 +123,7 @@ async function main() {
 
   const outputData = {
     updatedAt: new Date().toISOString(),
-    source: '양주시 평생학습포털 공식 연동 (lll.yangju.go.kr)',
+    source: '양주시 평생학습포털 공식 연동 (www.yangju.go.kr/edu)',
     totalCount: sorted.length,
     courses: sorted,
   };

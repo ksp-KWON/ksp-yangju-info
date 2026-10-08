@@ -1,8 +1,10 @@
 /**
  * scripts/fetch-city-rss.js
- * ?�주??공식 RSS 공통 ?�합 ?�집 ?�진
+ * 양주시 공식 RSS 공통 통합 수집 엔진
  * 
- * ?�법 ??�?3.1??[?��? · 범용 · 콤팩??· ?�합 · 공유 · 공통] 준?? * ?��? ?�존???�이 Node.js ?��? fetch?� ?�규?�으�?5�??�드 ?�괄 ?�싱 �?중복 ?�터�? */
+ * 헌법 제3조 3.1항 [표준 · 범용 · 콤팩트 · 통합 · 공유 · 공통] 준수
+ * 외부 의존성 없이 Node.js 표준 fetch와 정규식으로 피드 일괄 파싱 및 중복 필터링
+ */
 
 'use strict';
 
@@ -13,32 +15,34 @@ const { safeFetch, sleep } = require('./pipeline-utils');
 
 const CITY_RSS_FILE = path.join(process.cwd(), 'public/data/city-rss.json');
 
-// ?�?� ?�정부?�청 공식 RSS 4�??�드?�인??�?직�???카테고리 매핑 ?�정 (?�순?�찰 ?�드 ?�구 ?�외) ?�?�
+// ── 양주시 공식 블로그 RSS 피드 및 카테고리 매핑 설정 ──
 const RSS_CONFIGS = [
   {
-    name: '?�주?�공?�블로그',
+    id: 'naver-blog',
+    name: '양주시공식블로그',
     url: 'https://rss.blog.naver.com/yangju619.xml',
-    category: '?�정?�식',
+    category: '행정소식',
   },
 ];
 
 /**
- * 기한 만료 �?과거 ?�도 ?�보 ?�동 배제 ?�터 (2026??기�?)
+ * 기한 만료 및 과거 연도 정보 자동 배제 필터 (2026년 기준)
  */
 function isItemExpired(title, description) {
   const fullText = title + ' ' + (description || '');
 
-  // 1) 2025???�전 과거 ?�도 ?�독 ?�함 ??배제
+  // 1) 2025년 이전 과거 연도 단독 포함 시 배제
   const oldYearMatch = fullText.match(/\b(201[0-9]|202[0-5])\b/);
   if (oldYearMatch && !fullText.includes('2026')) {
     return true;
   }
 
-  // 2) KST ?�늘 ?�정 기�? 만료??검??  const now = new Date();
+  // 2) KST 오늘 자정 기준 만료일 검사
+  const now = new Date();
   const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
   const todayThreshold = new Date(Date.UTC(kstNow.getUTCFullYear(), kstNow.getUTCMonth(), kstNow.getUTCDate(), 0, 0, 0));
 
-  const regex = /(?:20)?(2[0-9])\s*[.\-/??\s*(\d{1,2})\s*[.\-/??\s*(\d{1,2})/g;
+  const regex = /(?:20)?(2[0-9])\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})/g;
   const dates = [];
   let m;
   while ((m = regex.exec(fullText)) !== null) {
@@ -59,22 +63,22 @@ function isItemExpired(title, description) {
 }
 
 /**
- * ?�?�질 ?�순 공고 �??��? ?�활 무�? ?�정 ?��??�무 배제 ?�터
+ * 저품질 단순 공고 및 시민 생활 무관 행정 내부잡무 배제 필터
  */
 function isLowQualityNotice(title, description) {
   const text = (title + ' ' + (description || '')).toLowerCase();
   const lowQualityKeywords = [
-    '?�찰', '견적?�출', '?�액?�의', '�?��?�역', '관급자??, '?�기�?, '?��?계약', '취소공고',
-    '공사(', '?�역(', '물품(', '?�난관리기�?, '?�비?�차', '매각 ?�반?�찰', '공유?�산',
-    '주요?�무계획', '?�정?�비???�장', '공표', '�??�련', '?�?�?�술?�련', '?�공방공?�련',
-    '?�격?�련', '?�인지 교육', '발�???, '?�경?�비', '?�과?�트 ?�달', '?�공 만들�?, '?�외?�판부 ?�치', '?�담??,
-    '추천?�서', '종이?�기', '?�전?��?????, '주간?�사?�보', '?�사?�보'
+    '입찰', '견적제출', '소액수의', '청소용역', '관급자재', '폐기물', '단가계약', '취소공고',
+    '공사(', '용역(', '물품(', '재난관리기금', '장비임차', '매각 일반입찰', '공유재산',
+    '주요업무계획', '행정서비스 헌장', '공표', '군 훈련', '대대전술훈련', '합공방공훈련',
+    '사격훈련', '성인지 교육', '발대식', '환경정비', '다과세트 전달', '흙공 만들기', '원외재판부 유치', '정담회',
+    '추천도서', '종이접기', '안전점검의 날', '주간농사정보', '농사정보'
   ];
   return lowQualityKeywords.some(kw => text.includes(kw));
 }
 
 /**
- * 초경??XML ?�이???�서 (기한 만료 ?�동 배제)
+ * 초경량 XML 아이템 파서
  */
 function parseRssXml(xmlText, defaultCategory, feedName) {
   const items = [];
@@ -87,46 +91,51 @@ function parseRssXml(xmlText, defaultCategory, feedName) {
     const linkMatch = itemBlock.match(/<link><!\[CDATA\[(.*?)\]\]><\/link>/i) || itemBlock.match(/<link>(.*?)<\/link>/i);
     const descMatch = itemBlock.match(/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/i) || itemBlock.match(/<description>([\s\S]*?)<\/description>/i);
     const dateMatch = itemBlock.match(/<pubDate><!\[CDATA\[(.*?)\]\]><\/pubDate>/i) || itemBlock.match(/<pubDate>(.*?)<\/pubDate>/i);
+    const catMatch = itemBlock.match(/<category><!\[CDATA\[(.*?)\]\]><\/category>/i) || itemBlock.match(/<category>(.*?)<\/category>/i);
 
     const title = titleMatch ? titleMatch[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&').trim() : '';
     const link = linkMatch ? linkMatch[1].trim() : '';
-    let description = descMatch ? descMatch[1].replace(/<[^>]+>/g, '').trim() : '';
+    let description = descMatch ? descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
     const pubDate = dateMatch ? dateMatch[1].trim() : '';
+    const rawCategory = catMatch ? catMatch[1].trim() : '';
 
-    if (!title || title === feedName || title.includes('RSS?�비??)) {
+    if (!title || !link || title === feedName || title.includes('RSS서비스')) {
       continue;
     }
 
-    // ?�?� 기한 만료 �?과거 ?�보 ?�동 배제 ?�?�
+    // ── 기한 만료 및 과거 정보 자동 배제 ──
     if (isItemExpired(title, description)) {
       continue;
     }
 
-    // ?�?� ?�?�질 ?�순 공고 �??�정 ?��??�무 배제 ?�?�
+    // ── 저품질 단순 공고 및 행정 내부잡무 배제 ──
     if (isLowQualityNotice(title, description)) {
       continue;
     }
 
-    // 카테고리 ?�마???�분??(?�워??기반 교차 보정)
+    // 카테고리 스마트 세분화 (키워드 기반 교차 보정)
     let finalCategory = defaultCategory;
-    if (title.includes('병원') || title.includes('?�국') || title.includes('?�료') || title.includes('검�?) || title.includes('보건')) {
-      finalCategory = '병원·?�국';
-    } else if (title.includes('축제') || title.includes('공연') || title.includes('?�사') || title.includes('?�스?�') || title.includes('문화')) {
-      finalCategory = '축제·?�들??;
-    } else if (title.includes('지?�금') || title.includes('복�?') || title.includes('?�당') || title.includes('바우�?) || title.includes('감면') || title.includes('?�학')) {
-      finalCategory = '복�?·지?�금';
-    } else if (title.includes('?�자�?) || title.includes('채용') || title.includes('취업') || title.includes('?�상공인') || title.includes('창업')) {
-      finalCategory = '?�자�?�소?�공??;
+    if (rawCategory.includes('복지') || title.includes('지원금') || title.includes('복지') || title.includes('수당') || title.includes('바우처') || title.includes('감면')) {
+      finalCategory = '복지·지원금';
+    } else if (rawCategory.includes('문화') || title.includes('축제') || title.includes('공연') || title.includes('행사') || title.includes('전시') || title.includes('페스타')) {
+      finalCategory = '문화·예술';
+    } else if (title.includes('일자리') || title.includes('채용') || title.includes('취업') || title.includes('소상공인') || title.includes('창업')) {
+      finalCategory = '일자리·생활';
+    } else if (title.includes('교통') || title.includes('주차') || title.includes('버스') || title.includes('도로')) {
+      finalCategory = '교통·주차';
+    } else if (title.includes('병원') || title.includes('약국') || title.includes('의료') || title.includes('검진') || title.includes('보건')) {
+      finalCategory = '건강·의료';
     }
 
     items.push({
       title,
       link,
-      description,
-      pubDate,
+      description: description.slice(0, 300),
+      pubDate: pubDate ? new Date(pubDate).toISOString() : new Date().toISOString(),
       category: finalCategory,
       feedName,
       sourceId: generateSourceId(title),
+      collectedAt: new Date().toISOString()
     });
   }
 
@@ -135,15 +144,15 @@ function parseRssXml(xmlText, defaultCategory, feedName) {
 
 async function main() {
   console.log('======================================================');
-  console.log('?�� [?�주???�털] ?�청 공식 RSS 5�??�합 ?�집 ?�이?�라??);
-  console.log('?�행 ?�각:', new Date().toISOString());
+  console.log('📡 [양주인 포털] 공식 블로그 RSS 통합 수집 파이프라인');
+  console.log('실행 시각:', new Date().toISOString());
   console.log('======================================================\n');
 
   const existingSourceIds = getExistingSourceIds();
   const existingSourceLinks = getExistingSourceLinks();
-  console.log(`기발??게시글: ID ${existingSourceIds.size}�? Link ${existingSourceLinks.size}�??�인??`);
+  console.log(`기발행 게시글: ID ${existingSourceIds.size}개, Link ${existingSourceLinks.size}개 확인됨.`);
 
-  // 기존 city-rss.json???�으�?로드
+  // 기존 city-rss.json 로드
   let existingRssQueue = [];
   if (fs.existsSync(CITY_RSS_FILE)) {
     try {
@@ -164,21 +173,21 @@ async function main() {
 
   for (const config of RSS_CONFIGS) {
     try {
-      console.log(`\n[?�집 �? ${config.name} RSS (${config.category}) -> ${config.url}`);
+      console.log(`\n[수집 중] ${config.name} RSS (${config.category}) -> ${config.url}`);
       const res = await safeFetch(config.url, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
           'Accept': 'application/rss+xml, application/xml, text/xml, */*;q=0.8',
         }
-      }, 10000);
+      }, 15000);
       if (!res.ok) {
-        console.warn(`  ?�️ HTTP ?�류: ${res.status}`);
+        console.warn(`  ⚠️ HTTP 오류: ${res.status}`);
         continue;
       }
 
       const xmlText = await res.text();
       const parsedItems = parseRssXml(xmlText, config.category, config.name);
-      console.log(`  -> ?�본 ${parsedItems.length}�??�이???�싱 ?�료.`);
+      console.log(`  -> 원본 ${parsedItems.length}개 유효 아이템 추출 완료.`);
 
       for (const item of parsedItems) {
         if (!isDuplicatePost(item, seenSet)) {
@@ -189,12 +198,12 @@ async function main() {
         }
       }
     } catch (err) {
-      console.error(`  ??${config.name} ?�집 ?�패:`, err.message);
+      console.error(`  ❌ ${config.name} 수집 실패:`, err.message);
     }
     await sleep(500);
   }
 
-  // ??병합 �?만료 ?�이???�면 ?�화 (?�규 ?�집 ??�� + 기존 미발????�� �??�효??것만 ?��?)
+  // 큐 병합 및 만료/저품질 데이터 전면 정화
   const mergedQueue = [...allCollectedItems, ...existingRssQueue];
   const finalQueue = [];
   const recordedSet = new Set([...existingSourceIds, ...existingSourceLinks]);
@@ -208,20 +217,20 @@ async function main() {
     finalQueue.push(item);
   }
 
-  // ?�???�렉?�리 보장 �??�??  const dir = path.dirname(CITY_RSS_FILE);
+  const dir = path.dirname(CITY_RSS_FILE);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   fs.writeFileSync(CITY_RSS_FILE, JSON.stringify(finalQueue, null, 2), 'utf8');
 
   console.log('\n======================================================');
-  console.log(`??[?�집 ?�료] ?�규 ?�이?? ${newCollectedCount}�?);
-  console.log(`?�� [발행 ?��???총량 (만료 ??�� ?�면 배제)]: ${finalQueue.length}�?(?�일: public/data/city-rss.json)`);
+  console.log(`✅ [수집 완료] 신규 아이템: ${newCollectedCount}개`);
+  console.log(`📦 [발행 대기 큐 총량 (만료·저품질 전면 배제)]: ${finalQueue.length}개 (파일: public/data/city-rss.json)`);
   console.log('======================================================');
 }
 
 if (require.main === module) {
   main().catch(err => {
-    console.error('치명???�러:', err);
+    console.error('치명적 에러:', err);
     process.exit(1);
   });
 }
@@ -229,4 +238,6 @@ if (require.main === module) {
 module.exports = {
   RSS_CONFIGS,
   parseRssXml,
+  isItemExpired,
+  isLowQualityNotice
 };
