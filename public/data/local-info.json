@@ -1,5 +1,20 @@
 {
   "events": [],
-  "benefits": [],
-  "lastUpdated": ""
+  "benefits": [
+    {
+      "id": "135200005017",
+      "title": "한국형 상병수당 시범사업",
+      "category": [
+        "복지·지원금",
+        "건강·의료"
+      ],
+      "startDate": "2026-10-08",
+      "endDate": "상시",
+      "location": "전국 (시범사업 지역별 상이)",
+      "target": "시범사업 지역 거주 취업자 또는 시범사업 지역 소재 사업장 근로자, 만 15세 이상 ~ 만 65세 미만 대한민국 국적자",
+      "summary": "업무 외 질병·부상으로 경제활동이 어려운 경우 치료에 집중할 수 있도록 상병수당 지원",
+      "link": "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/135200005017"
+    }
+  ],
+  "lastUpdated": "2026-10-08"
 }
