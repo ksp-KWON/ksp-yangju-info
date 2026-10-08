@@ -273,7 +273,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
         <div className="w-full h-[520px] bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 relative overflow-hidden">
           {!loading && !error ? (
             <KakaoMap
-              center={selectedPlace ? { lat: selectedPlace.lat, lng: selectedPlace.lng } : { lat: 37.742, lng: 127.065 }}
+              center={selectedPlace ? { lat: selectedPlace.lat, lng: selectedPlace.lng } : { lat: 37.8213, lng: 127.0945 }}
               style={{ width: '100%', height: '100%' }}
               level={5}
             >

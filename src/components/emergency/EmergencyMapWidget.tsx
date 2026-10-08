@@ -16,12 +16,12 @@ interface EmergencyMapWidgetProps {
 }
 
 const neighborhoods = [
-  { name: '양주역(중심)', lat: 37.7380, lng: 127.0450 },
-  { name: '민락지구', lat: 37.7454, lng: 127.0984 },
-  { name: '신곡/장암', lat: 37.7336, lng: 127.0650 },
-  { name: '옥정중앙공원', lat: 37.8213, lng: 127.0945 },
-  { name: '양주시청', lat: 37.7853, lng: 127.0458 },
-  { name: '가능/녹양', lat: 37.7540, lng: 127.0300 },
+  { name: '옥정신도시', lat: 37.8213, lng: 127.0945 },
+  { name: '덕정역/회천', lat: 37.8432, lng: 127.0612 },
+  { name: '고읍/광사', lat: 37.7997, lng: 127.0805 },
+  { name: '양주시청/양주역', lat: 37.7853, lng: 127.0458 },
+  { name: '백석/광적', lat: 37.8189, lng: 126.9855 },
+  { name: '장흥/송추', lat: 37.7225, lng: 126.9535 },
 ];
 
 export default function EmergencyMapWidget({ isWidget = false, defaultTab = 'er', hideTabs = false }: EmergencyMapWidgetProps) {
