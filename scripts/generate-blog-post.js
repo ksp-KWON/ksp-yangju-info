@@ -12,7 +12,18 @@ const fs = require('fs');
 const path = require('path');
 const { callGemini, isAllQuotaExhausted } = require('./gemini-helper');
 const { sleep, MIN_SOURCE_CHARS, getCleanSourceText, isSourceSufficient, validateSourceNumbers } = require('./pipeline-utils');
-const { generateSourceId, getExistingSourceIds, saveMarkdownPost, makeSlug, getKSTDateString, getKSTTimestamp } = require('./post-utils');
+const {
+  FALLBACK_HOME_URL,
+  isFallbackOrEmptyUrl,
+  generateSourceId,
+  getExistingSourceIds,
+  getExistingSourceLinks,
+  isDuplicatePost,
+  saveMarkdownPost,
+  makeSlug,
+  getKSTDateString,
+  getKSTTimestamp
+} = require('./post-utils');
 const {
   PLAN_SCHEMA,
   CONTENT_SCHEMA,
@@ -126,7 +137,7 @@ async function generateAndSavePost(targetItem, tierLabel) {
     category: plan.frontmatter.category,
     tags: plan.frontmatter.tags,
     sourceId: sourceId,
-    sourceLink: targetItem.link || 'https://www.yangju.go.kr',
+    sourceLink: targetItem.link || FALLBACK_HOME_URL,
     ...(targetItem.expiresAt ? { expiresAt: targetItem.expiresAt } : {})
   }, content.markdownContent);
 
@@ -158,13 +169,23 @@ async function runTier1CityRss(limit = MAX_POSTS_PER_RUN) {
   }
 
   const existingSourceIds = getExistingSourceIds();
+  const existingSourceLinks = getExistingSourceLinks();
+  const existingSet = new Set([...existingSourceIds, ...existingSourceLinks]);
   const rssQueue = JSON.parse(fs.readFileSync(CITY_RSS_PATH, 'utf8'));
 
   const qualified = filterTier1Candidates(rssQueue);
-  const pending = qualified.filter(item => {
-    const sourceId = item.sourceId || generateSourceId(item.title);
-    return !existingSourceIds.has(sourceId);
-  }).slice(0, MAX_CONTENT_CALLS_PER_RUN);
+  const pending = [];
+  for (const item of qualified) {
+    if (!isDuplicatePost(item, existingSet)) {
+      pending.push(item);
+      const sid = item.sourceId || generateSourceId(item.title);
+      existingSet.add(sid);
+      if (item.link && !isFallbackOrEmptyUrl(item.link)) {
+        existingSet.add(item.link.trim());
+      }
+      if (pending.length >= MAX_CONTENT_CALLS_PER_RUN) break;
+    }
+  }
 
   if (pending.length === 0) {
     console.log('  -> 시청 RSS에 미발행된 신규 소식이 없습니다.');
@@ -184,7 +205,11 @@ async function runTier1CityRss(limit = MAX_POSTS_PER_RUN) {
       const fileName = await generateAndSavePost(item, 'Tier 1: 시청 공식 RSS');
       if (fileName) {
         published.push(fileName);
-        existingSourceIds.add(item.sourceId || generateSourceId(item.title));
+        const sid = item.sourceId || generateSourceId(item.title);
+        existingSet.add(sid);
+        if (item.link && !isFallbackOrEmptyUrl(item.link)) {
+          existingSet.add(item.link.trim());
+        }
         await sleep(2500); // Gemini API 레이트 리밋 방지 쾌적 대기
       }
     } catch (err) {
@@ -357,7 +382,7 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
     const postItem = {
       title: course.title,
       content: `교육기관: ${course.org}, 교육장소: ${course.address} (${course.dong}), 교육기간: ${course.eduPeriod}, 신청기간: ${course.applyPeriod}, 모집정원: ${course.capacity}, 수강료: ${feeText}, 주요대상: ${course.target}, 분야: ${course.category}. 상세 교육내용 및 강의계획: ${course.intro}. 양주시 평생학습 통합플랫폼 뉴런 공식 온라인 접수.`,
-      link: course.applyUrl || 'https://www.yangju.go.kr/edu/index.do',
+      link: course.applyUrl || 'https://sugang.ull.or.kr',
       sourceId: course.id,
       expiresAt: extractExpiryDate(course.applyPeriod),
       category: '교육·청소년',

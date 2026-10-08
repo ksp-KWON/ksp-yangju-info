@@ -1,12 +1,11 @@
-import fs from 'fs';
-import path from 'path';
 import { Metadata } from 'next';
-import LearningFinderClient, { CourseItem } from '@/components/learning/LearningFinderClient';
+import LearningFinderClient from '@/components/learning/LearningFinderClient';
 import { SITE_URL, SITE_NAME } from '@/lib/constants';
+import { getLearningData } from '@/lib/learning';
 
 export const metadata: Metadata = {
   title: '양주시 평생학습 강좌 지도 & 수강신청 파인더 | 양주 건강·생활 정보 포털',
-  description: '양주시 평생학습 통합플랫폼(뉴런) 공식 연동! 도서관, 주민센터, 청소년수련관의 실시간 접수중 강좌를 지도와 1초 필터로 바로 검색하고 신청하세요.',
+  description: '양주시 평생학습포털 공식 연동! 도서관, 주민센터, 평생학습관의 실시간 접수중 강좌를 지도와 1초 필터로 바로 검색하고 신청하세요.',
   alternates: {
     canonical: `${SITE_URL}/services/learning`,
   },
@@ -19,25 +18,6 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
-
-interface LearningData {
-  updatedAt: string;
-  totalCount: number;
-  courses: CourseItem[];
-}
-
-function getLearningData(): LearningData {
-  try {
-    const filePath = path.join(process.cwd(), 'src/data/learning-courses.json');
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(content);
-    }
-  } catch (e) {
-    console.error('Failed to load learning courses data:', e);
-  }
-  return { updatedAt: '', totalCount: 0, courses: [] };
-}
 
 export default function LearningPage() {
   const data = getLearningData();
