@@ -132,7 +132,7 @@ async function generateAndSavePost(targetItem, tierLabel) {
 
   const saved = saveMarkdownPost(fileName, {
     title: plan.frontmatter.title,
-    date: getKSTTimestamp(),
+    date: getKSTDateString() + 'T09:00:00+09:00',
     summary: plan.frontmatter.summary,
     category: plan.frontmatter.category,
     tags: plan.frontmatter.tags,
@@ -381,8 +381,8 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
     const feeText = course.isFree ? '무료' : (course.fee ? `${course.fee}` : '유료 (강의계획서 참조)');
     const postItem = {
       title: course.title,
-      content: `교육기관: ${course.org}, 교육장소: ${course.address} (${course.dong}), 교육기간: ${course.eduPeriod}, 신청기간: ${course.applyPeriod}, 모집정원: ${course.capacity}, 수강료: ${feeText}, 주요대상: ${course.target}, 분야: ${course.category}. 상세 교육내용 및 강의계획: ${course.intro}. 양주시 평생학습 통합플랫폼 뉴런 공식 온라인 접수.`,
-      link: course.applyUrl || 'https://sugang.ull.or.kr',
+      content: `교육기관: ${course.org}, 교육장소: ${course.address} (${course.dong}), 교육기간: ${course.eduPeriod}, 신청기간: ${course.applyPeriod}, 모집정원: ${course.capacity}, 수강료: ${feeText}, 주요대상: ${course.target}, 분야: ${course.category}. 상세 교육내용 및 강의계획: ${course.intro}. 양주시 평생학습관 공식 온라인 접수.`,
+      link: course.applyUrl || 'https://lll.yangju.go.kr',
       sourceId: course.id,
       expiresAt: extractExpiryDate(course.applyPeriod),
       category: '교육·청소년',
