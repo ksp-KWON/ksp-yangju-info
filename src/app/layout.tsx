@@ -59,7 +59,7 @@ export default function RootLayout({
         "url": SITE_URL,
         "logo": {
           "@type": "ImageObject",
-          "url": `${SITE_URL}/images/uijeongbu-logo.png`,
+          "url": `${SITE_URL}/images/yangju-logo.svg`,
         },
         "description": "의정부시 시민을 위한 공공 건강·생활 정보 및 혜택 종합 포털",
       },

@@ -44,7 +44,7 @@ export default function PublicLayout({
               <Link href="/" className="group flex items-center gap-2 sm:gap-2.5 whitespace-nowrap overflow-hidden">
                 <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200 z-10 overflow-hidden">
                   <Image
-                    src="/images/uijeongbu-logo.png"
+                    src="/images/yangju-logo.svg"
                     alt="의정부 행복특별시 로고"
                     fill
                     className="object-contain"
