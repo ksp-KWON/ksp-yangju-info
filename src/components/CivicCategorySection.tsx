@@ -8,7 +8,7 @@ import PremiumCard from '@/components/ui/PremiumCard';
 import PremiumButton from '@/components/ui/PremiumButton';
 import PostCard from '@/components/ui/PostCard';
 import { PostData, PostMeta } from '@/lib/types';
-import { YANGJU_TAXONOMY } from '@/data/yangju-taxonomy';
+import { CIVIC_TAXONOMY } from '@/data/civic-taxonomy';
 
 interface CivicCategorySectionProps {
   posts: (PostMeta | PostData)[];
@@ -56,7 +56,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
 
   // 포스트가 등록된 카테고리를 우선순위 순서대로 정렬하여 표시
   const activeCategories = useMemo(() => {
-    return YANGJU_TAXONOMY.filter((cat) => (categoryPostsMap[cat.name] || []).length > 0).sort((a, b) => {
+    return CIVIC_TAXONOMY.filter((cat) => (categoryPostsMap[cat.name] || []).length > 0).sort((a, b) => {
       const idxA = CATEGORY_ORDER.indexOf(a.name);
       const idxB = CATEGORY_ORDER.indexOf(b.name);
       return (idxA !== -1 ? idxA : 99) - (idxB !== -1 ? idxB : 99);

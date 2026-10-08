@@ -13,14 +13,16 @@ export interface CivicCategoryDefinition {
   name: CivicCategory;
   tagline: string;
   officialUrl: string;
+  icon: AppIconName;
   subCategories: CivicSubCategory[];
 }
 
-export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
+export const CIVIC_TAXONOMY: CivicCategoryDefinition[] = [
   {
     name: '일자리·생활',
     tagline: '취업지원 & 생활민원',
     officialUrl: 'https://www.yangju.go.kr/www/selectBbsNttList.do?key=233&bbsNo=63',
+    icon: 'file-text',
     subCategories: [
       {
         id: 'job-center',
@@ -63,6 +65,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '교통·주차',
     tagline: '공영주차 & 교통정보',
     officialUrl: 'https://www.yangju.go.kr/www/contents.do?key=288',
+    icon: 'car',
     subCategories: [
       {
         id: 'public-parking',
@@ -105,6 +108,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '기업경제·농업',
     tagline: '산단지원 & 영농혜택',
     officialUrl: 'https://www.yangju.go.kr/www/contents.do?key=270',
+    icon: 'bank',
     subCategories: [
       {
         id: 'techno-valley',
@@ -147,6 +151,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '문화·예술',
     tagline: '축제명소 & 시립미술관',
     officialUrl: 'https://www.yangju.go.kr/tour',
+    icon: 'sparkles',
     subCategories: [
       {
         id: 'nari-farm',
@@ -175,6 +180,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '체육·공원',
     tagline: '체육시설 & 수변공원',
     officialUrl: 'https://www.yangju.go.kr/www/contents.do?key=300',
+    icon: 'leaf',
     subCategories: [
       {
         id: 'sports-center',
@@ -203,6 +209,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '청소·환경',
     tagline: '폐기물배출 & 친환경',
     officialUrl: 'https://www.yangju.go.kr/www/contents.do?key=310',
+    icon: 'trash',
     subCategories: [
       {
         id: 'waste-sticker',
@@ -238,6 +245,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '주택·재개발',
     tagline: '신도시청약 & 주거복지',
     officialUrl: 'https://www.yangju.go.kr/www/contents.do?key=320',
+    icon: 'home',
     subCategories: [
       {
         id: 'okjeong-housing',
@@ -273,6 +281,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '재난·민방위',
     tagline: '시민안전 & 비상대피',
     officialUrl: 'https://www.yangju.go.kr/www/contents.do?key=330',
+    icon: 'shield-alert',
     subCategories: [
       {
         id: 'citizen-insurance',
@@ -308,6 +317,7 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     name: '복지·돌봄',
     tagline: '영유아·청년·어르신 복지',
     officialUrl: 'https://www.yangju.go.kr/www/contents.do?key=340',
+    icon: 'heart',
     subCategories: [
       {
         id: 'childcare',
@@ -347,3 +357,9 @@ export const YANGJU_TAXONOMY: CivicCategoryDefinition[] = [
     ],
   },
 ];
+
+export const YANGJU_TAXONOMY = CIVIC_TAXONOMY;
+
+export function getCategoryDefinition(categoryName: string): CivicCategoryDefinition | undefined {
+  return CIVIC_TAXONOMY.find((c) => c.name === categoryName);
+}

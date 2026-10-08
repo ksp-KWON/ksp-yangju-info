@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import PostCard from '@/components/ui/PostCard';
 import { PostData, PostMeta } from '@/lib/types';
 import { CIVIC_CATEGORIES, getCategoryIcon } from '@/lib/constants';
-import { getCategoryDefinition } from '@/data/uijeongbu-taxonomy';
+import { getCategoryDefinition } from '@/data/civic-taxonomy';
 import AppIcon from '@/components/ui/AppIcon';
 import PageHeaderBanner from '@/components/ui/PageHeaderBanner';
 import PremiumCard from '@/components/ui/PremiumCard';

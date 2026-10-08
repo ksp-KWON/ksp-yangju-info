@@ -14,7 +14,7 @@ import Link from 'next/link';
 import SidebarTagMore from './SidebarTagMore';
 import PremiumCard from '@/components/ui/PremiumCard';
 import AppIcon from '@/components/ui/AppIcon';
-import { UIJEONGBU_TAXONOMY } from '@/data/uijeongbu-taxonomy';
+import { CIVIC_TAXONOMY } from '@/data/civic-taxonomy';
 import { PostData, PostMeta } from '@/lib/types';
 
 interface SidebarContentProps {
@@ -143,7 +143,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
 
         {/* 9대 행정 분야 아코디언 리스트 */}
         <div className="divide-y divide-gray-100 dark:divide-zinc-800/60">
-          {UIJEONGBU_TAXONOMY.map((cat) => {
+          {CIVIC_TAXONOMY.map((cat) => {
             const isOpen = openCategory === cat.name;
 
             return (
