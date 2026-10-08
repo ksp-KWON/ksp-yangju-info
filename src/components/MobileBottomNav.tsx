@@ -90,7 +90,7 @@ const LEARNING_ITEMS: MenuCardProps[] = [
     watermarkIcon: 'book',
   },
   {
-    href: 'https://yangju.gseek.kr',
+    href: 'https://www.yangju.go.kr/edu/index.do',
     icon: <AppIcon name="landmark" size={20} strokeWidth={2.2} />,
     title: '양주 평생학습포털 (공식)',
     themeColor: 'yellow',

@@ -48,7 +48,7 @@ const EXTERNAL_QUICK_LINKS = [
   },
   {
     href: 'https://www.yangju.go.kr/www/contents.do?key=390',
-    title: '동 행정복지센터',
+    title: '읍·면·동 행정복지센터',
     badge: '생활민원',
     icon: 'landmark' as const,
     containerClass: 'flex items-center justify-between gap-2 p-2 bg-sky-50/80 hover:bg-sky-100/80 dark:bg-sky-950/40 dark:hover:bg-sky-900/50 border border-sky-200/80 dark:border-sky-800/80 transition-colors group/csc',
@@ -57,7 +57,7 @@ const EXTERNAL_QUICK_LINKS = [
     badgeClass: 'text-sky-700 dark:text-sky-300 bg-sky-100/70 dark:bg-sky-900/50',
   },
   {
-    href: 'https://yangju.gseek.kr',
+    href: 'https://www.yangju.go.kr/edu/index.do',
     title: '평생학습포털',
     badge: '시민강좌',
     icon: 'book' as const,
