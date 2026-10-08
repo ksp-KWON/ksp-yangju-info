@@ -112,7 +112,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         addressRegion: '경기도',
         addressCountry: 'KR',
       },
-      telephone: course.tel || '031-826-9988',
+      telephone: course.tel || '031-8082-7390',
     },
     offers: {
       '@type': 'Offer',
@@ -218,7 +218,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
             <span className="text-zinc-400 block mb-1">문의처</span>
-            <strong className="text-sm text-zinc-900 dark:text-zinc-100 block">{course.tel || '031-826-9988'}</strong>
+            <strong className="text-sm text-zinc-900 dark:text-zinc-100 block">{course.tel || '031-8082-7390'}</strong>
             <span className="text-zinc-500 mt-0.5 block">양주도시교육재단 평생학습원</span>
           </div>
         </div>

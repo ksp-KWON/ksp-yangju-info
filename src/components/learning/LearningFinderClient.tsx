@@ -41,15 +41,15 @@ interface UniquePlace {
 }
 
 type QuickFilter = 'all' | 'free' | 'night' | 'child' | 'senior';
-type DongFilter = 'all' | 'ujb' | 'howon' | 'singok' | 'songsan' | 'heungseon';
+type DongFilter = 'all' | 'okjeong' | 'deokjeong' | 'baekseok' | 'gwangsa' | 'jangheung';
 
 const DONG_GROUPS: Record<DongFilter, { label: string; dongs: string[] }> = {
-  all: { label: '전체 동', dongs: [] },
-  ujb: { label: '양주1·2동', dongs: ['양주1동', '양주2동', '양주동'] },
-  howon: { label: '호원1·2동', dongs: ['호원1동', '호원2동', '호원동'] },
-  singok: { label: '신곡·장암동', dongs: ['신곡1동', '신곡2동', '신곡동', '장암동'] },
-  songsan: { label: '송산·민락·고산', dongs: ['송산1동', '송산2동', '송산3동', '고산동', '자금동'] },
-  heungseon: { label: '흥선·가능·녹양', dongs: ['흥선동', '가능동', '녹양동'] },
+  all: { label: '전체 읍·면·동', dongs: [] },
+  okjeong: { label: '옥정·회천', dongs: ['옥정동', '회천동', '회정동'] },
+  deokjeong: { label: '덕정·덕계', dongs: ['덕정동', '덕계동', '고암동', '산북동'] },
+  baekseok: { label: '백석·광적', dongs: ['백석읍', '광적면'] },
+  gwangsa: { label: '고읍·유양', dongs: ['광사동', '만송동', '유양동', '남방동'] },
+  jangheung: { label: '장흥·남면·은현', dongs: ['장흥면', '남면', '은현면'] },
 };
 
 export default function LearningFinderClient({ initialCourses, updatedAt }: LearningFinderClientProps) {

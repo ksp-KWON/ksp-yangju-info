@@ -1,5 +1,5 @@
 # ==============================================================================
-# Cloudflare Pages Global Standard 301 & Rewrite Rules - Uijeongbusim (SSOT)
+# Cloudflare Pages Global Standard 301 & Rewrite Rules - Yangjuin (SSOT)
 # ==============================================================================
 
 # [Rule 1] Next.js App Router Tree TXT Auto Rewrite (Fix 404s to 200 OK)

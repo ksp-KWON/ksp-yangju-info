@@ -128,7 +128,7 @@ const CIVIC_ITEMS: MenuCardProps[] = [
     title: '양주 문화관광 포털',
     themeColor: 'indigo',
     badgeText: '축제·명소',
-    description: '양주 대표 축제, 소풍길, 부대찌개거리, 명소 및 주말 나들이 명소',
+    description: '양주 대표 축제, 나리농원 천일홍, 회암사지, 옥정호수공원, 명소 및 주말 나들이 명소',
     buttonText: '문화관광 포털 방문',
     watermarkIcon: 'compass',
   },
