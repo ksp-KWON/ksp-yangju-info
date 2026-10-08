@@ -50,6 +50,11 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/fetch-public-data.js || true
 
+      - name: 평생학습 강좌 캐시 갱신
+        timeout-minutes: 5
+        continue-on-error: true
+        run: node scripts/build-learning-cache.js
+
       - name: 블로그 자동글쓰기
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
