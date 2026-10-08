@@ -134,7 +134,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
       <PageHeaderBanner
         badgeTone="sky"
         badgeIcon="shield-check"
-        badgeText="양주시 평생학습 통합플랫폼 뉴런 공식 연동"
+        badgeText="양주시 평생학습 통합플랫폼 공식 연동"
         title="양주시 실시간 평생학습 강좌 지도"
         description="도서관·청소년수련관·주민자치센터에서 열리는 지금 신청 가능한 강좌를 1초 만에 검색하고 온라인으로 바로 신청하세요."
         watermarkIcon="book"

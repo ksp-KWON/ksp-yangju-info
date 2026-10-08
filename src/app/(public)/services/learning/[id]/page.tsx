@@ -268,7 +268,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
       {/* ── [구역 5] 하단 대형 공식 신청 배너 ── */}
       <div className="p-6 bg-gradient-to-r from-blue-900 via-indigo-950 to-zinc-950 text-white rounded-none border border-blue-800 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold text-blue-300 block mb-1">양주시 공식 뉴런 플랫폼</span>
+          <span className="text-xs font-bold text-blue-300 block mb-1">양주시 공식 평생학습 포털</span>
           <h4 className="text-base sm:text-lg font-extrabold text-white">
             지금 공식 사이트에서 바로 수강신청을 완료하세요
           </h4>
