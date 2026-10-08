@@ -59,7 +59,7 @@ export default function PublicLayout({
                   양주 생활정보
                 </span>
                 <span className="hidden lg:inline-flex items-center px-2 py-0.5 ml-1.5 bg-zinc-100 dark:bg-zinc-800 text-[10px] font-extrabold text-zinc-900 dark:text-zinc-100 tracking-wider uppercase border border-zinc-200 dark:border-zinc-700 rounded-none">
-                  Uijeongbu
+                  Yangju
                 </span>
               </Link>
             </div>

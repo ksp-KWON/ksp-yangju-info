@@ -265,10 +265,10 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
           </p>
           <div className="pt-2">
             <Link
-              href="/blog/2026-09-24-uijeongbu-lifelong-learning-enrollment-guide"
+              href="https://lll.yangju.go.kr"
               className="inline-flex items-center gap-1 font-bold text-[var(--google-blue)] dark:text-[#8ab4f8] hover:underline"
             >
-              <span>2026 수강신청 방법 및 수강료 감면 자격 총정리 가이드 읽기</span>
+              <span>양주시 평생학습포털 공식 수강신청 및 감면 안내 바로가기</span>
               <AppIcon name="chevron-right" size={14} />
             </Link>
           </div>

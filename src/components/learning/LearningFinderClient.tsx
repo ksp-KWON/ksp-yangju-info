@@ -147,10 +147,10 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
           </div>
         </div>
         <Link
-          href="/blog/2026-09-24-uijeongbu-lifelong-learning-enrollment-guide"
+          href="https://lll.yangju.go.kr"
           className="inline-flex items-center gap-1 text-xs font-bold text-[var(--google-blue)] dark:text-[#8ab4f8] hover:underline shrink-0"
         >
-          <span>2026 수강신청 가이드 보기</span>
+          <span>양주시 평생학습포털 바로가기</span>
           <AppIcon name="chevron-right" size={14} />
         </Link>
       </div>

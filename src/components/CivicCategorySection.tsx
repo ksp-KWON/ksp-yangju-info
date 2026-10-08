@@ -101,7 +101,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
 
   return (
     <div className="space-y-10 sm:space-y-12">
-      {/* 🚀 [최상단] 최신 의정부 생활 브리핑 위젯 (보상스쿨 Google Blue 스타일) */}
+      {/* 🚀 [최상단] 최신 양주 생활 브리핑 위젯 (보상스쿨 Google Blue 스타일) */}
       {latestPosts.length > 0 && (
         <PremiumCard borderColor="blue" hoverEffect={false} watermarkIcon="sparkles" className="!p-0 overflow-hidden">
           <div className="p-4 sm:p-5 bg-gradient-to-r from-blue-50/90 via-blue-50/30 to-transparent dark:from-blue-900/30 dark:via-blue-900/10 dark:to-transparent border-b border-blue-100 dark:border-blue-900/40 flex items-center justify-between gap-3 relative z-10">
@@ -112,7 +112,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-[15px] sm:text-[16px] font-extrabold text-[var(--google-blue)] dark:text-[#8ab4f8] tracking-tight">
-                    실시간 의정부 생활 핵심 브리핑
+                    실시간 양주 생활 핵심 브리핑
                   </span>
                   <span className="text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 px-1.5 py-0.2 font-bold uppercase tracking-wider">
                     NEW
@@ -319,7 +319,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
                       </h4>
                       <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-0.5 leading-relaxed">
                         {currentSubDef?.description ||
-                          '의정부시청 공식 누리집을 통해 실시간 행정 소식과 신청 절차를 확인하실 수 있습니다.'}
+                          '양주시청 공식 누리집을 통해 실시간 행정 소식과 신청 절차를 확인하실 수 있습니다.'}
                       </p>
                     </div>
                   </div>

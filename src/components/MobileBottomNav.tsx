@@ -133,11 +133,11 @@ const CIVIC_ITEMS: MenuCardProps[] = [
     watermarkIcon: 'compass',
   },
   {
-    href: 'tel:031-828-2114',
+    href: 'tel:031-8082-2114',
     icon: <AppIcon name="phone" size={20} strokeWidth={2.2} />,
     title: '양주시 대표 콜센터',
     themeColor: 'green',
-    badgeText: '031-828-2114',
+    badgeText: '031-8082-2114',
     description: '시정 문의, 생활 불편 신고, 당직실 연결을 위한 원스톱 전화 연결',
     buttonText: '대표 콜센터 즉시 전화 걸기',
     watermarkIcon: 'phone',

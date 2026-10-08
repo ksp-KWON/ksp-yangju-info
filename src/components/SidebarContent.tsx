@@ -329,10 +329,10 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
           시정 문의 및 생활 민원 안내 (평일 09:00 ~ 18:00)
         </p>
         <a
-          href="tel:031-828-1234"
+          href="tel:031-8082-2114"
           className="mt-2.5 inline-flex items-center justify-between w-full p-2 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 text-xs font-bold text-zinc-950 dark:text-white transition-colors"
         >
-          <span>031-828-1234</span>
+          <span>031-8082-2114</span>
           <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-normal">전화연결 &gt;</span>
         </a>
       </div>

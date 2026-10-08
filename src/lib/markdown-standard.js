@@ -1,6 +1,6 @@
 /**
  * src/lib/markdown-standard.js
- * 의정부 건강·생활 정보 포털 전사 단일 표준 마크다운 정규화 엔진 (Single Source of Truth)
+ * 양주 건강·생활 정보 포털 전사 단일 표준 마크다운 정규화 엔진 (Single Source of Truth)
  * 
  * [헌법 원칙 준수: 표준 · 범용 · 콤팩트 · 통합 · 공유 · 공통]
  * - 순수 Universal JavaScript + JSDoc 표준: Node.js CLI 및 Next.js 런타임 양방향 100% 호환
@@ -51,7 +51,7 @@ function normalizeFrontmatter(data = {}) {
       .trim();
   }
 
-  // 1-2. 의정부시 공식 9대 분야 카테고리 정규화
+  // 1-2. 양주시 공식 9대 분야 카테고리 정규화
   if (cleanData.category) {
     const cats = Array.isArray(cleanData.category) ? cleanData.category : [cleanData.category];
     const catStr = cats.join(' ');
@@ -210,7 +210,7 @@ function normalizeMarkdownBody(rawBody, sourceLink = '') {
   // 3-4. 수묵화 시그니처 박스 표준화
   body = body.replace(
     />\s*###\s*(?:의정부\s*생활\s*꿀팁|의정부\s*생활포털|행정\s*인사이트|실무\s*팁|실무TIP)[^\n]*/gi,
-    '> ### 의정부 생활 꿀팁 & 행정 인사이트'
+    '> ### 양주 생활 꿀팁 & 행정 인사이트'
   );
 
   // 3-5. 이모지 제거 (헤딩)

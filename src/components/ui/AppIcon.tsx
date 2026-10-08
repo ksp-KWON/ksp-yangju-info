@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * AppIconName: 의정부 포털 전역에서 사용되는 W3C 표준 SVG 라인 심볼 키 유니온
+ * AppIconName: 양주 포털 전역에서 사용되는 W3C 표준 SVG 라인 심볼 키 유니온
  */
 export type AppIconName =
   // 공통 네비게이션 & UI
