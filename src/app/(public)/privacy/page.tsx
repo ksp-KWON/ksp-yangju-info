@@ -4,7 +4,7 @@ import PremiumHeading from '@/components/ui/PremiumHeading';
 
 export const metadata: Metadata = {
   title: '개인정보처리방침',
-  description: '의정부 건강·생활 정보 포털의 이용자 개인정보 보호 및 처리 방침입니다.',
+  description: '양주 건강·생활 정보 포털의 이용자 개인정보 보호 및 처리 방침입니다.',
   alternates: {
     canonical: '/privacy',
   },
@@ -14,7 +14,7 @@ export default function PrivacyPage() {
   return (
     <LegalPageLayout breadcrumbTitle="개인정보처리방침" pageTitle="개인정보처리방침">
       <p>
-            &quot;의정부 건강·생활 정보 포털&quot;(이하 &quot;사이트&quot;)은 이용자의 개인정보를 소중히 다루며, 「개인정보 보호법」 등 관련 법규를 철저히 준수합니다.
+            &quot;양주 건강·생활 정보 포털&quot;(이하 &quot;사이트&quot;)은 이용자의 개인정보를 소중히 다루며, 「개인정보 보호법」 등 관련 법규를 철저히 준수합니다.
           </p>
           <p>
             본 사이트는 별도의 회원가입 없이 모든 공공데이터 혜택 및 지도 정보를 자유롭게 열람할 수 있으며, <strong>이용자를 식별할 수 있는 민감한 개인정보를 일절 수집하거나 저장하지 않습니다.</strong>

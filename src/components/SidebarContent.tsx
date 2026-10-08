@@ -3,10 +3,10 @@
 /**
  * SidebarContent.tsx
  * 사이드바 컴포넌트 (Client Component)
- * - 1. 의정부 생활 퀵메뉴
+ * - 1. 양주 생활 퀵메뉴
  * - 2. 실시간 인기 키워드 태그
  * - 3. 보상스쿨 무료 보상 진단 비즈니스 배너
- * - 4. 의정부시 대표 콜센터
+ * - 4. 양주시 대표 콜센터
  */
 
 import React, { useState } from 'react';
@@ -27,7 +27,7 @@ const INITIAL_TAG_COUNT = 6;
 
 const EXTERNAL_QUICK_LINKS = [
   {
-    href: 'https://www.ui4u.go.kr/tour/main.do',
+    href: 'https://www.yangju.go.kr/tour',
     title: '문화관광 포털',
     badge: '축제·명소',
     icon: 'compass' as const,
@@ -37,8 +37,8 @@ const EXTERNAL_QUICK_LINKS = [
     badgeClass: 'text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-900/50',
   },
   {
-    href: 'https://www.ui4u.go.kr/health/main.do',
-    title: '의정부시 보건소',
+    href: 'https://health.yangju.go.kr',
+    title: '양주시 보건소',
     badge: '예방·진료',
     icon: 'heart' as const,
     containerClass: 'flex items-center justify-between gap-2 p-2 bg-rose-50/80 hover:bg-rose-100/80 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200/80 dark:border-rose-800/80 transition-colors group/health',
@@ -47,7 +47,7 @@ const EXTERNAL_QUICK_LINKS = [
     badgeClass: 'text-rose-700 dark:text-rose-300 bg-rose-100/70 dark:bg-rose-900/50',
   },
   {
-    href: 'https://www.ui4u.go.kr/cscportal/main.do',
+    href: 'https://www.yangju.go.kr/town/index.do',
     title: '동 행정복지센터',
     badge: '생활민원',
     icon: 'landmark' as const,
@@ -57,7 +57,7 @@ const EXTERNAL_QUICK_LINKS = [
     badgeClass: 'text-sky-700 dark:text-sky-300 bg-sky-100/70 dark:bg-sky-900/50',
   },
   {
-    href: 'https://www.ull.or.kr/lifeedu/index.do',
+    href: 'https://yangju.gseek.kr',
     title: '평생학습포털',
     badge: '시민강좌',
     icon: 'book' as const,
@@ -81,14 +81,14 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
 
   return (
     <div className="space-y-4">
-      {/* ── 1. 의정부 시민 퀵서비스 허브 (생활 퀵메뉴 아코디언) ── */}
+      {/* ── 1. 양주 시민 퀵서비스 허브 (생활 퀵메뉴 아코디언) ── */}
       <PremiumCard borderColor="default" hoverEffect={false} watermarkIcon="compass" className="!p-4 sm:!p-5">
         {/* 카드 헤더 */}
         <div className="flex items-center justify-between min-w-0 gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
           <div className="flex items-center gap-2">
             <AppIcon name="compass" size={16} strokeWidth={2.5} className="text-zinc-900 dark:text-zinc-100" />
             <h3 className="text-xs sm:text-sm font-extrabold text-zinc-950 dark:text-white tracking-tight">
-              의정부 생활 퀵메뉴
+              양주 생활 퀵메뉴
             </h3>
           </div>
           <span className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-bold px-1.5 py-0.5 border border-zinc-200 dark:border-zinc-700">
@@ -96,7 +96,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
           </span>
         </div>
 
-        {/* 의정부 5대 핵심 생활 퀵메뉴 (가로형 컬러 배너 스택) */}
+        {/* 양주 5대 핵심 생활 퀵메뉴 (가로형 컬러 배너 스택) */}
         <div className="space-y-1.5 mb-3">
           {/* 1. 24시간 응급실·병원 지도 (에메랄드) */}
           <Link
@@ -226,14 +226,14 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
         </div>
       </PremiumCard>
 
-      {/* ── 2. 주목할 의정부 소식 (보상스쿨 인기 칼럼 스타일 벤치마킹) ── */}
+      {/* ── 2. 주목할 양주 소식 (보상스쿨 인기 칼럼 스타일 벤치마킹) ── */}
       {recentPosts.length > 0 && (
         <PremiumCard borderColor="blue" hoverEffect={false} watermarkIcon="file-text" className="!p-4 sm:!p-5">
           <div className="flex items-center justify-between min-w-0 gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
             <div className="flex items-center gap-2">
               <AppIcon name="file-text" size={16} strokeWidth={2.5} className="text-[var(--google-blue)]" />
               <h3 className="text-xs sm:text-sm font-extrabold text-zinc-950 dark:text-white tracking-tight">
-                주목할 의정부 소식
+                주목할 양주 소식
               </h3>
             </div>
             <Link
@@ -294,7 +294,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
         </PremiumCard>
       )}
 
-      {/* ── 4. 보상스쿨 연계 : 의정부 시민 무료 사고·상해 보상 진단 ── */}
+      {/* ── 4. 보상스쿨 연계 : 양주 시민 무료 사고·상해 보상 진단 ── */}
       <div className="p-4 border border-blue-200 dark:border-blue-900/50 bg-gradient-to-br from-blue-900 via-indigo-950 to-zinc-950 text-white shadow-sm relative overflow-hidden group">
         <div className="flex items-center justify-between mb-1.5">
           <div className="flex items-center gap-1.5">
@@ -319,11 +319,11 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
         </a>
       </div>
 
-      {/* ── 5. 의정부시 공식 행정 직통 안내 배너 ── */}
+      {/* ── 5. 양주시 공식 행정 직통 안내 배너 ── */}
       <div className="p-4 border border-gray-200/90 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-sm">
         <div className="flex items-center gap-2 mb-1">
           <AppIcon name="phone" size={14} strokeWidth={2.5} className="text-zinc-700 dark:text-zinc-300" />
-          <span className="text-xs font-extrabold text-zinc-950 dark:text-white">의정부시 대표 콜센터</span>
+          <span className="text-xs font-extrabold text-zinc-950 dark:text-white">양주시 대표 콜센터</span>
         </div>
         <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
           시정 문의 및 생활 민원 안내 (평일 09:00 ~ 18:00)

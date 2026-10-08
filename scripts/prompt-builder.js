@@ -1,6 +1,6 @@
 /**
  * scripts/prompt-builder.js
- * 의정부 건강·생활 포털 마스터 헌법(.agents/AGENTS.md) 준수 AI 프롬프트 생성 엔진
+ * 양주 건강·생활 포털 마스터 헌법(.agents/AGENTS.md) 준수 AI 프롬프트 생성 엔진
  * - 원천 데이터 절대 준수 및 사실 기반 시정 안내
  * - 수묵화 5대 묵향 농담 명도 시스템 및 순수 텍스트 미니멀리즘 (No Emoji in Markdown)
  * - 번역투 제거 및 궁극의 전문가 휴머나이징(Humanizing) 표준
@@ -10,7 +10,7 @@
 
 const STRICT_RULES = `
 ## 1. 사전 분석 및 분량 계획 (Chain-of-Thought) - 필수 수행
-- 본문 마크다운 작성을 시작하기 전에 반드시 JSON의 \`thoughtProcess\` 속성에 의정부 시민의 실생활 혜택 관점과 분석 내용을 먼저 서술하여 기획하십시오.
+- 본문 마크다운 작성을 시작하기 전에 반드시 JSON의 \`thoughtProcess\` 속성에 양주 시민의 실생활 혜택 관점과 분석 내용을 먼저 서술하여 기획하십시오.
 - 분석을 바탕으로 가장 알찬 고밀도의 공공 생활 정보 칼럼을 자율적으로 구성하십시오.
 
 ## 2. Heading 규칙 (H1 사용 금지, H2~H4 자율 계층화)
@@ -76,12 +76,12 @@ const PLAN_SCHEMA = {
   properties: {
     thoughtProcess: { 
       type: 'STRING', 
-      description: '의정부 시민의 실생활 편의와 검색 니즈를 충족시키기 위해 어떤 관점에서 기획했는지 서술한 연쇄 사고 (Chain-of-Thought)' 
+      description: '양주 시민의 실생활 편의와 검색 니즈를 충족시키기 위해 어떤 관점에서 기획했는지 서술한 연쇄 사고 (Chain-of-Thought)' 
     },
     frontmatter: {
       type: 'OBJECT',
       properties: {
-        title: { type: 'STRING', description: 'SEO 최적화된 명확하고 신뢰성 있는 제목 (예: "2026 의정부시 청년 기본소득 신청 자격 및 지급 일정 완벽 가이드")' },
+        title: { type: 'STRING', description: 'SEO 최적화된 명확하고 신뢰성 있는 제목 (예: "2026 양주시 청년 기본소득 신청 자격 및 지급 일정 완벽 가이드")' },
         summary: { type: 'STRING', description: '구글 검색 스니펫에 노출될 150자 이내의 핵심 요약문' },
         category: { type: 'STRING', description: '복지·지원금|축제·나들이|생활·민원|병원·약국|일자리·소상공인 중 택 1' },
         tags: { type: 'ARRAY', items: { type: 'STRING' }, description: '관련 해시태그 3~5개' }
@@ -109,14 +109,14 @@ const CONTENT_SCHEMA = {
 
 function buildPlanPrompt(item) {
   const { link: _link, ...cleanItem } = item;
-  return `당신은 "의정부 건강·생활 정보 포털"의 수석 에디터입니다.
+  return `당신은 "양주 건강·생활 정보 포털 양주인"의 수석 에디터입니다.
 주어진 공공 데이터를 바탕으로 구글 SEO 최적화된 블로그 포스트의 기획안(메타데이터)을 작성하십시오.
 
 [공공 데이터 정보]
 ${JSON.stringify(cleanItem, null, 2)}
 
 [기획 원칙]
-단순히 정보를 나열하지 말고, 의정부 시민이 검색을 통해 이 글을 발견했을 때 "의정부 생활에 꼭 필요한 핵심 혜택"임을 즉시 알 수 있도록 명확하고 신뢰성 높은 제목과 요약을 기획하세요. 원천에 없는 가공의 사실이나 혜택을 유추하여 제목이나 요약에 포함하지 마십시오.
+단순히 정보를 나열하지 말고, 양주 시민이 검색을 통해 이 글을 발견했을 때 "양주 생활에 꼭 필요한 핵심 혜택"임을 즉시 알 수 있도록 명확하고 신뢰성 높은 제목과 요약을 기획하세요. 원천에 없는 가공의 사실이나 혜택을 유추하여 제목이나 요약에 포함하지 마십시오.
 
 반드시 지정된 JSON 스키마를 따르는 순수 JSON 객체여야 합니다.`;
 }
@@ -124,10 +124,10 @@ ${JSON.stringify(cleanItem, null, 2)}
 function buildContentPrompt(item, plan, angle) {
   const { link: _link, ...cleanItem } = item;
   return `# Role
-당신은 의정부시의 시정 정책, 복지 지원금, 응급의료, 문화 행사를 사실에 입각하여 시민들에게 정확하게 전달하는 전문 공공 에디터입니다.
+당신은 양주시의 시정 정책, 복지 지원금, 응급의료, 문화 행사를 사실에 입각하여 시민들에게 정확하게 전달하는 전문 공공 에디터입니다.
 
 # Objective
-제공된 공공 데이터와 기획안을 바탕으로, 아래의 의정부 포털 글쓰기 헌법 규칙을 완벽히 만족하는 칼럼을 마크다운 형식으로 작성하십시오.
+제공된 공공 데이터와 기획안을 바탕으로, 아래의 양주 포털 글쓰기 헌법 규칙을 완벽히 만족하는 칼럼을 마크다운 형식으로 작성하십시오.
 
 ## 작성 원칙
 - **전문 에디터 톤**: 정중하고 신뢰할 수 있는 어조(~합니다, ~안내해 드립니다).
@@ -135,7 +135,7 @@ function buildContentPrompt(item, plan, angle) {
 - **원천 데이터 범위 내 작성** : 분량을 억지로 늘리기 위해 메인 섹션을 억지로 만들거나 가공의 사실을 추가하지 마십시오. 원천에 존재하는 팩트만으로 간결하고 정확하게 작성하십시오.
 - **미포함 섹션 제외** : 원천에 근거가 없는 '생활 꿀팁', '대중교통 연계', '자주 묻는 질문(FAQ)' 섹션은 작성하지 마십시오.
 
-# ⚖️ 의정부 포털 공통 글쓰기 헌법 규칙 (STRICT WRITING RULES)
+# ⚖️ 양주 포털 공통 글쓰기 헌법 규칙 (STRICT WRITING RULES)
 ${STRICT_RULES}
 
 [원본 공공 데이터]

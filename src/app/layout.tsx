@@ -6,11 +6,11 @@ import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID } from "@/lib/constants";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "의정부 건강·생활 정보 포털 | 응급실·건강·생활 안내",
-    template: "%s | 의정부 건강·생활 정보 포털",
+    default: "양주 건강·생활 정보 포털 | 응급실·건강·생활 안내",
+    template: "%s | 양주 건강·생활 정보 포털",
   },
-  description: "의정부시 응급실 위치·전화 안내와 국가건강검진, 민원 등 생활 가이드를 정리합니다.",
-  keywords: ["의정부", "의정부응급실", "의정부건강검진", "의정부민원", "의정부심"],
+  description: "양주시 응급실 위치·전화 안내와 국가건강검진, 민원 등 생활 가이드를 정리합니다.",
+  keywords: ["양주", "양주응급실", "양주건강검진", "양주민원", "양주인"],
   authors: [{ name: SITE_NAME, url: `${SITE_URL}/about` }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: "의정부 건강·생활 정보 포털 | 응급실·건강·생활 안내",
-    description: "의정부시 응급실 위치·전화 안내와 국가건강검진, 민원 등 생활 가이드를 정리합니다.",
+    title: "양주 건강·생활 정보 포털 | 응급실·건강·생활 안내",
+    description: "양주시 응급실 위치·전화 안내와 국가건강검진, 민원 등 생활 가이드를 정리합니다.",
     url: SITE_URL,
     siteName: SITE_NAME,
     locale: "ko_KR",
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "의정부 건강·생활 정보 포털",
-    description: "의정부시 응급실 안내와 건강·생활 가이드",
+    title: "양주 건강·생활 정보 포털",
+    description: "양주시 응급실 안내와 건강·생활 가이드",
   },
 };
 
@@ -61,7 +61,7 @@ export default function RootLayout({
           "@type": "ImageObject",
           "url": `${SITE_URL}/images/yangju-logo.svg`,
         },
-        "description": "의정부시 시민을 위한 공공 건강·생활 정보 및 혜택 종합 포털",
+        "description": "양주시 시민을 위한 공공 건강·생활 정보 및 혜택 종합 포털 양주인",
       },
       {
         "@type": "WebSite",

@@ -73,13 +73,13 @@ export async function generateMetadata({ params }: CoursePageProps): Promise<Met
   }
 
   return {
-    title: `${course.title} - 수강신청·교육일정·장소 안내 | 의정부 건강·생활 정보 포털`,
+    title: `${course.title} - 수강신청·교육일정·장소 안내 | 양주 건강·생활 정보 포털`,
     description: `${course.org}(${course.dong})에서 진행되는 ${course.title} 강좌의 교육기간(${course.eduPeriod}), 수강료(${course.fee || '무료'}), 모집인원(${course.capacity}), 주차별 커리큘럼 및 신청 방법입니다.`,
     alternates: {
       canonical: `${SITE_URL}/services/learning/${course.id}`,
     },
     openGraph: {
-      title: `${course.title} | 의정부시 평생학습 실시간 강좌`,
+      title: `${course.title} | 양주시 평생학습 실시간 강좌`,
       description: `${course.org} · ${course.eduPeriod} · 신청기간: ${course.applyPeriod}`,
       url: `${SITE_URL}/services/learning/${course.id}`,
       type: 'article',
@@ -101,14 +101,14 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
     '@context': 'https://schema.org',
     '@type': 'Course',
     name: course.title,
-    description: course.intro || `${course.org}에서 진행되는 의정부시 평생학습 강좌`,
+    description: course.intro || `${course.org}에서 진행되는 양주시 평생학습 강좌`,
     provider: {
       '@type': 'EducationalOrganization',
       name: course.org,
       address: {
         '@type': 'PostalAddress',
         streetAddress: course.address,
-        addressLocality: '의정부시',
+        addressLocality: '양주시',
         addressRegion: '경기도',
         addressCountry: 'KR',
       },
@@ -219,7 +219,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
             <span className="text-zinc-400 block mb-1">문의처</span>
             <strong className="text-sm text-zinc-900 dark:text-zinc-100 block">{course.tel || '031-826-9988'}</strong>
-            <span className="text-zinc-500 mt-0.5 block">의정부도시교육재단 평생학습원</span>
+            <span className="text-zinc-500 mt-0.5 block">양주도시교육재단 평생학습원</span>
           </div>
         </div>
       </PremiumCard>
@@ -240,8 +240,8 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         ) : (
           <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed space-y-3">
             <p>
-              본 강좌는 <strong>{course.org}</strong>에서 진행되는 의정부시 평생학습 정규/수시 특화 프로그램입니다.
-              의정부 시민 누구나 참여할 수 있으며, 선착순 인터넷 접수를 통해 등록이 진행됩니다.
+              본 강좌는 <strong>{course.org}</strong>에서 진행되는 양주시 평생학습 정규/수시 특화 프로그램입니다.
+              양주 시민 누구나 참여할 수 있으며, 선착순 인터넷 접수를 통해 등록이 진행됩니다.
             </p>
             <p>
               자세한 주차별 강의계획서 및 준비물 세부 사항은 공식 신청 페이지의 첨부파일(강의계획서.hwp)에서 직접 확인하실 수 있습니다.
@@ -252,7 +252,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
       {/* ── [구역 4] 수강료 감면 및 수강 팁 (보상스쿨 W3C 박스) ── */}
       <CommonBox
-        title="의정부시 평생학습 수강료 감면 및 신청 안내"
+        title="양주시 평생학습 수강료 감면 및 신청 안내"
         tone="blue"
         icon={<AppIcon name="shield-check" size={16} />}
       >
@@ -278,7 +278,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
       {/* ── [구역 5] 하단 대형 공식 신청 배너 ── */}
       <div className="p-6 bg-gradient-to-r from-blue-900 via-indigo-950 to-zinc-950 text-white rounded-none border border-blue-800 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold text-blue-300 block mb-1">의정부시 공식 뉴런 플랫폼</span>
+          <span className="text-xs font-bold text-blue-300 block mb-1">양주시 공식 뉴런 플랫폼</span>
           <h4 className="text-base sm:text-lg font-extrabold text-white">
             지금 공식 사이트에서 바로 수강신청을 완료하세요
           </h4>

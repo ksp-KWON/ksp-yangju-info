@@ -1,6 +1,6 @@
 /**
  * scripts/generate-blog-post.js
- * 의정부 건강·생활 정보 포털 [공공데이터 자동 포스팅 파이프라인 엔진]
+ * 양주 건강·생활 정보 포털 [공공데이터 자동 포스팅 파이프라인 엔진]
  * 
  * 헌법 준수 (.agents/AGENTS.md)
  * Tier 1: 경기24 공공데이터 포털 API (신규 복지·지원금 공고 최우선 포스팅)
@@ -148,10 +148,10 @@ function filterTier1Candidates(queue) {
   });
 }
 
-// ── [Tier 1] 의정부시청 공식 RSS 최우선 포스팅 ─────────────────────
+// ── [Tier 1] 양주시청 공식 RSS 최우선 포스팅 ─────────────────────
 async function runTier1CityRss(limit = MAX_POSTS_PER_RUN) {
   if (limit <= 0 || totalContentCalls >= MAX_CONTENT_CALLS_PER_RUN) return { attempted: 0, published: [] };
-  console.log('\n[Tier 1] 의정부시청 공식 RSS 미발행 항목 검색 중...');
+  console.log('\n[Tier 1] 양주시청 공식 RSS 미발행 항목 검색 중...');
   if (!fs.existsSync(CITY_RSS_PATH)) {
     console.log('  -> city-rss.json 파일이 없습니다.');
     return { attempted: 0, published: [] };
@@ -259,7 +259,7 @@ async function runTier2LocalInfo(limit = MAX_POSTS_PER_RUN) {
   return { attempted: pending.length, published };
 }
 
-// ── [Tier 3] 의정부 평생학습 실시간 강좌(learning-courses.json) 자동 포스팅 ───
+// ── [Tier 3] 양주 평생학습 실시간 강좌(learning-courses.json) 자동 포스팅 ───
 const LEARNING_COURSES_PATH = path.join(process.cwd(), 'src/data/learning-courses.json');
 
 /**
@@ -316,7 +316,7 @@ function isQualityCivicCourse(course) {
 
 async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
   if (limit <= 0) return { attempted: 0, published: [] };
-  console.log('\n[Tier 3] 의정부 평생학습 실시간 강좌 미발행 항목 검색 중...');
+  console.log('\n[Tier 3] 양주 평생학습 실시간 강좌 미발행 항목 검색 중...');
   if (!fs.existsSync(LEARNING_COURSES_PATH)) {
     console.log('  -> learning-courses.json 파일이 없어 자동 수집을 실행합니다...');
     try {
@@ -356,7 +356,7 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
     const feeText = course.isFree ? '무료' : (course.fee ? `${course.fee}` : '유료 (강의계획서 참조)');
     const postItem = {
       title: course.title,
-      content: `교육기관: ${course.org}, 교육장소: ${course.address} (${course.dong}), 교육기간: ${course.eduPeriod}, 신청기간: ${course.applyPeriod}, 모집정원: ${course.capacity}, 수강료: ${feeText}, 주요대상: ${course.target}, 분야: ${course.category}. 상세 교육내용 및 강의계획: ${course.intro}. 의정부시 평생학습 통합플랫폼 뉴런 공식 온라인 접수.`,
+      content: `교육기관: ${course.org}, 교육장소: ${course.address} (${course.dong}), 교육기간: ${course.eduPeriod}, 신청기간: ${course.applyPeriod}, 모집정원: ${course.capacity}, 수강료: ${feeText}, 주요대상: ${course.target}, 분야: ${course.category}. 상세 교육내용 및 강의계획: ${course.intro}. 양주시 평생학습 통합플랫폼 뉴런 공식 온라인 접수.`,
       link: course.applyUrl || 'https://sugang.ull.or.kr',
       sourceId: course.id,
       expiresAt: extractExpiryDate(course.applyPeriod),
@@ -366,7 +366,7 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
 
     try {
       console.log(`\n[${i + 1}/${pending.length}] 평생학습 글 작성 진행: "${course.title}"`);
-      const fileName = await generateAndSavePost(postItem, 'Tier 3: 의정부 평생학습 실시간 강좌');
+      const fileName = await generateAndSavePost(postItem, 'Tier 3: 양주 평생학습 실시간 강좌');
       if (fileName) {
         published.push(fileName);
         existingSourceIds.add(course.id);
@@ -384,14 +384,14 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
 // ── [메인 실행 엔진] ───────────────────────────────────────────────
 async function main() {
   console.log('======================================================');
-  console.log(`🚀 [의정부 포털] 오토 포스팅 엔진 시작 (안전 콤팩트 모드: 최대 ${MAX_POSTS_PER_RUN}건/회)`);
+  console.log(`🚀 [양주 포털] 오토 포스팅 엔진 시작 (안전 콤팩트 모드: 최대 ${MAX_POSTS_PER_RUN}건/회)`);
   console.log('실행 시각:', new Date().toISOString());
   console.log('======================================================');
 
   try {
     let remaining = MAX_POSTS_PER_RUN;
 
-    // 1순위: 의정부시청 공식 RSS 피드
+    // 1순위: 양주시청 공식 RSS 피드
     const tier1 = await runTier1CityRss(remaining);
     remaining -= (tier1.published?.length || 0);
 
@@ -399,7 +399,7 @@ async function main() {
     const tier2 = await runTier2LocalInfo(remaining);
     remaining -= (tier2.published?.length || 0);
 
-    // 3순위: 의정부 평생학습 실시간 강좌
+    // 3순위: 양주 평생학습 실시간 강좌
     const tier3 = await runTier3LifelongLearning(remaining);
 
     const allPublishedFiles = new Set([

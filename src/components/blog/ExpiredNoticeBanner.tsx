@@ -34,7 +34,7 @@ export default function ExpiredNoticeBanner({ expiresAt, sourceLink }: ExpiredNo
             이 안내의 기한이 지났습니다.
           </p>
           <p className="text-xs text-zinc-600 dark:text-zinc-400">
-            최신 내용은 의정부시 공식 포털에서 확인하세요.
+            최신 내용은 양주시 공식 포털에서 확인하세요.
             {sourceLink && (
               <a
                 href={sourceLink}

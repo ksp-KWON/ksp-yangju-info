@@ -217,7 +217,7 @@ export default function BlogPostClient({ content, title, sourceLink, tags = [], 
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-500/20 text-blue-200 text-[11px] font-bold border border-blue-400/30">
                 <AppIcon name="shield-check" size={12} strokeWidth={2.5} />
-                <span>의정부시 공식 접수처</span>
+                <span>양주시 공식 접수처</span>
               </div>
               <h3 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
                 원스톱 공식 신청 및 상세 공고 안내
@@ -243,7 +243,7 @@ export default function BlogPostClient({ content, title, sourceLink, tags = [], 
       <div className="my-8 pt-6 border-t border-gray-200/80 dark:border-zinc-800">
         <div className="flex items-center gap-2 mb-3 text-xs font-bold text-zinc-600 dark:text-zinc-400">
           <AppIcon name="compass" size={15} strokeWidth={2.5} />
-          <span>의정부 시민 내 주변 생활 지도 퀵메뉴</span>
+          <span>양주 시민 내 주변 생활 지도 퀵메뉴</span>
         </div>
         <div className="grid grid-cols-1 gap-3">
           <EmergencyBanner />

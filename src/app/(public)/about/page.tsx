@@ -6,7 +6,7 @@ import AppIcon from '@/components/ui/AppIcon';
 
 export const metadata: Metadata = {
   title: '사이트 소개 및 운영 철학',
-  description: '의정부 시민을 위한 생활 복지·의료 정보의 운영 목적과 정보 출처를 투명하게 안내합니다.',
+  description: '양주 시민을 위한 생활 복지·의료 정보의 운영 목적과 정보 출처를 투명하게 안내합니다.',
   alternates: {
     canonical: '/about',
   },
@@ -37,7 +37,7 @@ export default function AboutPage() {
         badgeText="투명성과 공공성"
         badgeTone="emerald"
         badgeIcon="shield-check"
-        title="의정부 건강·생활 정보 포털의 사명"
+        title="양주 건강·생활 정보 포털의 사명"
         description="시민들에게 꼭 필요한 공공 혜택과 응급의료 정보가 복잡한 행정 사이트에 흩어져 있어 놓치는 일이 없도록, 공공데이터와 각 기관의 공식 안내를 바탕으로 가장 읽기 쉽고 직관적인 형태로 큐레이션합니다."
         watermarkIcon="shield-check"
       >

@@ -75,7 +75,7 @@ function SearchResults() {
               ‘<span className="text-sky-700 dark:text-sky-400 underline decoration-2">{q}</span>’ 검색 결과
             </span>
           ) : (
-            '의정부 생활정보 검색'
+            '양주 생활정보 검색'
           )
         }
         description={q ? `총 ${results.length}개의 관련 소식을 찾았습니다.` : '찾으시는 병원, 민원 키워드를 입력해 보세요.'}

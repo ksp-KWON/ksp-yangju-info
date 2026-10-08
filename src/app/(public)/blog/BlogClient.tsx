@@ -20,7 +20,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
 
   let posts = initialPosts;
   let categoryTitle = '유용한 소식 및 생활 정보';
-  let categoryDesc = '의정부 시민들을 위한 공공 혜택, 행사, 병원 및 생활 정보 가이드입니다.';
+  let categoryDesc = '양주 시민들을 위한 공공 혜택, 행사, 병원 및 생활 정보 가이드입니다.';
 
   const categoryCounts: Record<string, number> = {};
   for (const post of initialPosts) {
@@ -55,7 +55,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
       return cats.some((c) => c.includes(cleanParam) || c === categoryParam);
     });
     categoryTitle = categoryParam.replace(/^[^\s]+\s/, '');
-    categoryDesc = `‘${categoryTitle}’ 관련 최신 의정부 소식 및 가이드 목록입니다.`;
+    categoryDesc = `‘${categoryTitle}’ 관련 최신 양주 소식 및 가이드 목록입니다.`;
   }
 
   if (subCategoryParam) {
@@ -72,7 +72,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
       return post.tags.includes(tagParam);
     });
     categoryTitle = `#${tagParam} 관련 소식`;
-    categoryDesc = `‘#${tagParam}’ 태그가 포함된 의정부 포스트 목록입니다.`;
+    categoryDesc = `‘#${tagParam}’ 태그가 포함된 양주 포스트 목록입니다.`;
   }
 
   // 선택된 카테고리의 하위 카테고리 목록 조회

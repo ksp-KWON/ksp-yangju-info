@@ -45,7 +45,7 @@ export default function PublicLayout({
                 <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 shrink-0 group-hover:-translate-y-0.5 transition-transform duration-200 z-10 overflow-hidden">
                   <Image
                     src="/images/yangju-logo.svg"
-                    alt="의정부 행복특별시 로고"
+                    alt="양주인 로고"
                     fill
                     className="object-contain"
                     sizes="40px"
@@ -53,10 +53,10 @@ export default function PublicLayout({
                   />
                 </div>
                 <span className="hidden sm:inline font-extrabold text-xl text-gray-900 dark:text-white truncate tracking-tight">
-                  의정부 건강·생활 정보 포털
+                  양주 건강·생활 정보 포털
                 </span>
                 <span className="sm:hidden font-extrabold text-lg text-gray-900 dark:text-white truncate tracking-tight">
-                  의정부 생활정보
+                  양주 생활정보
                 </span>
                 <span className="hidden lg:inline-flex items-center px-2 py-0.5 ml-1.5 bg-zinc-100 dark:bg-zinc-800 text-[10px] font-extrabold text-zinc-900 dark:text-zinc-100 tracking-wider uppercase border border-zinc-200 dark:border-zinc-700 rounded-none">
                   Uijeongbu
@@ -93,7 +93,7 @@ export default function PublicLayout({
         </div>
       </header>
 
-      {/* 2. 의정부 포털 스마트 2열 스티키 레이아웃 (본문 72% + 사이드바 28%) */}
+      {/* 2. 양주 포털 스마트 2열 스티키 레이아웃 (본문 72% + 사이드바 28%) */}
       <SmartStickyLayout
         mainContent={children}
         sidebarContent={<SidebarContent tags={sortedTags} recentPosts={posts.slice(0, 4)} categories={categories} />}
@@ -103,7 +103,7 @@ export default function PublicLayout({
       <footer className="mt-auto w-full bg-white dark:bg-[#202124] text-zinc-700 dark:text-zinc-300 border-t border-gray-200/80 dark:border-zinc-800 pb-[calc(64px+env(safe-area-inset-bottom))] lg:pb-0">
         <div className="mx-auto flex flex-col md:flex-row h-auto md:h-[70px] w-[92vw] xl:w-[85vw] max-w-7xl items-center justify-between px-2 sm:px-5 py-5 md:py-0 text-xs font-medium gap-3">
           <p className="copyright text-center md:text-left flex items-center gap-1.5">
-            © {new Date().getFullYear()} 의정부 건강·생활 정보 포털. All rights reserved.
+            © {new Date().getFullYear()} 양주 건강·생활 정보 포털. All rights reserved.
           </p>
           <p className="iagree text-center md:text-right flex items-center justify-center flex-wrap gap-3 font-semibold">
             <Link href="/about" className="hover:text-zinc-950 dark:hover:text-white hover:underline cursor-pointer transition-all">

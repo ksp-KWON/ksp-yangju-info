@@ -13,7 +13,7 @@ export async function GET() {
 <channel>
   <title>${SITE_NAME}</title>
   <link>${siteUrl}</link>
-  <description>의정부 시민들을 위한 응급실·건강검진·민원 등 생활 정보 가이드</description>
+  <description>양주 시민들을 위한 응급실·건강검진·민원 등 생활 정보 가이드</description>
   <language>ko-KR</language>
   <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml" />
   <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>

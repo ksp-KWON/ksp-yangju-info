@@ -40,14 +40,14 @@ export default async function Home() {
           <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#e8f0fe] text-[var(--google-blue)] dark:bg-[#174ea6]/20 dark:text-[#8ab4f8] text-xs font-bold uppercase tracking-wider mb-4 border border-[#d2e3fc]/60 dark:border-[#174ea6]/40 rounded-none shadow-xs">
               <AppIcon name="shield-check" size={14} strokeWidth={2} />
-              <span>의정부시 생활·의료·교육 정보 포털</span>
+              <span>양주시 생활·의료·교육 정보 포털</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.2] text-[#202124] dark:text-white">
-              의정부 <br className="hidden sm:block lg:hidden" />
+              양주 <br className="hidden sm:block lg:hidden" />
               <span className="bg-gradient-to-r from-[#0d47a1] to-[#1a73e8] dark:from-[#8ab4f8] dark:to-[#aecbfa] bg-clip-text text-transparent">건강·생활 정보 포털</span>
             </h1>
             <p className="mt-3 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-normal break-keep max-w-xl leading-relaxed">
-              의정부 응급실 위치와 평생학습 실시간 강좌, 국가건강검진·민원 안내를 한눈에 확인하세요.
+              양주 응급실 위치와 평생학습 실시간 강좌, 국가건강검진·민원 안내를 한눈에 확인하세요.
             </p>
           </div>
 

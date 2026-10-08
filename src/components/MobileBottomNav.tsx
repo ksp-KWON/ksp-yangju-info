@@ -10,16 +10,16 @@ import { getCategoryIcon } from '@/lib/constants';
 
 type ModalType = 'none' | 'home' | 'emergency' | 'learning' | 'civic' | 'categories';
 
-// ── [의정부심 클린 & 프리미엄] 선언형 모바일 퀵 허브 데이터셋 (보상스쿨 SSOT 규격) ──
+// ── [양주심 클린 & 프리미엄] 선언형 모바일 퀵 허브 데이터셋 (보상스쿨 SSOT 규격) ──
 
 const HOME_ITEMS: MenuCardProps[] = [
   {
     href: '/',
     icon: <AppIcon name="home" size={20} strokeWidth={2.2} />,
-    title: '의정부 포털 메인 홈',
+    title: '양주 포털 메인 홈',
     themeColor: 'blue',
     badgeText: '메인',
-    description: '의정부시 복지·지원금, 보건소, 생활 소식 종합 첫 화면',
+    description: '양주시 복지·지원금, 보건소, 생활 소식 종합 첫 화면',
     buttonText: '포털 메인 홈으로 이동',
     watermarkIcon: 'home',
   },
@@ -52,14 +52,14 @@ const EMERGENCY_ITEMS: MenuCardProps[] = [
     title: '24시간 응급실·병원 지도',
     themeColor: 'green',
     badgeText: '실시간 지도',
-    description: '의정부 관내 24시 응급실, 달빛어린이병원, 심야약국 위치 및 전화 연결',
+    description: '양주 관내 24시 응급실, 달빛어린이병원, 심야약국 위치 및 전화 연결',
     buttonText: '응급의료 지도 열기',
     watermarkIcon: 'hospital',
   },
   {
-    href: 'https://www.ui4u.go.kr/health/main.do',
+    href: 'https://health.yangju.go.kr',
     icon: <AppIcon name="heart" size={20} strokeWidth={2.2} />,
-    title: '의정부시 보건소 (공식)',
+    title: '양주시 보건소 (공식)',
     themeColor: 'rose',
     badgeText: '예방·진료',
     description: '국가 무료 예방접종, 생애주기별 건강검진, 모자보건 및 만성질환 관리',
@@ -82,38 +82,38 @@ const LEARNING_ITEMS: MenuCardProps[] = [
   {
     href: '/services/learning',
     icon: <AppIcon name="book" size={20} strokeWidth={2.2} />,
-    title: '의정부 평생학습 실시간 강좌',
+    title: '양주 평생학습 실시간 강좌',
     themeColor: 'blue',
     badgeText: '접수중 강좌',
-    description: '의정부시 평생학습원 실시간 개설 강좌 수강료, 일정, 접수 방법 안내',
+    description: '양주시 평생학습원 실시간 개설 강좌 수강료, 일정, 접수 방법 안내',
     buttonText: '개설 강좌 리스트 확인',
     watermarkIcon: 'book',
   },
   {
-    href: 'https://www.ull.or.kr/lifeedu/index.do',
+    href: 'https://yangju.gseek.kr',
     icon: <AppIcon name="landmark" size={20} strokeWidth={2.2} />,
-    title: '의정부 평생학습포털 (공식)',
+    title: '양주 평생학습포털 (공식)',
     themeColor: 'yellow',
     badgeText: '공식 접수처',
-    description: '의정부시민 무료·유료 시민대학, 자격증, 취미 교양 온라인 수강신청',
+    description: '양주시민 무료·유료 시민대학, 자격증, 취미 교양 온라인 수강신청',
     buttonText: '평생학습포털 공식 사이트 방문',
     watermarkIcon: 'landmark',
   },
   {
     href: 'https://www.uilib.go.kr',
     icon: <AppIcon name="book" size={20} strokeWidth={2.2} />,
-    title: '의정부시 도서관 포털',
+    title: '양주시 도서관 포털',
     themeColor: 'teal',
     badgeText: '도서·문화',
-    description: '의정부 관내 시립 도서관 소장 도서 검색, 대출·예약 및 문화 프로그램',
-    buttonText: '의정부 도서관 방문',
+    description: '양주 관내 시립 도서관 소장 도서 검색, 대출·예약 및 문화 프로그램',
+    buttonText: '양주 도서관 방문',
     watermarkIcon: 'book',
   },
 ];
 
 const CIVIC_ITEMS: MenuCardProps[] = [
   {
-    href: 'https://www.ui4u.go.kr/cscportal/main.do',
+    href: 'https://www.yangju.go.kr/town/index.do',
     icon: <AppIcon name="landmark" size={20} strokeWidth={2.2} />,
     title: '동 행정복지센터 (생활민원)',
     themeColor: 'blue',
@@ -123,19 +123,19 @@ const CIVIC_ITEMS: MenuCardProps[] = [
     watermarkIcon: 'landmark',
   },
   {
-    href: 'https://www.ui4u.go.kr/tour/main.do',
+    href: 'https://www.yangju.go.kr/tour',
     icon: <AppIcon name="compass" size={20} strokeWidth={2.2} />,
-    title: '의정부 문화관광 포털',
+    title: '양주 문화관광 포털',
     themeColor: 'indigo',
     badgeText: '축제·명소',
-    description: '의정부 대표 축제, 소풍길, 부대찌개거리, 명소 및 주말 나들이 명소',
+    description: '양주 대표 축제, 소풍길, 부대찌개거리, 명소 및 주말 나들이 명소',
     buttonText: '문화관광 포털 방문',
     watermarkIcon: 'compass',
   },
   {
     href: 'tel:031-828-2114',
     icon: <AppIcon name="phone" size={20} strokeWidth={2.2} />,
-    title: '의정부시 대표 콜센터',
+    title: '양주시 대표 콜센터',
     themeColor: 'green',
     badgeText: '031-828-2114',
     description: '시정 문의, 생활 불편 신고, 당직실 연결을 위한 원스톱 전화 연결',
@@ -208,7 +208,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
       {/* ── 1. [홈 모달] 메인 홈 + 생활 가이드 전체글 + 스마트 통합검색 ── */}
       <BottomSheet isOpen={openModal === 'home'} onClose={closeModals} maxHeight="max-h-[85vh]">
         <h3 className="font-extrabold text-base text-[#202124] dark:text-white mb-3">
-          의정부 생활정보 포털
+          양주 생활정보 포털
         </h3>
         <div className="space-y-3">
           {HOME_ITEMS.map((item, idx) => (
@@ -258,7 +258,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
         <div className="w-full flex flex-col">
           <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-100 dark:border-zinc-800">
             <h3 className="text-sm sm:text-base font-extrabold text-[#202124] dark:text-white">
-              의정부 8대 생활정보 카테고리
+              양주 8대 생활정보 카테고리
             </h3>
             <span className="text-[10px] font-bold px-2 py-0.5 bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
               분야별 가이드

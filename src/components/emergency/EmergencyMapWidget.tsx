@@ -16,7 +16,7 @@ interface EmergencyMapWidgetProps {
 }
 
 const neighborhoods = [
-  { name: '의정부역(중심)', lat: 37.7380, lng: 127.0450 },
+  { name: '양주역(중심)', lat: 37.7380, lng: 127.0450 },
   { name: '민락지구', lat: 37.7454, lng: 127.0984 },
   { name: '신곡/장암', lat: 37.7336, lng: 127.0650 },
   { name: '망월사역', lat: 37.7176, lng: 127.0454 },

@@ -45,7 +45,7 @@ type DongFilter = 'all' | 'ujb' | 'howon' | 'singok' | 'songsan' | 'heungseon';
 
 const DONG_GROUPS: Record<DongFilter, { label: string; dongs: string[] }> = {
   all: { label: '전체 동', dongs: [] },
-  ujb: { label: '의정부1·2동', dongs: ['의정부1동', '의정부2동', '의정부동'] },
+  ujb: { label: '양주1·2동', dongs: ['양주1동', '양주2동', '양주동'] },
   howon: { label: '호원1·2동', dongs: ['호원1동', '호원2동', '호원동'] },
   singok: { label: '신곡·장암동', dongs: ['신곡1동', '신곡2동', '신곡동', '장암동'] },
   songsan: { label: '송산·민락·고산', dongs: ['송산1동', '송산2동', '송산3동', '고산동', '자금동'] },
@@ -125,8 +125,8 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
       <PageHeaderBanner
         badgeTone="sky"
         badgeIcon="shield-check"
-        badgeText="의정부시 평생학습 통합플랫폼 뉴런 공식 연동"
-        title="의정부시 실시간 평생학습 강좌 지도"
+        badgeText="양주시 평생학습 통합플랫폼 뉴런 공식 연동"
+        title="양주시 실시간 평생학습 강좌 지도"
         description="도서관·청소년수련관·주민자치센터에서 열리는 지금 신청 가능한 강좌를 1초 만에 검색하고 온라인으로 바로 신청하세요."
         watermarkIcon="book"
       />

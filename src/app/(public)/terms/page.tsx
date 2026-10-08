@@ -4,7 +4,7 @@ import PremiumHeading from '@/components/ui/PremiumHeading';
 
 export const metadata: Metadata = {
   title: '이용약관',
-  description: '의정부 건강·생활 정보 포털 서비스 이용에 관한 권리와 의무, 면책 조항을 규정합니다.',
+  description: '양주 건강·생활 정보 포털 서비스 이용에 관한 권리와 의무, 면책 조항을 규정합니다.',
   alternates: {
     canonical: '/terms',
   },
@@ -14,7 +14,7 @@ export default function TermsPage() {
   return (
     <LegalPageLayout breadcrumbTitle="이용약관" pageTitle="서비스 이용약관">
       <p>
-            환영합니다! 본 약관은 &quot;의정부 건강·생활 정보 포털&quot;(이하 &quot;사이트&quot;)이 제공하는 공공데이터 기반 정보 서비스의 이용과 관련하여, 사이트와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.
+            환영합니다! 본 약관은 &quot;양주 건강·생활 정보 포털&quot;(이하 &quot;사이트&quot;)이 제공하는 공공데이터 기반 정보 서비스의 이용과 관련하여, 사이트와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.
           </p>
 
           <section className="space-y-2">
@@ -22,8 +22,8 @@ export default function TermsPage() {
               제1조 (목적 및 서비스의 성격)
             </PremiumHeading>
             <p>
-              1. 본 사이트는 의정부시의 공공서비스, 혜택, 행사, 심야/휴일 의료 정보 등을 시민들이 쉽게 확인할 수 있도록 큐레이션하여 제공하는 비영리 공공데이터 정보 채널입니다.<br />
-              2. 본 사이트는 의정부시청 등 공공기관이 직접 운영하는 공식 사이트가 아니며, 정부 공공데이터를 기반으로 독립적으로 서비스되는 포털입니다.
+              1. 본 사이트는 양주시의 공공서비스, 혜택, 행사, 심야/휴일 의료 정보 등을 시민들이 쉽게 확인할 수 있도록 큐레이션하여 제공하는 비영리 공공데이터 정보 채널입니다.<br />
+              2. 본 사이트는 양주시청 등 공공기관이 직접 운영하는 공식 사이트가 아니며, 정부 공공데이터를 기반으로 독립적으로 서비스되는 포털입니다.
             </p>
           </section>
 

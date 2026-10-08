@@ -75,10 +75,10 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
         <div className="space-y-1.5 flex-1 min-w-0">
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[10.5px] font-extrabold tracking-wider border border-zinc-200 dark:border-zinc-700">
             <AppIcon name="link" size={11} strokeWidth={2.5} />
-            <span>이웃과 함께 나누는 의정부 혜택</span>
+            <span>이웃과 함께 나누는 양주 혜택</span>
           </div>
           <h4 className="text-sm sm:text-base font-extrabold text-zinc-950 dark:text-white tracking-tight leading-snug break-keep">
-            놓치기 아까운 의정부 생활 정보, 가족·지인에게 알려주세요
+            놓치기 아까운 양주 생활 정보, 가족·지인에게 알려주세요
           </h4>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 font-normal leading-relaxed">
             헛걸음 방지 팁과 핵심 신청 요강을 카카오톡으로 간편하게 공유할 수 있습니다.

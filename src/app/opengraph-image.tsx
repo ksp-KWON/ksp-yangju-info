@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 export const dynamic = 'force-static';
 
-export const alt = '의정부 건강·생활 정보 포털';
+export const alt = '양주 건강·생활 정보 포털';
 export const size = {
   width: 1200,
   height: 630,
@@ -55,7 +55,7 @@ export default async function Image() {
               textTransform: 'uppercase',
             }}
           >
-            의정부시 생활·의료 정보 포털
+            양주시 생활·의료 정보 포털
           </div>
 
           {/* 중앙 메인 타이틀 */}
@@ -77,7 +77,7 @@ export default async function Image() {
                 marginBottom: '16px',
               }}
             >
-              의정부 건강·생활 정보 포털
+              양주 건강·생활 정보 포털
             </div>
             <div
               style={{
@@ -103,10 +103,10 @@ export default async function Image() {
             }}
           >
             <div style={{ fontSize: '20px', fontWeight: '800', color: '#18181b' }}>
-              uijeongbusim.com
+              yangjuin.com
             </div>
             <div style={{ fontSize: '18px', fontWeight: '600', color: '#71717a' }}>
-              의정부시 생활·의료 정보 안내
+              양주시 생활·의료 정보 안내
             </div>
           </div>
         </div>

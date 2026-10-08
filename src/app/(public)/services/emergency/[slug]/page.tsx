@@ -54,7 +54,7 @@ export default async function EmergencyPlaceDetailPage({ params }: PlacePageProp
     address: {
       '@type': 'PostalAddress',
       streetAddress: place.address,
-      addressLocality: '의정부시',
+      addressLocality: '양주시',
       addressRegion: '경기도',
       addressCountry: 'KR',
     },
@@ -114,7 +114,7 @@ export default async function EmergencyPlaceDetailPage({ params }: PlacePageProp
             size="sm"
             icon="hospital"
           >
-            의정부 전체 지도
+            양주 전체 지도
           </PremiumButton>
         </div>
       </PageHeaderBanner>
@@ -209,11 +209,11 @@ export default async function EmergencyPlaceDetailPage({ params }: PlacePageProp
         </CommonBox>
       )}
 
-      {/* ── [구역 4] 의정부 다른 응급기관 바로가기 ── */}
+      {/* ── [구역 4] 양주 다른 응급기관 바로가기 ── */}
       <div className="pt-4 border-t border-gray-200/80 dark:border-zinc-800">
         <h4 className="text-sm font-extrabold text-zinc-950 dark:text-white mb-3 flex items-center gap-2">
           <AppIcon name="hospital" size={16} strokeWidth={2.5} />
-          <span>의정부시 관내 다른 응급의료 기관</span>
+          <span>양주시 관내 다른 응급의료 기관</span>
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {EMERGENCY_PLACES.filter((p) => p.slug !== place.slug).slice(0, 3).map((other) => (

@@ -6,7 +6,7 @@ export function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export const alt = '의정부 건강·생활 정보 포털';
+export const alt = '양주 건강·생활 정보 포털';
 export const size = {
   width: 1200,
   height: 630,
@@ -16,8 +16,8 @@ export const contentType = 'image/png';
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = getPostData(slug);
-  const title = post?.title || '의정부 시민들을 위한 맞춤 혜택 가이드';
-  const category = Array.isArray(post?.category) ? post.category[0] : post?.category || '의정부 생활정보';
+  const title = post?.title || '양주 시민들을 위한 맞춤 혜택 가이드';
+  const category = Array.isArray(post?.category) ? post.category[0] : post?.category || '양주 생활정보';
 
   return new ImageResponse(
     (
@@ -77,7 +77,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 color: '#71717a',
               }}
             >
-              의정부 건강·생활 정보 포털
+              양주 건강·생활 정보 포털
             </div>
           </div>
 
@@ -113,10 +113,10 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             }}
           >
             <div style={{ fontSize: '18px', fontWeight: '800', color: '#18181b' }}>
-              uijeongbusim.com
+              yangjuin.com
             </div>
             <div style={{ fontSize: '16px', fontWeight: '600', color: '#047857' }}>
-              의정부 생활·의료 안내
+              양주 생활·의료 안내
             </div>
           </div>
         </div>

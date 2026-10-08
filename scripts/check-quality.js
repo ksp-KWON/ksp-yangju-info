@@ -87,7 +87,7 @@ function main() {
   });
 
   if (modifiedCount > 0) {
-    console.log('🛠️ CQF 의정부 품질 검증 엔진 자동 교정 완료 (적용 파일: ' + modifiedCount + '개).');
+    console.log('🛠️ CQF 양주인 품질 검증 엔진 자동 교정 완료 (적용 파일: ' + modifiedCount + '개).');
   }
 
   if (calendarErrors.length > 0) {
@@ -98,7 +98,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log('✅ All Uijeongbu blog posts passed quality checks (Rock-Solid Verified).');
+  console.log('✅ All Yangjuin blog posts passed quality checks (Rock-Solid Verified).');
 }
 
 main();

@@ -46,7 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // 2. 의정부 응급의료기관 및 심야약국 상세 페이지
+  // 2. 양주 응급의료기관 및 심야약국 상세 페이지
   const emergencyPlaceRoutes: MetadataRoute.Sitemap = EMERGENCY_PLACES.map((place) => ({
     url: `${baseUrl}/services/emergency/${place.slug}`,
     lastModified: SITE_LAUNCH_DATE,
@@ -59,7 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: post.updatedAt || post.date || SITE_LAUNCH_DATE,
   }));
 
-  // 4. 의정부 평생학습 실시간 강좌 상세 페이지 (전수 색인)
+  // 4. 양주 평생학습 실시간 강좌 상세 페이지 (전수 색인)
   let learningRoutes: MetadataRoute.Sitemap = [];
   try {
     const lPath = path.join(process.cwd(), 'src/data/learning-courses.json');
