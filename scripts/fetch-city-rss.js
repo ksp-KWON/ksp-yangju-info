@@ -21,7 +21,7 @@ const RSS_CONFIGS = [
     id: 'naver-blog',
     name: '양주시공식블로그',
     url: 'https://rss.blog.naver.com/yangju619.xml',
-    category: '행정소식',
+    category: '일자리·생활',
   },
 ];
 
@@ -113,18 +113,26 @@ function parseRssXml(xmlText, defaultCategory, feedName) {
       continue;
     }
 
-    // 카테고리 스마트 세분화 (키워드 기반 교차 보정)
+    // 카테고리 스마트 세분화 (전사 9대 표준 카테고리 직접 매핑)
     let finalCategory = defaultCategory;
-    if (rawCategory.includes('복지') || title.includes('지원금') || title.includes('복지') || title.includes('수당') || title.includes('바우처') || title.includes('감면')) {
-      finalCategory = '복지·지원금';
-    } else if (rawCategory.includes('문화') || title.includes('축제') || title.includes('공연') || title.includes('행사') || title.includes('전시') || title.includes('페스타')) {
+    if (rawCategory.includes('복지') || title.includes('지원금') || title.includes('복지') || title.includes('수당') || title.includes('바우처') || title.includes('감면') || title.includes('병원') || title.includes('약국') || title.includes('의료') || title.includes('검진') || title.includes('보건') || title.includes('돌봄') || title.includes('노인') || title.includes('장애인')) {
+      finalCategory = '복지·돌봄';
+    } else if (rawCategory.includes('문화') || title.includes('축제') || title.includes('공연') || title.includes('행사') || title.includes('전시') || title.includes('페스타') || title.includes('예술') || title.includes('음악')) {
       finalCategory = '문화·예술';
+    } else if (title.includes('체육') || title.includes('공원') || title.includes('산책') || title.includes('나들이') || title.includes('등산') || title.includes('운동')) {
+      finalCategory = '체육·공원';
+    } else if (title.includes('교통') || title.includes('주차') || title.includes('버스') || title.includes('도로') || title.includes('전철') || title.includes('철도')) {
+      finalCategory = '교통·주차';
     } else if (title.includes('일자리') || title.includes('채용') || title.includes('취업') || title.includes('소상공인') || title.includes('창업')) {
       finalCategory = '일자리·생활';
-    } else if (title.includes('교통') || title.includes('주차') || title.includes('버스') || title.includes('도로')) {
-      finalCategory = '교통·주차';
-    } else if (title.includes('병원') || title.includes('약국') || title.includes('의료') || title.includes('검진') || title.includes('보건')) {
-      finalCategory = '건강·의료';
+    } else if (title.includes('청소') || title.includes('환경') || title.includes('폐기물') || title.includes('쓰레기') || title.includes('재활용')) {
+      finalCategory = '청소·환경';
+    } else if (title.includes('재난') || title.includes('민방위') || title.includes('안전') || title.includes('훈련') || title.includes('대피')) {
+      finalCategory = '재난·민방위';
+    } else if (title.includes('주택') || title.includes('재개발') || title.includes('건축') || title.includes('아파트')) {
+      finalCategory = '주택·재개발';
+    } else if (title.includes('기업') || title.includes('농업') || title.includes('농사') || title.includes('경제')) {
+      finalCategory = '기업경제·농업';
     }
 
     items.push({
@@ -214,6 +222,11 @@ async function main() {
     if (isLowQualityNotice(item.title, item.description)) continue;
     if (item.sourceId) recordedSet.add(item.sourceId);
     if (item.link && !isFallbackOrEmptyUrl(item.link)) recordedSet.add(item.link.trim());
+
+    // 9대 표준 카테고리 정합 보장
+    if (item.category === '복지·지원금' || item.category === '건강·의료') item.category = '복지·돌봄';
+    if (item.category === '생활·민원' || item.category === '행정소식') item.category = '일자리·생활';
+
     finalQueue.push(item);
   }
 
