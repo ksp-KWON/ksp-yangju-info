@@ -1,15 +1,12 @@
 # Cloudflare Pages Custom Headers
 # W3C & OWASP 글로벌 웹 보안 및 고속 CDN 캐시 정책 (SSOT)
 
-# 1. 전역 보안 헤더 (MIME 스니핑 방어, 클릭재킹 차단, 개인정보 보호)
+# 1. 전역 보안 헤더 및 HTML 무지연 반영 (0초 원본 재확인)
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-
-# 2. 모든 HTML 페이지: 매번 원본 서버에서 최신 버전 재확인 (0초 무지연 반영)
-/
   Cache-Control: public, max-age=0, must-revalidate
 
 # 3. 내부 정적 API: 표준 JSON MIME 보장 및 검색엔진 색인 원천 차단

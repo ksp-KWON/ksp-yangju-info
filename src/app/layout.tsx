@@ -69,7 +69,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Google 공식 @graph 규격 (Organization + WebSite + SearchAction 통합 구조화 데이터)
+  // Google 공식 @graph 규격 (Organization + WebSite 표준 구조화 데이터)
   const globalJsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -80,7 +80,9 @@ export default function RootLayout({
         "url": SITE_URL,
         "logo": {
           "@type": "ImageObject",
-          "url": `${SITE_URL}/images/yangju-logo.svg`,
+          "url": `${SITE_URL}/icon.png`,
+          "width": 320,
+          "height": 220,
         },
         "description": "양주시 시민을 위한 공공 건강·생활 정보 및 혜택 종합 포털 양주인",
       },
@@ -93,14 +95,6 @@ export default function RootLayout({
           "@id": `${SITE_URL}/#organization`,
         },
         "inLanguage": "ko-KR",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": `${SITE_URL}/search?q={search_term_string}`,
-          },
-          "query-input": "required name=search_term_string",
-        },
       },
     ],
   };
