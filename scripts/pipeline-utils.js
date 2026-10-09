@@ -8,6 +8,11 @@
 
 const fs   = require('fs');
 const path = require('path');
+const dns  = require('dns');
+
+if (dns && dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 // ── .env.local 로드 (파이프라인 전역 1회만 실행) ─────────────────────────────
 const envPath = path.join(process.cwd(), '.env.local');
@@ -47,11 +52,27 @@ function isSourceSufficient(item) {
 // ── 공통 유틸 ────────────────────────────────────────────────────────────────
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-async function safeFetch(url, options = {}, timeoutMs = 10000) {
+async function safeFetch(url, options = {}, timeoutMs = 15000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
+
+  const defaultHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
+  };
+
+  const finalOptions = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...(options?.headers || {})
+    },
+    signal: controller.signal
+  };
+
   try {
-    return await fetch(url, { ...options, signal: controller.signal });
+    return await fetch(url, finalOptions);
   } catch (error) {
     if (error.name === 'AbortError') {
       throw new Error(`Fetch timeout after ${timeoutMs}ms: ${url}`);
