@@ -5,6 +5,7 @@ export const SITE_DOMAIN = 'yangjuin.com';
 export const SITE_NAME = '양주인 (양주 건강·생활 정보 포털)';
 export const GA_MEASUREMENT_ID = '';
 export const NAVER_SITE_VERIFICATION = '';
+export const KAKAO_MAP_CLIENT_KEY = 'c60e479ca3c78009474b748414de3a1b';
 
 export const CIVIC_CATEGORIES = [
   '일자리·생활',

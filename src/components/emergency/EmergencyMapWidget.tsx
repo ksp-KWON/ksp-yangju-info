@@ -8,6 +8,7 @@ import { getEmergencyItems } from '@/lib/api/emergency';
 import EmergencyMap from '@/components/emergency/EmergencyMap';
 import EmergencyBottomSheet from '@/components/emergency/EmergencyBottomSheet';
 import AppIcon from '@/components/ui/AppIcon';
+import { KAKAO_MAP_CLIENT_KEY } from '@/lib/constants';
 
 interface EmergencyMapWidgetProps {
   isWidget?: boolean;
@@ -30,7 +31,7 @@ export default function EmergencyMapWidget({ isWidget = false, defaultTab = 'er'
   const hasPharmacy = getEmergencyItems('pharmacy').length > 0;
 
   const [loading, error] = useKakaoLoader({
-    appkey: "c60e479ca3c78009474b748414de3a1b",
+    appkey: KAKAO_MAP_CLIENT_KEY,
     libraries: ["services", "clusterer"],
   });
 

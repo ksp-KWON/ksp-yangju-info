@@ -109,19 +109,17 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
             {copied ? '링크 복사 완료!' : 'URL 링크 복사'}
           </PremiumButton>
 
-          {/* 모바일 OS 기본 공유 버튼 */}
-          {typeof navigator !== 'undefined' && 'share' in navigator && (
-            <PremiumButton
-              variant="outline"
-              size="md"
-              icon="share"
-              onClick={handleNativeShare}
-              aria-label="OS 공유창 열기"
-              className="md:hidden !px-3"
-            >
-              공유
-            </PremiumButton>
-          )}
+          {/* 모바일 OS 기본 공유 버튼 (W3C 점진적 향상 표준: 미지원 브라우저는 URL 복사로 자동 폴백) */}
+          <PremiumButton
+            variant="outline"
+            size="md"
+            icon="share"
+            onClick={handleNativeShare}
+            aria-label="생활 정보 공유하기"
+            className="md:hidden !px-3"
+          >
+            공유
+          </PremiumButton>
         </div>
       </div>
     </PremiumCard>

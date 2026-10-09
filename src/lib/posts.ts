@@ -12,6 +12,10 @@ const postsDirectory = path.join(process.cwd(), 'src/content/posts');
  */
 export function formatDate(dateVal: unknown): string {
   if (!dateVal) return '';
+  // 1. 이미 YYYY-MM-DD 표준 문자열인 경우: Date 파싱 없이 즉시 반환하여 타임존 왜곡 원천 차단
+  if (typeof dateVal === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateVal.trim())) {
+    return dateVal.trim();
+  }
   try {
     let d: Date;
     if (dateVal instanceof Date) {
