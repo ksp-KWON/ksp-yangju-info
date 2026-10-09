@@ -33,6 +33,14 @@ export default function PublicLayout({
 
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      {/* W3C WCAG 2.1 AA & 전자정부 웹 접근성 표준: 본문 건너뛰기 링크 */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] focus:px-4 focus:py-2.5 focus:bg-zinc-950 focus:text-white dark:focus:bg-white dark:focus:text-zinc-950 focus:font-bold focus:text-sm focus:border focus:border-zinc-700 focus:shadow-xl focus:outline-none"
+      >
+        본문 바로가기
+      </a>
+
       <ScrollProgressBar />
 
       {/* 1. 프리미엄 패밀리룩 헤더 */}
