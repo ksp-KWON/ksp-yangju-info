@@ -10,19 +10,68 @@ import PremiumCard from '@/components/ui/PremiumCard';
 import PremiumButton from '@/components/ui/PremiumButton';
 import { PostData } from '@/lib/types';
 
+/**
+ * 인라인 검색 폼 컴포넌트
+ * - React 19 권장 표준: key={q}를 통해 쿼리 변경 시 상태를 자연스럽게 초기화
+ * - useEffect 내 setState 동기 호출 안티패턴을 원천 배제하여 cascading render 0회 보장
+ */
+function InlineSearchForm({
+  initialQuery,
+  onSearch,
+}: {
+  initialQuery: string;
+  onSearch: (query: string) => void;
+}) {
+  const [val, setVal] = useState(initialQuery);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSearch(val.trim().slice(0, 40));
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="mt-4 relative flex items-center bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 rounded-none shadow-xs p-1 focus-within:border-[var(--google-blue)] dark:focus-within:border-[#8ab4f8] transition-all"
+    >
+      <div className="pl-3 pr-2 text-zinc-400 dark:text-zinc-500 shrink-0">
+        <AppIcon name="search" size={18} strokeWidth={2} />
+      </div>
+      <input
+        type="text"
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        placeholder="병원, 민원 키워드를 입력하세요 (예: 양주 일자리)"
+        className="w-full bg-transparent text-sm sm:text-base font-bold text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none py-1.5"
+      />
+      {val && (
+        <button
+          type="button"
+          onClick={() => setVal('')}
+          className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors mr-1 cursor-pointer shrink-0"
+          aria-label="검색어 지우기"
+        >
+          <AppIcon name="close" size={16} strokeWidth={2} />
+        </button>
+      )}
+      <button
+        type="submit"
+        className="px-4 py-2 bg-[var(--google-blue)] text-white text-xs sm:text-sm font-extrabold rounded-none hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer shrink-0"
+      >
+        검색
+      </button>
+    </form>
+  );
+}
+
 function SearchResults() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const rawQ = searchParams.get('q') || '';
   const q = rawQ.trim().slice(0, 40);
 
-  const [inputVal, setInputVal] = useState(q);
   const [results, setResults] = useState<PostData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setInputVal(q);
-  }, [q]);
 
   useEffect(() => {
     let ignore = false;
@@ -72,11 +121,11 @@ function SearchResults() {
     };
   }, [q]);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = inputVal.trim().slice(0, 40);
-    if (trimmed) {
-      router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+  const handleSearch = (newQuery: string) => {
+    if (newQuery) {
+      router.push(`/search?q=${encodeURIComponent(newQuery)}`);
+    } else {
+      router.push('/search');
     }
   };
 
@@ -102,35 +151,8 @@ function SearchResults() {
         description={q ? `총 ${results.length}개의 관련 소식을 찾았습니다.` : '찾으시는 병원, 민원, 일자리 키워드를 검색해 보세요.'}
         watermarkIcon="search"
       >
-        {/* 인라인 검색창 (실시간 재검색) */}
-        <form onSubmit={handleSearchSubmit} className="mt-4 relative flex items-center bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 rounded-none shadow-xs p-1 focus-within:border-[var(--google-blue)] dark:focus-within:border-[#8ab4f8] transition-all">
-          <div className="pl-3 pr-2 text-zinc-400 dark:text-zinc-500 shrink-0">
-            <AppIcon name="search" size={18} strokeWidth={2} />
-          </div>
-          <input
-            type="text"
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            placeholder="병원, 민원 키워드를 입력하세요 (예: 양주 일자리)"
-            className="w-full bg-transparent text-sm sm:text-base font-bold text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none py-1.5"
-          />
-          {inputVal && (
-            <button
-              type="button"
-              onClick={() => setInputVal('')}
-              className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors mr-1 cursor-pointer shrink-0"
-              aria-label="검색어 지우기"
-            >
-              <AppIcon name="close" size={16} strokeWidth={2} />
-            </button>
-          )}
-          <button
-            type="submit"
-            className="px-4 py-2 bg-[var(--google-blue)] text-white text-xs sm:text-sm font-extrabold rounded-none hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer shrink-0"
-          >
-            검색
-          </button>
-        </form>
+        {/* 인라인 검색창 (React 19 key 기반 무결점 상태 초기화) */}
+        <InlineSearchForm key={q} initialQuery={q} onSearch={handleSearch} />
 
         {/* 추천 키워드 칩 */}
         <div className="mt-4 flex items-center flex-wrap gap-1.5 pt-3.5 border-t border-gray-100 dark:border-zinc-800">
