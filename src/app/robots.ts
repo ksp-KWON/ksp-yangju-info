@@ -9,7 +9,6 @@ export const dynamic = 'force-static';
  * 크롤 예산 보호 및 무의미한 엔드포인트 색인 방지:
  *   /search - 검색 결과 쿼리 페이지
  *   /api/   - 내부 API 엔드포인트
- *   /*opengraph-image* - 동적 OG 이미지 생성 엔드포인트 원시 호출 차단
  */
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = SITE_URL;
@@ -18,7 +17,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/search', '/api/', '/*opengraph-image*'],
+      disallow: ['/search', '/api/'],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

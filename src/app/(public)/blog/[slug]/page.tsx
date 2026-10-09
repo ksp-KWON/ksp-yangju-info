@@ -80,9 +80,9 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     },
     image: {
       '@type': 'ImageObject',
-      url: `${SITE_URL}/blog/${slug}/opengraph-image`,
-      width: 1200,
-      height: 630,
+      url: `${SITE_URL}/icon.png`,
+      width: 320,
+      height: 220,
     },
     inLanguage: 'ko-KR',
     keywords: post.tags?.join(', ') ?? '',
