@@ -18,6 +18,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const post = getPostData(slug);
   const title = post?.title || '양주 시민들을 위한 맞춤 혜택 가이드';
   const category = Array.isArray(post?.category) ? post.category[0] : post?.category || '양주 생활정보';
+  const titleFontSize = title.length > 35 ? '38px' : title.length > 25 ? '44px' : '50px';
 
   return new ImageResponse(
     (
@@ -84,7 +85,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           {/* 중앙 글 제목 */}
           <div
             style={{
-              fontSize: '50px',
+              fontSize: titleFontSize,
               fontWeight: '900',
               color: '#09090b',
               textAlign: 'center',
