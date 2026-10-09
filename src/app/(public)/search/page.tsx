@@ -12,7 +12,8 @@ import { PostData } from '@/lib/types';
 
 function SearchResults() {
   const searchParams = useSearchParams();
-  const q = searchParams.get('q') || '';
+  const rawQ = searchParams.get('q') || '';
+  const q = rawQ.trim().slice(0, 40);
   const [results, setResults] = useState<PostData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
