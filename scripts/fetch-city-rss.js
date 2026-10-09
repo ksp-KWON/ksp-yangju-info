@@ -11,7 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const { generateSourceId, getExistingSourceIds, getExistingSourceLinks, isDuplicatePost, isFallbackOrEmptyUrl } = require('./post-utils');
-const { safeFetch, sleep } = require('./pipeline-utils');
+const { safeFetch, sleep, decodeHtmlEntities } = require('./pipeline-utils');
 
 const CITY_RSS_FILE = path.join(process.cwd(), 'public/data/city-rss.json');
 
@@ -93,9 +93,11 @@ function parseRssXml(xmlText, defaultCategory, feedName) {
     const dateMatch = itemBlock.match(/<pubDate><!\[CDATA\[(.*?)\]\]><\/pubDate>/i) || itemBlock.match(/<pubDate>(.*?)<\/pubDate>/i);
     const catMatch = itemBlock.match(/<category><!\[CDATA\[(.*?)\]\]><\/category>/i) || itemBlock.match(/<category>(.*?)<\/category>/i);
 
-    const title = titleMatch ? titleMatch[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&').trim() : '';
+    const rawTitle = titleMatch ? titleMatch[1].trim() : '';
+    const title = decodeHtmlEntities(rawTitle);
     const link = linkMatch ? linkMatch[1].trim() : '';
-    let description = descMatch ? descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+    const rawDesc = descMatch ? descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+    let description = decodeHtmlEntities(rawDesc);
     const pubDate = dateMatch ? dateMatch[1].trim() : '';
     const rawCategory = catMatch ? catMatch[1].trim() : '';
 

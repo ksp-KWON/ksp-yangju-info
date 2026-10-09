@@ -29,10 +29,30 @@ if (fs.existsSync(envPath)) {
 const POSTS_DIR = path.join(process.cwd(), 'src/content/posts');
 const MIN_SOURCE_CHARS = 100;
 
+/**
+ * HTML 엔티티 및 기호 복원 표준 함수 (수집 시 텍스트 깨짐 및 노이즈 원천 차단)
+ */
+function decodeHtmlEntities(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&rsquo;/g, "'")
+    .replace(/&lsquo;/g, "'")
+    .replace(/&rdquo;/g, '"')
+    .replace(/&ldquo;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&middot;/g, '·')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\\?u203B/g, '※');
+}
+
 // ── 공통 원천 분량 판정 유틸 ────────────────────────────────────────────────
 function getCleanSourceText(item) {
   if (!item) return '';
-  if (typeof item === 'string') return item.replace(/<[^>]+>/g, '').replace(/\s+/g, '');
+  if (typeof item === 'string') return decodeHtmlEntities(item).replace(/<[^>]+>/g, '').replace(/\s+/g, '');
   const raw = item.intro || item.description || item.content || [
     item.summary,
     item.target,
@@ -42,7 +62,7 @@ function getCleanSourceText(item) {
     item.지원대상,
     item.선정기준
   ].filter(Boolean).join(' ');
-  return String(raw).replace(/<[^>]+>/g, '').replace(/\s+/g, '');
+  return decodeHtmlEntities(String(raw)).replace(/<[^>]+>/g, '').replace(/\s+/g, '');
 }
 
 function isSourceSufficient(item) {
@@ -148,6 +168,7 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
 module.exports = {
   POSTS_DIR,
   MIN_SOURCE_CHARS,
+  decodeHtmlEntities,
   getCleanSourceText,
   isSourceSufficient,
   sleep,
