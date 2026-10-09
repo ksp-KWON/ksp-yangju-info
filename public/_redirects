@@ -2,6 +2,10 @@
 # Cloudflare Pages Global Standard 301 & Rewrite Rules - Yangjuin (SSOT)
 # ==============================================================================
 
+# [Rule 0] OpenGraph Image URL Normalization (Prevent 404 & Redirect to Post)
+/blog/:slug/opengraph-image  /blog/:slug  301
+/blog/:slug/opengraph-image/ /blog/:slug  301
+
 # [Rule 1] Next.js App Router Tree TXT Auto Rewrite (Fix 404s to 200 OK)
 /__next_tree.txt                     /__next._tree.txt            200
 /:dir/__next_tree.txt                /:dir/__next._tree.txt       200
