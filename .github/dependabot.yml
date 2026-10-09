@@ -1,11 +1,21 @@
 version: 2
 updates:
+  # 1. npm 패키지 주간 판올림 검토
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    open-pull-requests-limit: 10
+    # major 버전은 groups에 포함하지 않음 → 개별 PR로 분리되어
+    # 브레이킹체인지 가능성이 있는 건은 눈에 띄게 별도 검토되도록 함
 
+  # 2. GitHub Actions CI/CD 액션 주간 판올림 검토
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
