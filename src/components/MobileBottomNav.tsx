@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import BottomSheet from '@/components/ui/BottomSheet';
@@ -156,9 +156,13 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
 
   const closeModals = () => setOpenModal('none');
 
-  useEffect(() => {
-    closeModals();
-  }, [pathname, searchParams]);
+  const currentRouteKey = `${pathname}?${searchParams.toString()}`;
+  const [prevRouteKey, setPrevRouteKey] = useState(currentRouteKey);
+
+  if (prevRouteKey !== currentRouteKey) {
+    setPrevRouteKey(currentRouteKey);
+    setOpenModal('none');
+  }
 
   const navTabs = [
     {

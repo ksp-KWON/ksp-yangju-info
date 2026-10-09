@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const { POSTS_DIR } = require('./pipeline-utils');
-const { normalizePost } = require('../src/lib/markdown-standard');
+const { normalizePost } = require('./markdown-standard');
 
 function normalizeFilename(filename) {
   const baseName = filename.replace(/\.md$/, '');

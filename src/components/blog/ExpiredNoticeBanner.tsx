@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import AppIcon from '@/components/ui/AppIcon';
+
+const emptySubscribe = () => () => {};
 
 interface ExpiredNoticeBannerProps {
   expiresAt?: string;
@@ -9,20 +11,19 @@ interface ExpiredNoticeBannerProps {
 }
 
 export default function ExpiredNoticeBanner({ expiresAt, sourceLink }: ExpiredNoticeBannerProps) {
-  const [isExpired, setIsExpired] = useState(false);
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
-  useEffect(() => {
-    if (!expiresAt) return;
-    // KST(UTC+9) 기준 방문 시점의 현재 날짜(YYYY-MM-DD) 계산
-    const todayKST = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
+  if (!isMounted || !expiresAt) return null;
 
-    // expiresAt 마감 당일까지 유효: 오늘 날짜가 expiresAt을 초과하면 마감 처리
-    if (todayKST > expiresAt) {
-      setIsExpired(true);
-    }
-  }, [expiresAt]);
+  // KST(UTC+9) 기준 방문 시점의 현재 날짜(YYYY-MM-DD) 계산
+  const todayKST = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
+  const isExpired = todayKST > expiresAt;
 
-  // 서버 렌더링 시 및 마감일 미경과 시 표시 안 함 (Hydration 불일치 방지)
+  // 마감일 미경과 시 표시 안 함 (Hydration 불일치 방지)
   if (!isExpired) return null;
 
   return (
