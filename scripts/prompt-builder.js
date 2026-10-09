@@ -83,7 +83,7 @@ const PLAN_SCHEMA = {
       properties: {
         title: { type: 'STRING', description: 'SEO 최적화된 명확하고 신뢰성 있는 제목 (예: "2026 양주시 청년 기본소득 신청 자격 및 지급 일정 완벽 가이드")' },
         summary: { type: 'STRING', description: '구글 검색 스니펫에 노출될 150자 이내의 핵심 요약문' },
-        category: { type: 'STRING', description: '복지·지원금|축제·나들이|생활·민원|병원·약국|일자리·소상공인 중 택 1' },
+        category: { type: 'STRING', description: '일자리·생활|교통·주차|기업경제·농업|문화·예술|체육·공원|청소·환경|주택·재개발|재난·민방위|복지·돌봄 중 택 1' },
         tags: { type: 'ARRAY', items: { type: 'STRING' }, description: '관련 해시태그 3~5개' }
       },
       required: ['title', 'summary', 'category', 'tags']

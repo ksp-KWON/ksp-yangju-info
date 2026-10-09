@@ -384,7 +384,7 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
       link: course.applyUrl || 'https://www.yangju.go.kr/edu/index.do',
       sourceId: course.id,
       expiresAt: extractExpiryDate(course.applyPeriod),
-      category: '교육·청소년',
+      category: '일자리·생활',
       department: course.org
     };
 

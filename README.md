@@ -11,7 +11,7 @@
 
 * **프레임워크**: Next.js 16 (Turbopack, App Router, SSG 정적 빌드)
 * **스타일링**: Tailwind CSS
-* **호스팅**: Cloudflare Pages
+* **호스팅**: Cloudflare Workers
 * **데이터 파이프라인**: GitHub Actions 크론 자동화 (일일 시정 소식 및 복지 데이터 자동 수집/생성)
 
 ---
