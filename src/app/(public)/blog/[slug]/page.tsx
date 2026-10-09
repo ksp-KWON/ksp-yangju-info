@@ -72,7 +72,20 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     headline: post.title,
     description: post.summary || `${post.title}에 관한 상세 안내입니다.`,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updatedAt || post.date,
+    url: `${SITE_URL}/blog/${slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/blog/${slug}`,
+    },
+    image: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/blog/${slug}/opengraph-image`,
+      width: 1200,
+      height: 630,
+    },
+    inLanguage: 'ko-KR',
+    keywords: post.tags?.join(', ') ?? '',
     author: {
       '@type': 'Organization',
       name: SITE_NAME,
@@ -85,10 +98,6 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         '@type': 'ImageObject',
         url: `${SITE_URL}/icon.png`,
       },
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${SITE_URL}/blog/${slug}`,
     },
   };
 

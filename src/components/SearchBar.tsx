@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import AppIcon from '@/components/ui/AppIcon';
@@ -9,6 +9,18 @@ export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
+  // W3C 접근성 표준: ESC 키 입력 시 모달 닫기
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,12 +45,21 @@ export default function SearchBar() {
         <span className="hidden sm:inline">통합 검색...</span>
       </button>
 
-      {/* 2. 모달 팝업 */}
+      {/* 2. 모달 팝업 (W3C 표준 대화상자) */}
       {isOpen &&
         typeof document !== 'undefined' &&
         createPortal(
-          <div className="fixed inset-0 z-[200] flex items-start justify-center pt-20 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="w-full max-w-xl bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 shadow-2xl rounded-none overflow-hidden">
+          <div
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-[200] flex items-start justify-center pt-20 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+            role="dialog"
+            aria-modal="true"
+            aria-label="통합 검색 대화상자"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-xl bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 shadow-2xl rounded-none overflow-hidden"
+            >
               <form onSubmit={handleSearch} className="flex items-center p-4 border-b border-gray-100 dark:border-zinc-800">
                 <AppIcon name="search" size={20} strokeWidth={2} className="text-zinc-600 dark:text-zinc-400 mr-3 shrink-0" />
                 <input
@@ -49,10 +70,24 @@ export default function SearchBar() {
                   autoFocus
                   className="w-full bg-transparent text-zinc-900 dark:text-white placeholder-zinc-400 font-bold text-base focus:outline-none"
                 />
+                {/* 검색어 즉시 삭제 (Clear) 버튼 */}
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery('')}
+                    className="p-1 mr-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                    aria-label="검색어 지우기"
+                  >
+                    <AppIcon name="close" size={16} strokeWidth={2} />
+                  </button>
+                )}
+                {/* 모바일 가상키보드 엔터 제출용 히든 버튼 */}
+                <button type="submit" className="hidden">검색</button>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
                   className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-none text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
+                  aria-label="닫기"
                 >
                   <AppIcon name="close" size={20} strokeWidth={2} />
                 </button>
