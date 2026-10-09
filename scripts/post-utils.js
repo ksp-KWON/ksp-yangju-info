@@ -5,7 +5,7 @@ const path = require('path');
 const crypto = require('crypto');
 const matter = require('gray-matter');
 const { POSTS_DIR } = require('./pipeline-utils');
-const { normalizePost } = require('../src/lib/markdown-standard');
+const { normalizePost } = require('./markdown-standard');
 
 const FALLBACK_HOME_URL = 'https://www.yangju.go.kr';
 
@@ -86,6 +86,27 @@ function isDuplicatePost(item, existingSet) {
   return false;
 }
 
+// ── 한글 자모 분해 및 로마자 변환기 (국립국어원 표준, 보상스쿨 SSOT) ──────────
+const CHO = ['g', 'kk', 'n', 'd', 'tt', 'r', 'm', 'b', 'pp', 's', 'ss', '', 'j', 'jj', 'ch', 'k', 't', 'p', 'h'];
+const JUNG = ['a', 'ae', 'ya', 'yae', 'eo', 'e', 'yeo', 'ye', 'o', 'wa', 'wae', 'oe', 'yo', 'u', 'wo', 'we', 'wi', 'yu', 'eu', 'ui', 'i'];
+const JONG = ['', 'k', 'k', 'ks', 'n', 'nj', 'nh', 't', 'l', 'lg', 'lm', 'lb', 'ls', 'lt', 'lp', 'lh', 'm', 'p', 'ps', 's', 'ss', 'ng', 'j', 'ch', 'k', 't', 'p', 'h'];
+
+function romanizeHangulWord(word) {
+  let res = '';
+  for (let i = 0; i < word.length; i++) {
+    const code = word.charCodeAt(i) - 44032;
+    if (code >= 0 && code <= 11171) {
+      const cho = Math.floor(code / 588);
+      const jung = Math.floor((code % 588) / 28);
+      const jong = code % 28;
+      res += CHO[cho] + JUNG[jung] + JONG[jong];
+    } else if (/[a-zA-Z0-9]/.test(word[i])) {
+      res += word[i].toLowerCase();
+    }
+  }
+  return res;
+}
+
 function makeSlug(title, date, seq = 1) {
   const KEYWORD_MAP = {
     '양주': 'yangju', '양주시': 'yangjusi', '옥정': 'okjeong', '회천': 'hoecheon', '덕정': 'deokjeong', '덕계': 'deokgye', '백석': 'baekseok', '광적': 'gwangjeok', '장흥': 'jangheung', '나리농원': 'nari-farm', '회암사지': 'hoeamsaji',
@@ -103,13 +124,16 @@ function makeSlug(title, date, seq = 1) {
     slug = slug.replace(new RegExp(kr, 'g'), '-' + en + '-');
   }
 
+  // 사전에 없는 잔여 한글 단어들을 국립국어원 표준 로마자로 자동 음차 변환
+  slug = slug.replace(/[가-힣]+/g, (match) => romanizeHangulWord(match));
+
   slug = slug
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_]+/g, '-')
     .replace(/-{2,}/g, '-')
     .replace(/^-|-$/g, '')
     .toLowerCase()
-    .slice(0, 50);
+    .slice(0, 60);
 
   if (!slug || slug === '-') slug = 'post';
 
