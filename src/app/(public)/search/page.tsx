@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState, Suspense } from 'react';
 import PostCard from '@/components/ui/PostCard';
@@ -11,11 +11,18 @@ import PremiumButton from '@/components/ui/PremiumButton';
 import { PostData } from '@/lib/types';
 
 function SearchResults() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const rawQ = searchParams.get('q') || '';
   const q = rawQ.trim().slice(0, 40);
+
+  const [inputVal, setInputVal] = useState(q);
   const [results, setResults] = useState<PostData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setInputVal(q);
+  }, [q]);
 
   useEffect(() => {
     let ignore = false;
@@ -33,20 +40,25 @@ function SearchResults() {
         const allPosts: PostData[] = await res.json();
         if (ignore) return;
 
-        const query = q.toLowerCase().trim();
+        // W3C 표준 다중 토큰(공백 분리) AND 검색 엔진
+        const tokens = q.toLowerCase().split(/\s+/).filter(Boolean);
+
         const filtered = allPosts.filter((post) => {
-          const titleMatch = post.title.toLowerCase().includes(query);
-          const summaryMatch = (post.summary || '').toLowerCase().includes(query);
-          const tagsMatch = (post.tags || []).some((tag) => tag.toLowerCase().includes(query));
-          const catMatch = Array.isArray(post.category)
-            ? post.category.some((c) => c.toLowerCase().includes(query))
-            : (post.category || '').toLowerCase().includes(query);
-          return titleMatch || summaryMatch || tagsMatch || catMatch;
+          const title = post.title.toLowerCase();
+          const summary = (post.summary || '').toLowerCase();
+          const tags = (post.tags || []).join(' ').toLowerCase();
+          const cat = Array.isArray(post.category)
+            ? post.category.join(' ').toLowerCase()
+            : (post.category || '').toLowerCase();
+          const subCat = (post.subCategory || '').toLowerCase();
+          const combined = `${title} ${summary} ${tags} ${cat} ${subCat}`;
+
+          return tokens.every((token) => combined.includes(token));
         });
 
         setResults(filtered);
       } catch (e) {
-        console.error(e);
+        console.error('검색 데이터 호출 실패:', e);
         if (!ignore) setResults([]);
       } finally {
         if (!ignore) setIsLoading(false);
@@ -60,10 +72,18 @@ function SearchResults() {
     };
   }, [q]);
 
-  const popularKeywords = ['응급실', '병원', '건강검진', '민원'];
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = inputVal.trim().slice(0, 40);
+    if (trimmed) {
+      router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+    }
+  };
+
+  const popularKeywords = ['응급실', '병원', '건강검진', '민원', '일자리', '문화'];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* 1. 검색 인트로 헤더 */}
       <PageHeaderBanner
         className="mt-4"
@@ -79,14 +99,44 @@ function SearchResults() {
             '양주 생활정보 검색'
           )
         }
-        description={q ? `총 ${results.length}개의 관련 소식을 찾았습니다.` : '찾으시는 병원, 민원 키워드를 입력해 보세요.'}
+        description={q ? `총 ${results.length}개의 관련 소식을 찾았습니다.` : '찾으시는 병원, 민원, 일자리 키워드를 검색해 보세요.'}
         watermarkIcon="search"
       >
+        {/* 인라인 검색창 (실시간 재검색) */}
+        <form onSubmit={handleSearchSubmit} className="mt-4 relative flex items-center bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 rounded-none shadow-xs p-1 focus-within:border-[var(--google-blue)] dark:focus-within:border-[#8ab4f8] transition-all">
+          <div className="pl-3 pr-2 text-zinc-400 dark:text-zinc-500 shrink-0">
+            <AppIcon name="search" size={18} strokeWidth={2} />
+          </div>
+          <input
+            type="text"
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+            placeholder="병원, 민원 키워드를 입력하세요 (예: 양주 일자리)"
+            className="w-full bg-transparent text-sm sm:text-base font-bold text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none py-1.5"
+          />
+          {inputVal && (
+            <button
+              type="button"
+              onClick={() => setInputVal('')}
+              className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors mr-1 cursor-pointer shrink-0"
+              aria-label="검색어 지우기"
+            >
+              <AppIcon name="close" size={16} strokeWidth={2} />
+            </button>
+          )}
+          <button
+            type="submit"
+            className="px-4 py-2 bg-[var(--google-blue)] text-white text-xs sm:text-sm font-extrabold rounded-none hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer shrink-0"
+          >
+            검색
+          </button>
+        </form>
+
         {/* 추천 키워드 칩 */}
-        <div className="mt-5 flex items-center flex-wrap gap-1.5 pt-4 border-t border-gray-100 dark:border-zinc-800">
+        <div className="mt-4 flex items-center flex-wrap gap-1.5 pt-3.5 border-t border-gray-100 dark:border-zinc-800">
           <span className="text-xs font-bold text-zinc-500 mr-1 flex items-center gap-1">
             <AppIcon name="zap" size={12} strokeWidth={2} className="text-amber-500" />
-            인기 키워드:
+            추천 키워드:
           </span>
           {popularKeywords.map((kw) => (
             <Link
@@ -117,7 +167,7 @@ function SearchResults() {
           <AppIcon name="search" size={40} strokeWidth={1.5} className="mx-auto text-zinc-400 mb-3" />
           <h3 className="text-lg font-bold text-zinc-950 dark:text-white mb-1">검색 결과가 없습니다</h3>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto break-keep">
-            단어의 철자가 정확한지 확인하시거나 다른 유사 검색어로 다시 시도해 보세요.
+            단어의 철자가 정확한지 확인하시거나 위의 검색창에서 다른 유사 검색어로 다시 시도해 보세요.
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <PremiumButton href="/blog" variant="primary" size="md">
