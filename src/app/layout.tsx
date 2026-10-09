@@ -1,7 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, NAVER_SITE_VERIFICATION } from "@/lib/constants";
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#121417" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -87,6 +96,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased overflow-x-hidden" suppressHydrationWarning>
       <head>
+        {/* W3C CDN 폰트 사전 연결 (FCP / LCP 최적화 및 폰트 깜빡임 사전 차단) */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         {NAVER_SITE_VERIFICATION && (
           <meta name="naver-site-verification" content={NAVER_SITE_VERIFICATION} />
         )}
