@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
-import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, NAVER_SITE_VERIFICATION } from "@/lib/constants";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -87,7 +87,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased overflow-x-hidden" suppressHydrationWarning>
       <head>
-        <meta name="naver-site-verification" content="17d7828ffa44b9ac00d06745104e11c4c0deb69f" />
+        {NAVER_SITE_VERIFICATION && (
+          <meta name="naver-site-verification" content={NAVER_SITE_VERIFICATION} />
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(globalJsonLd) }}
