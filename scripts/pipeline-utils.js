@@ -125,7 +125,23 @@ function extractSourceTokens(sourceRaw) {
   const unitRegex = /(\d+[\d,]*)\s*(만\s*원|만원|천\s*원|천원|억\s*원|억원|%|시(?![\w가-힣])|분|명|석|원|번|호|층|매|가구)/g;
   const unitMatches = clean.match(unitRegex) || [];
   unitMatches.forEach(u => {
-    tokens.add(u.replace(/\s+/g, ''));
+    const compact = u.replace(/\s+/g, '');
+    tokens.add(compact);
+    const mMan = compact.match(/^(\d+)만원$/);
+    if (mMan) {
+      const num = parseInt(mMan[1], 10);
+      const won = num * 10000;
+      tokens.add(`${won}원`);
+      tokens.add(`${won.toLocaleString()}원`);
+    }
+    const mWon = compact.match(/^(\d+)원$/);
+    if (mWon) {
+      const num = parseInt(mWon[1], 10);
+      if (num >= 10000 && num % 10000 === 0) {
+        tokens.add(`${num / 10000}만원`);
+        tokens.add(`${num / 10000}만 원`);
+      }
+    }
   });
 
   return { tokens, compactText: clean.replace(/\s+/g, '') };
