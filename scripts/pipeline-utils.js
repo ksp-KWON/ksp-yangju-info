@@ -122,7 +122,8 @@ function extractSourceTokens(sourceRaw) {
   });
 
   // 2) 숫자 + 단위 쌍 (시·분·명·석·원·번·호·층·매·가구)
-  const unitMatches = clean.match(/(\d+)\s*(시(?![\w가-힣])|분|명|석|원|번|호|층|매|가구)/g) || [];
+  const unitRegex = /(\d+[\d,]*)\s*(만\s*원|만원|천\s*원|천원|억\s*원|억원|%|시(?![\w가-힣])|분|명|석|원|번|호|층|매|가구)/g;
+  const unitMatches = clean.match(unitRegex) || [];
   unitMatches.forEach(u => {
     tokens.add(u.replace(/\s+/g, ''));
   });
@@ -149,13 +150,13 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
 
   // 2) 숫자 + 단위 쌍 (시·분·명·석·원·번·호·층·매·가구)
   // 연·월·일·부·회·차는 정규식 자체에 미포함되어 자동 제외
-  const unitRegex = /(\d+[\d,]*)\s*(시(?![\w가-힣])|분|명|석|원|번|호|층|매|가구)/g;
+  const unitRegex = /(\d+[\d,]*)\s*(만\s*원|만원|천\s*원|천원|억\s*원|억원|%|시(?![\w가-힣])|분|명|석|원|번|호|층|매|가구)/g;
   let um;
   while ((um = unitRegex.exec(bodyOnly)) !== null) {
     const rawToken = um[0];
     const num = um[1].replace(/,/g, '').replace(/\s+/g, '');
     const unit = um[2];
-    const normToken = `${num}${unit}`;
+    const normToken = rawToken.replace(/\s+/g, "");
 
     if (!validTokens.has(normToken) && !compactText.includes(normToken)) {
       violations.push(rawToken.trim());
