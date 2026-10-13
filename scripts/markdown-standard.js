@@ -1,3 +1,29 @@
+const KOREAN_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
+/**
+ * 달력 요일 불일치 정규화 (사전 예방)
+ * 본문, 제목, 요약의 "N월 N일(요일)" 패턴 중 실제 달력과 불일치하는 요일 괄호 삭제
+ * @param {string} text
+ * @param {number} defaultYear
+ * @param {string} [context]
+ * @returns {string}
+ */
+function sanitizeCalendarDays(text, defaultYear = 2026, context = '') {
+  if (!text || typeof text !== 'string') return text;
+  const regex = /(?:(20\d{2})년\s*)?(\d{1,2})월\s*(\d{1,2})일\s*\(([일월화수목금토])\)/g;
+  return text.replace(regex, (match, yStr, mStr, dStr, claimedDay) => {
+    const year = yStr ? parseInt(yStr, 10) : defaultYear;
+    const month = parseInt(mStr, 10);
+    const day = parseInt(dStr, 10);
+    const actualDay = KOREAN_DAYS[new Date(year, month - 1, day).getDay()];
+    if (actualDay !== claimedDay) {
+      console.warn(`[요일 정리] ${context ? context + ', ' : ''}원문 표기: ${match}, 실제 달력 요일: (${actualDay}) -> 요일 괄호 삭제`);
+      return match.replace(/\s*\([일월화수목금토]\)/, '');
+    }
+    return match;
+  });
+}
+
 /**
  * src/lib/markdown-standard.js
  * 양주 건강·생활 정보 포털 전사 단일 표준 마크다운 정규화 엔진 (Single Source of Truth)
@@ -279,16 +305,31 @@ function normalizePost(rawFileContent) {
   const cleanData = normalizeFrontmatter(parsed.data);
   const cleanBody = normalizeMarkdownBody(parsed.content, cleanData.sourceLink);
 
-  const cleanContent = matter.stringify(cleanBody, cleanData);
+  // 달력 요일 불일치 사전 정규화
+  const dateMatch = cleanData.date ? String(cleanData.date).match(/^(\d{4})-\d{2}-\d{2}/) : rawFileContent.match(/date:\s*['"]?(\d{4})-\d{2}-\d{2}/);
+  const defaultYear = dateMatch ? parseInt(dateMatch[1], 10) : 2026;
+  const sourceContext = cleanData.title || cleanData.sourceId || '';
+
+  if (cleanData.title) {
+    cleanData.title = sanitizeCalendarDays(cleanData.title, defaultYear, `제목[${sourceContext}]`);
+  }
+  if (cleanData.summary) {
+    cleanData.summary = sanitizeCalendarDays(cleanData.summary, defaultYear, `요약[${sourceContext}]`);
+  }
+  const sanitizedBody = sanitizeCalendarDays(cleanBody, defaultYear, `본문[${sourceContext}]`);
+
+  const cleanContent = matter.stringify(sanitizedBody, cleanData);
   return {
     data: cleanData,
-    content: cleanBody,
+    content: sanitizedBody,
     fullContent: cleanContent,
     isChanged: cleanContent !== rawFileContent,
   };
 }
 
 module.exports = {
+  KOREAN_DAYS,
+  sanitizeCalendarDays,
   normalizeFrontmatter,
   repairLineBold,
   normalizeMarkdownBody,

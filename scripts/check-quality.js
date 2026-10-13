@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const { POSTS_DIR } = require('./pipeline-utils');
-const { normalizePost } = require('./markdown-standard');
+const { normalizePost, KOREAN_DAYS } = require('./markdown-standard');
 
 function normalizeFilename(filename) {
   const baseName = filename.replace(/\.md$/, '');
@@ -38,8 +38,6 @@ function processPost(filePath) {
   }
   return false;
 }
-
-const KOREAN_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 function validateCalendarDays(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
@@ -101,4 +99,12 @@ function main() {
   console.log('✅ All Yangjuin blog posts passed quality checks (Rock-Solid Verified).');
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  validateCalendarDays,
+  processPost,
+  main
+};
