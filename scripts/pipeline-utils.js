@@ -14,6 +14,23 @@ if (dns && dns.setDefaultResultOrder) {
   dns.setDefaultResultOrder('ipv4first');
 }
 
+const tls  = require('tls');
+
+// ── TLS 중간 인증서 로드 (ui4u.go.kr 등 중간 체인 보완, TLS 검증 유지) ─────────
+const certPath = path.join(process.cwd(), 'scripts', 'certs', 'ui4u-intermediate.pem');
+let customDispatcher = null;
+if (fs.existsSync(certPath)) {
+  try {
+    const { Agent } = require('undici');
+    const pem = fs.readFileSync(certPath, 'utf8');
+    customDispatcher = new Agent({
+      connect: {
+        ca: [...tls.rootCertificates, pem]
+      }
+    });
+  } catch {}
+}
+
 // ── .env.local 로드 (파이프라인 전역 1회만 실행) ─────────────────────────────
 const envPath = path.join(process.cwd(), '.env.local');
 if (fs.existsSync(envPath)) {
@@ -92,7 +109,11 @@ async function safeFetch(url, options = {}, timeoutMs = 15000) {
   };
 
   try {
-    return await fetch(url, finalOptions);
+    const fetchOpts = { ...finalOptions };
+    if (customDispatcher && !fetchOpts.dispatcher && (typeof url === 'string' && url.includes('ui4u.go.kr'))) {
+      fetchOpts.dispatcher = customDispatcher;
+    }
+    return await fetch(url, fetchOpts);
   } catch (error) {
     if (error.name === 'AbortError') {
       throw new Error(`Fetch timeout after ${timeoutMs}ms: ${url}`);
@@ -182,14 +203,8 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
   return Array.from(new Set(violations));
 }
 
-let undiciAgent = null;
-try {
-  const { Agent } = require('undici');
-  undiciAgent = new Agent({ connect: { rejectUnauthorized: false } });
-} catch {}
-
 /**
- * 소스 본문 수집 함수 (B-1 표준)
+ * 소스 본문 수집 함수 (B-1/B-2 표준)
  * @param {string} url - RSS 항목의 link
  * @returns {Promise<{text: string, imageCount: number, attachments: string[]}>}
  */
@@ -222,8 +237,9 @@ async function crawlSourceBody(url) {
         'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
       }
     };
-    if (undiciAgent) {
-      fetchOptions.dispatcher = undiciAgent;
+    // TLS 중간 인증서가 필요한 특정 공공기관(ui4u.go.kr)에만 검증된 ca dispatcher 적용 (TLS 검증 유지)
+    if (customDispatcher && (typeof targetUrl === 'string' && targetUrl.includes('ui4u.go.kr'))) {
+      fetchOptions.dispatcher = customDispatcher;
     }
 
     const res = await fetch(targetUrl, fetchOptions);
@@ -235,7 +251,7 @@ async function crawlSourceBody(url) {
 
     const html = await res.text();
 
-    // alert 등으로 삭제/존재하지 않는 페이지 처리
+    // alert 등으로 삭제/존재하지 않거나 권한 없는 페이지 처리
     if (html.includes("alert('게시판이 삭제되었거나 존재하지 않습니다')") || html.includes('alert("게시판이 삭제되었거나') || html.includes('alert("권한이 없습니다') || html.includes("alert('권한이 없습니다")) {
       return { text: '', imageCount: 0, attachments: [] };
     }
@@ -260,21 +276,24 @@ async function crawlSourceBody(url) {
     let container = '';
     if (targetUrl.includes('blog.naver.com')) {
       const startIdx = html.indexOf('class="se-main-container"');
-      const footerStart = html.indexOf('<!-- SE_DOC_FOOTER_START -->', startIdx);
-      const postFooter = html.indexOf('class="post-footer', startIdx);
-      const endIdx = footerStart !== -1 ? footerStart : (postFooter !== -1 ? postFooter : html.length);
-      if (startIdx !== -1) {
-        const openTagEnd = html.indexOf('>', startIdx);
-        container = openTagEnd !== -1 ? html.substring(openTagEnd + 1, endIdx) : html.substring(startIdx, endIdx);
+      const viewIdx = html.indexOf('id="postViewArea"');
+      const chosenStart = startIdx !== -1 ? startIdx : viewIdx;
+      if (chosenStart !== -1) {
+        const footerStart = html.indexOf('<!-- SE_DOC_FOOTER_START -->', chosenStart);
+        const postFooter = html.indexOf('class="post-footer', chosenStart);
+        const endIdx = footerStart !== -1 ? footerStart : (postFooter !== -1 ? postFooter : html.length);
+        const openTagEnd = html.indexOf('>', chosenStart);
+        container = openTagEnd !== -1 ? html.substring(openTagEnd + 1, endIdx) : html.substring(chosenStart, endIdx);
       } else {
-        container = html;
+        // 네이버 블로그 본문 컨테이너 미발견 시 비공고/오염 방지를 위해 빈 문자열 반환
+        return { text: '', imageCount: 0, attachments: [] };
       }
     } else {
       const articleMatch = html.match(/<article[\s\S]*?<\/article>/i);
       const mainMatch = html.match(/<main[\s\S]*?<\/main>/i);
-      const contentIdx = html.indexOf('id="content"');
       const viewContIdx = html.indexOf('class="view_cont"');
       const bbsIdx = html.indexOf('class="bbs_view"');
+      const contentIdx = html.indexOf('id="content"');
 
       if (articleMatch) {
         container = articleMatch[0];
@@ -287,8 +306,8 @@ async function crawlSourceBody(url) {
         const endIdx = footerIdx !== -1 ? footerIdx : startIdx + 35000;
         container = openTagEnd !== -1 ? html.substring(openTagEnd + 1, endIdx) : html.substring(startIdx, endIdx);
       } else {
-        const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-        container = bodyMatch ? bodyMatch[1] : html;
+        // 본문 컨테이너 미발견 시 <body> 전체로 대체하지 않고 비공고/홈페이지 오염 방지를 위해 빈 문자열 반환 (B-2)
+        return { text: '', imageCount: 0, attachments: [] };
       }
     }
 
@@ -308,6 +327,19 @@ async function crawlSourceBody(url) {
     clean = decodeHtmlEntities(clean)
       .replace(/\s+/g, ' ')
       .trim();
+
+    // 네비게이션·메뉴 문구가 3개 이상 들어가면 비공고/홈페이지 오염 방지를 위해 빈 문자열 반환 (B-2)
+    const navKeywords = ["바로가기", "메뉴", "QUICK", "로그인", "사이트맵", "개인정보처리방침", "COPYRIGHT"];
+    let navCount = 0;
+    for (const kw of navKeywords) {
+      const reg = new RegExp(kw, 'gi');
+      const m = clean.match(reg);
+      if (m) navCount += m.length;
+      if (navCount >= 3) break;
+    }
+    if (navCount >= 3) {
+      return { text: '', imageCount: 0, attachments: [] };
+    }
 
     // 최대 12,000자로 절단
     const text = clean.slice(0, 12000);
