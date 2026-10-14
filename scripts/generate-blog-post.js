@@ -11,7 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const { callGemini, isAllQuotaExhausted } = require('./gemini-helper');
-const { sleep, MIN_SOURCE_CHARS, getCleanSourceText, isSourceSufficient, validateSourceNumbers } = require('./pipeline-utils');
+const { sleep, MIN_SOURCE_CHARS, getCleanSourceText, isSourceSufficient, validateSourceNumbers, crawlSourceBody } = require('./pipeline-utils');
 const {
   FALLBACK_HOME_URL,
   isFallbackOrEmptyUrl,
@@ -111,6 +111,22 @@ async function generateAndSavePost(targetItem, tierLabel) {
   const sourceId = targetItem.sourceId || generateSourceId(targetItem.title);
   console.log(`  -> [${tierLabel}] 타깃 선정: "${targetItem.title}" (Source ID: ${sourceId})`);
 
+  let sourceBody = '';
+  if (targetItem.link) {
+    const crawled = await crawlSourceBody(targetItem.link);
+    sourceBody = crawled.text || '';
+    if (sourceBody) {
+      console.log(`  -> [소스 본문 수집 성공] ${targetItem.link} (${sourceBody.length}자 수집)`);
+    } else {
+      console.log(`  -> [소스 본문 수집 실패] ${targetItem.link} (본문 없음 또는 접근 불가)`);
+    }
+  }
+
+  const promptItem = sourceBody ? { ...targetItem, sourceBody } : targetItem;
+  const validationSource = sourceBody
+    ? `${targetItem.title || ''} ${targetItem.description || ''} ${sourceBody}`
+    : targetItem;
+
   const angle = getRandomAngle();
   let plan = null;
   let content = null;
@@ -119,15 +135,15 @@ async function generateAndSavePost(targetItem, tierLabel) {
 
   while (attempts < MAX_REWRITES) {
     attempts++;
-    plan = await callGemini(buildPlanPrompt(targetItem), PLAN_SCHEMA, 'lite');
+    plan = await callGemini(buildPlanPrompt(promptItem), PLAN_SCHEMA, 'lite');
     await sleep(2000);
 
     totalContentCalls++;
-    content = await callGemini(buildContentPrompt(targetItem, plan, angle), CONTENT_SCHEMA, 'flash');
+    content = await callGemini(buildContentPrompt(promptItem, plan, angle), CONTENT_SCHEMA, 'flash');
 
     // 원천 팩트 숫자 토큰 무결성 검증 (제목·요약·본문 전역 사전예방 게이트)
     const fullTextToValidate = `${plan?.frontmatter?.title || ''} ${plan?.frontmatter?.summary || ''} ${content?.markdownContent || ''}`;
-    const violations = validateSourceNumbers(fullTextToValidate, targetItem);
+    const violations = validateSourceNumbers(fullTextToValidate, validationSource);
     if (violations.length === 0) {
       break;
     }

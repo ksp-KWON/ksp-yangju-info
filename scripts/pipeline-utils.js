@@ -172,7 +172,7 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
     const rawToken = um[0];
     const num = um[1].replace(/,/g, '').replace(/\s+/g, '');
     const unit = um[2];
-    const normToken = rawToken.replace(/\s+/g, "");
+    const normToken = `${num}${unit.replace(/\s+/g, "")}`;
 
     if (!validTokens.has(normToken) && !compactText.includes(normToken)) {
       violations.push(rawToken.trim());
@@ -180,6 +180,147 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
   }
 
   return Array.from(new Set(violations));
+}
+
+let undiciAgent = null;
+try {
+  const { Agent } = require('undici');
+  undiciAgent = new Agent({ connect: { rejectUnauthorized: false } });
+} catch {}
+
+/**
+ * 소스 본문 수집 함수 (B-1 표준)
+ * @param {string} url - RSS 항목의 link
+ * @returns {Promise<{text: string, imageCount: number, attachments: string[]}>}
+ */
+async function crawlSourceBody(url) {
+  if (!url || typeof url !== 'string' || !url.startsWith('http')) {
+    return { text: '', imageCount: 0, attachments: [] };
+  }
+
+  // 요청 간 1초 간격 준수
+  await sleep(1000);
+
+  let targetUrl = url;
+  // 네이버 블로그 PostView iframe URL 처리
+  if (url.includes('blog.naver.com') && !url.includes('PostView.naver')) {
+    const m = url.match(/blog\.naver\.com\/([^/?#]+)\/(\d+)/);
+    if (m) {
+      targetUrl = `https://blog.naver.com/PostView.naver?blogId=${m[1]}&logNo=${m[2]}`;
+    }
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const fetchOptions = {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
+      }
+    };
+    if (undiciAgent) {
+      fetchOptions.dispatcher = undiciAgent;
+    }
+
+    const res = await fetch(targetUrl, fetchOptions);
+    clearTimeout(timeoutId);
+
+    if (res.status !== 200) {
+      return { text: '', imageCount: 0, attachments: [] };
+    }
+
+    const html = await res.text();
+
+    // alert 등으로 삭제/존재하지 않는 페이지 처리
+    if (html.includes("alert('게시판이 삭제되었거나 존재하지 않습니다')") || html.includes('alert("게시판이 삭제되었거나') || html.includes('alert("권한이 없습니다') || html.includes("alert('권한이 없습니다")) {
+      return { text: '', imageCount: 0, attachments: [] };
+    }
+
+    // 첨부 링크 검출 (.pdf, .hwp, .hwpx, .xlsx, .zip 등)
+    const attachRegex = /href="([^"]+\.(pdf|hwp|hwpx|xlsx|xls|zip|doc|docx)[^"]*)"/gi;
+    const attachMatches = [];
+    let match;
+    while ((match = attachRegex.exec(html)) !== null) {
+      const extMatch = match[1].match(/\.(pdf|hwp|hwpx|xlsx|xls|zip|doc|docx)/i);
+      if (extMatch) {
+        attachMatches.push(extMatch[0].toLowerCase());
+      }
+    }
+    const dlRegex = /href="([^"]*(?:download\.do|fileDown|file_down|fileDownload|attach\.naver\.net|download\.naver)[^"]*)"/gi;
+    while ((match = dlRegex.exec(html)) !== null) {
+      const ext = (match[1].match(/\.(pdf|hwp|hwpx|xlsx|xls|zip|doc|docx)/i) || [])[0];
+      attachMatches.push(ext ? ext.toLowerCase() : '.첨부');
+    }
+
+    // 본문 컨테이너 추출 (네이버 블로그 및 일반 HTML)
+    let container = '';
+    if (targetUrl.includes('blog.naver.com')) {
+      const startIdx = html.indexOf('class="se-main-container"');
+      const footerStart = html.indexOf('<!-- SE_DOC_FOOTER_START -->', startIdx);
+      const postFooter = html.indexOf('class="post-footer', startIdx);
+      const endIdx = footerStart !== -1 ? footerStart : (postFooter !== -1 ? postFooter : html.length);
+      if (startIdx !== -1) {
+        const openTagEnd = html.indexOf('>', startIdx);
+        container = openTagEnd !== -1 ? html.substring(openTagEnd + 1, endIdx) : html.substring(startIdx, endIdx);
+      } else {
+        container = html;
+      }
+    } else {
+      const articleMatch = html.match(/<article[\s\S]*?<\/article>/i);
+      const mainMatch = html.match(/<main[\s\S]*?<\/main>/i);
+      const contentIdx = html.indexOf('id="content"');
+      const viewContIdx = html.indexOf('class="view_cont"');
+      const bbsIdx = html.indexOf('class="bbs_view"');
+
+      if (articleMatch) {
+        container = articleMatch[0];
+      } else if (mainMatch) {
+        container = mainMatch[0];
+      } else if (viewContIdx !== -1 || bbsIdx !== -1 || contentIdx !== -1) {
+        const startIdx = viewContIdx !== -1 ? viewContIdx : (bbsIdx !== -1 ? bbsIdx : contentIdx);
+        const openTagEnd = html.indexOf('>', startIdx);
+        const footerIdx = html.indexOf('<footer', startIdx);
+        const endIdx = footerIdx !== -1 ? footerIdx : startIdx + 35000;
+        container = openTagEnd !== -1 ? html.substring(openTagEnd + 1, endIdx) : html.substring(startIdx, endIdx);
+      } else {
+        const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        container = bodyMatch ? bodyMatch[1] : html;
+      }
+    }
+
+    // 이미지 개수만 카운트 (URL은 수집하지 않음)
+    const imgMatches = (container.match(/<img\b[^>]*>/gi) || []).length;
+
+    // 불필요한 태그 제거 및 텍스트 정제
+    let clean = container
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .replace(/<header[\s\S]*?<\/header>/gi, '')
+      .replace(/<nav[\s\S]*?<\/nav>/gi, '')
+      .replace(/<footer[\s\S]*?<\/footer>/gi, '')
+      .replace(/<aside[\s\S]*?<\/aside>/gi, '')
+      .replace(/<[^>]+>/g, ' ');
+
+    clean = decodeHtmlEntities(clean)
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // 최대 12,000자로 절단
+    const text = clean.slice(0, 12000);
+
+    return {
+      text,
+      imageCount: imgMatches,
+      attachments: Array.from(new Set(attachMatches))
+    };
+  } catch {
+    clearTimeout(timeoutId);
+    return { text: '', imageCount: 0, attachments: [] };
+  }
 }
 
 module.exports = {
@@ -191,7 +332,8 @@ module.exports = {
   sleep,
   safeFetch,
   extractSourceTokens,
-  validateSourceNumbers
+  validateSourceNumbers,
+  crawlSourceBody
 };
 
 
