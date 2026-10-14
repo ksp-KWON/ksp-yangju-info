@@ -1,0 +1,1 @@
+require('./pipeline.test.js');

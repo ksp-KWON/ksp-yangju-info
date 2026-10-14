@@ -14,23 +14,6 @@ if (dns && dns.setDefaultResultOrder) {
   dns.setDefaultResultOrder('ipv4first');
 }
 
-const tls  = require('tls');
-
-// ── TLS 중간 인증서 로드 (ui4u.go.kr 등 중간 체인 보완, TLS 검증 유지) ─────────
-const certPath = path.join(process.cwd(), 'scripts', 'certs', 'ui4u-intermediate.pem');
-let customDispatcher = null;
-if (fs.existsSync(certPath)) {
-  try {
-    const { Agent } = require('undici');
-    const pem = fs.readFileSync(certPath, 'utf8');
-    customDispatcher = new Agent({
-      connect: {
-        ca: [...tls.rootCertificates, pem]
-      }
-    });
-  } catch {}
-}
-
 // ── .env.local 로드 (파이프라인 전역 1회만 실행) ─────────────────────────────
 const envPath = path.join(process.cwd(), '.env.local');
 if (fs.existsSync(envPath)) {
@@ -109,11 +92,7 @@ async function safeFetch(url, options = {}, timeoutMs = 15000) {
   };
 
   try {
-    const fetchOpts = { ...finalOptions };
-    if (customDispatcher && !fetchOpts.dispatcher && (typeof url === 'string' && url.includes('ui4u.go.kr'))) {
-      fetchOpts.dispatcher = customDispatcher;
-    }
-    return await fetch(url, fetchOpts);
+    return await fetch(url, finalOptions);
   } catch (error) {
     if (error.name === 'AbortError') {
       throw new Error(`Fetch timeout after ${timeoutMs}ms: ${url}`);
@@ -237,10 +216,6 @@ async function crawlSourceBody(url) {
         'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
       }
     };
-    // TLS 중간 인증서가 필요한 특정 공공기관(ui4u.go.kr)에만 검증된 ca dispatcher 적용 (TLS 검증 유지)
-    if (customDispatcher && (typeof targetUrl === 'string' && targetUrl.includes('ui4u.go.kr'))) {
-      fetchOptions.dispatcher = customDispatcher;
-    }
 
     const res = await fetch(targetUrl, fetchOptions);
     clearTimeout(timeoutId);
@@ -274,7 +249,7 @@ async function crawlSourceBody(url) {
 
     // 본문 컨테이너 추출 (네이버 블로그 및 일반 HTML)
     let container = '';
-    if (targetUrl.includes('blog.naver.com')) {
+    if (targetUrl.includes('blog.naver.com') || html.includes('class="se-main-container"') || html.includes('id="postViewArea"')) {
       const startIdx = html.indexOf('class="se-main-container"');
       const viewIdx = html.indexOf('id="postViewArea"');
       const chosenStart = startIdx !== -1 ? startIdx : viewIdx;
@@ -367,5 +342,4 @@ module.exports = {
   validateSourceNumbers,
   crawlSourceBody
 };
-
 

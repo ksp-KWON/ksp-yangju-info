@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "test": "node --test tests/",
+    "prebuild": "npm test",
     "build": "npm run check-quality && next build",
     "start": "next start",
     "lint": "eslint",
