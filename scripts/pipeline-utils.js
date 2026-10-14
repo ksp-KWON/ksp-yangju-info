@@ -9,9 +9,29 @@
 const fs   = require('fs');
 const path = require('path');
 const dns  = require('dns');
+const tls  = require('tls');
 
 if (dns && dns.setDefaultResultOrder) {
   dns.setDefaultResultOrder('ipv4first');
+}
+
+// ── TLS 중간 인증서 로드 (ui4u.go.kr 등 중간 체인 보완, TLS 검증 유지) ─────────
+const certPath = path.join(process.cwd(), 'scripts', 'certs', 'ui4u-intermediate.pem');
+let customDispatcher = null;
+let customFetch = null;
+if (fs.existsSync(certPath)) {
+  try {
+    const undici = require('undici');
+    const pem = fs.readFileSync(certPath, 'utf8');
+    customDispatcher = new undici.Agent({
+      connect: {
+        ca: [...tls.rootCertificates, pem]
+      }
+    });
+    customFetch = undici.fetch;
+  } catch (err) {
+    console.warn('[pipeline-utils] ui4u TLS intermediate agent creation failed:', err && err.message ? err.message : String(err));
+  }
 }
 
 // ── .env.local 로드 (파이프라인 전역 1회만 실행) ─────────────────────────────
@@ -92,7 +112,13 @@ async function safeFetch(url, options = {}, timeoutMs = 15000) {
   };
 
   try {
-    return await fetch(url, finalOptions);
+    const fetchOpts = { ...finalOptions };
+    const isUi4u = customDispatcher && customFetch && (typeof url === 'string' && url.includes('ui4u.go.kr'));
+    const fetchFn = isUi4u ? customFetch : fetch;
+    if (isUi4u && !fetchOpts.dispatcher) {
+      fetchOpts.dispatcher = customDispatcher;
+    }
+    return await fetchFn(url, fetchOpts);
   } catch (error) {
     if (error.name === 'AbortError') {
       throw new Error(`Fetch timeout after ${timeoutMs}ms: ${url}`);
@@ -172,7 +198,7 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
     const rawToken = um[0];
     const num = um[1].replace(/,/g, '').replace(/\s+/g, '');
     const unit = um[2];
-    const normToken = `${num}${unit.replace(/\s+/g, "")}`;
+    const normToken = `${num}${unit.replace(/\s+/g, '')}`;
 
     if (!validTokens.has(normToken) && !compactText.includes(normToken)) {
       violations.push(rawToken.trim());
@@ -216,8 +242,14 @@ async function crawlSourceBody(url) {
         'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
       }
     };
+    // TLS 중간 인증서가 필요한 특정 공공기관(ui4u.go.kr)에만 검증된 ca dispatcher 적용 (TLS 검증 유지)
+    const isUi4u = customDispatcher && customFetch && (typeof targetUrl === 'string' && targetUrl.includes('ui4u.go.kr'));
+    const fetchFn = isUi4u ? customFetch : fetch;
+    if (isUi4u) {
+      fetchOptions.dispatcher = customDispatcher;
+    }
 
-    const res = await fetch(targetUrl, fetchOptions);
+    const res = await fetchFn(targetUrl, fetchOptions);
     clearTimeout(timeoutId);
 
     if (res.status !== 200) {
@@ -267,6 +299,7 @@ async function crawlSourceBody(url) {
       const articleMatch = html.match(/<article[\s\S]*?<\/article>/i);
       const mainMatch = html.match(/<main[\s\S]*?<\/main>/i);
       const viewContIdx = html.indexOf('class="view_cont"');
+      const bodIdx = html.indexOf('class="bod_view"');
       const bbsIdx = html.indexOf('class="bbs_view"');
       const contentIdx = html.indexOf('id="content"');
 
@@ -274,8 +307,8 @@ async function crawlSourceBody(url) {
         container = articleMatch[0];
       } else if (mainMatch) {
         container = mainMatch[0];
-      } else if (viewContIdx !== -1 || bbsIdx !== -1 || contentIdx !== -1) {
-        const startIdx = viewContIdx !== -1 ? viewContIdx : (bbsIdx !== -1 ? bbsIdx : contentIdx);
+      } else if (viewContIdx !== -1 || bodIdx !== -1 || bbsIdx !== -1 || contentIdx !== -1) {
+        const startIdx = viewContIdx !== -1 ? viewContIdx : (bodIdx !== -1 ? bodIdx : (bbsIdx !== -1 ? bbsIdx : contentIdx));
         const openTagEnd = html.indexOf('>', startIdx);
         const footerIdx = html.indexOf('<footer', startIdx);
         const endIdx = footerIdx !== -1 ? footerIdx : startIdx + 35000;

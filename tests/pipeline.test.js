@@ -49,6 +49,50 @@ describe('Pipeline Core Test Suite', () => {
             </article>
           </body></html>
         `);
+      } else if (req.url === '/bod-view') {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(`
+          <html><body>
+            <div class="bod_view">
+              <div class="view_cont">
+                <h3>의정부시청 공고 상세 안내</h3>
+                <p>시민 복지 혜택과 신청 서류 안내입니다.</p>
+              </div>
+            </div>
+            <footer>하단 정보</footer>
+          </body></html>
+        `);
+      } else if (req.url === '/nav-list') {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(`
+          <html><body>
+            <div id="content">
+              <ul>
+                <li><a href="#">바로가기</a></li>
+                <li><a href="#">메뉴</a></li>
+                <li><a href="#">QUICK</a></li>
+                <li><a href="#">사이트맵</a></li>
+              </ul>
+              <p>목록 페이지입니다.</p>
+            </div>
+          </body></html>
+        `);
+      } else if (req.url === '/alert-page') {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(`
+          <html><head>
+            <script>alert("비정상적인 접근입니다."); history.back();</script>
+          </head><body></body></html>
+        `);
+      } else if (req.url === '/deleted-page') {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(`
+          <html><body>
+            <div class="error_box">
+              <p>삭제되었거나 존재하지 않는 게시물입니다.</p>
+            </div>
+          </body></html>
+        `);
       } else if (req.url === '/404') {
         res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
         res.end('Not Found');
@@ -135,6 +179,28 @@ describe('Pipeline Core Test Suite', () => {
       assert.ok(res.text.length > 0, '본문 텍스트가 존재해야 함');
       assert.ok(res.text.includes('시정 공고 상세 안내'));
       assert.ok(res.text.includes('공공복지 혜택과 구비 서류'));
+    });
+
+    test('bod_view 및 view_cont 컨테이너 공고 HTML 에서 본문 반환', async () => {
+      const res = await crawlSourceBody(`${baseUrl}/bod-view`);
+      assert.ok(res.text.length > 0, '본문 텍스트가 존재해야 함');
+      assert.ok(res.text.includes('의정부시청 공고 상세 안내'));
+      assert.ok(!res.text.includes('하단 정보'), '푸터 영역은 제외되어야 함');
+    });
+
+    test('네비가 많은 목록 페이지 HTML 에서 빈 문자열 반환', async () => {
+      const res = await crawlSourceBody(`${baseUrl}/nav-list`);
+      assert.equal(res.text, '');
+    });
+
+    test('알림창(alert/history.back) 페이지에서 빈 문자열 반환', async () => {
+      const res = await crawlSourceBody(`${baseUrl}/alert-page`);
+      assert.equal(res.text, '');
+    });
+
+    test('컨테이너 없는 삭제 안내 페이지에서 빈 문자열 반환', async () => {
+      const res = await crawlSourceBody(`${baseUrl}/deleted-page`);
+      assert.equal(res.text, '');
     });
 
     test('404 에서 빈 문자열 반환', async () => {
