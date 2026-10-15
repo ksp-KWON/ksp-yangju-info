@@ -427,7 +427,11 @@ async function extractAndFilterImages(imageUrls) {
   for (const url of imageUrls) {
     if (validImages.length >= MAX_IMAGES) break;
     try {
-      const res = await safeFetch(url, {}, 8000);
+      const fetchOpts = {};
+      if (url.includes('pstatic.net') || url.includes('naver.com')) {
+        fetchOpts.headers = { 'Referer': 'https://blog.naver.com/' };
+      }
+      const res = await safeFetch(url, fetchOpts, 8000);
       if (!res || res.status !== 200) continue;
       const buf = Buffer.from(await res.arrayBuffer());
       if (buf.length < 40 * 1024) continue; // 40KB 미만 배너/아이콘 차단
