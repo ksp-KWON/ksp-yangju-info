@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
-import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, NAVER_SITE_VERIFICATION } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, NAVER_SITE_VERIFICATION, GOOGLE_ADSENSE_ID } from "@/lib/constants";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -42,11 +42,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
       { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/icon.png', sizes: '320x220', type: 'image/png' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   openGraph: {
@@ -81,8 +82,8 @@ export default function RootLayout({
         "logo": {
           "@type": "ImageObject",
           "url": `${SITE_URL}/icon.png`,
-          "width": 320,
-          "height": 220,
+          "width": 512,
+          "height": 512,
         },
         "description": "양주시 시민을 위한 공공 건강·생활 정보 및 혜택 종합 포털 양주인",
       },
@@ -107,6 +108,13 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         {NAVER_SITE_VERIFICATION && (
           <meta name="naver-site-verification" content={NAVER_SITE_VERIFICATION} />
+        )}
+        {GOOGLE_ADSENSE_ID && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_ID}`}
+            crossOrigin="anonymous"
+          />
         )}
         <script
           type="application/ld+json"
