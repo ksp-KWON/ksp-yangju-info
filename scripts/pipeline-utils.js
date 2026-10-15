@@ -10,6 +10,7 @@ const fs   = require('fs');
 const path = require('path');
 const dns  = require('dns');
 const tls  = require('tls');
+const zlib = require('zlib');
 
 if (dns && dns.setDefaultResultOrder) {
   dns.setDefaultResultOrder('ipv4first');
@@ -209,13 +210,258 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
 }
 
 /**
- * 소스 본문 수집 함수 (B-1/B-2 표준)
+ * 무의존성 HWPX Central Directory 파서 (B단계 표준)
+ * EOCD(0x06054b50) -> Central Directory(0x02014b50) 순회
+ * Contents/section\d+.xml 엔트리만 zlib.inflateRawSync 압축 해제 (최대 6,000자)
+ * @param {Buffer} buffer
+ * @returns {string}
+ */
+function extractTextFromHwpxBuffer(buffer) {
+  if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 22) {
+    return '';
+  }
+
+  // 1. EOCD 시그니처(0x06054b50) 역방향 탐색
+  let eocdOffset = -1;
+  const maxSearch = Math.min(buffer.length, 65535 + 22);
+  const searchStart = buffer.length - 22;
+  const searchEnd = buffer.length - maxSearch;
+
+  for (let i = searchStart; i >= searchEnd && i >= 0; i--) {
+    if (buffer.readUInt32LE(i) === 0x06054b50) {
+      eocdOffset = i;
+      break;
+    }
+  }
+
+  if (eocdOffset === -1) return '';
+
+  const cdTotalEntries = buffer.readUInt16LE(eocdOffset + 10);
+  const cdSize = buffer.readUInt32LE(eocdOffset + 12);
+  const cdOffset = buffer.readUInt32LE(eocdOffset + 16);
+
+  if (cdOffset + cdSize > buffer.length) return '';
+
+  let currOffset = cdOffset;
+  const sectionTexts = [];
+
+  for (let i = 0; i < cdTotalEntries && currOffset < buffer.length - 46; i++) {
+    const sig = buffer.readUInt32LE(currOffset);
+    if (sig !== 0x02014b50) break;
+
+    const compressionMethod = buffer.readUInt16LE(currOffset + 10);
+    const compressedSize = buffer.readUInt32LE(currOffset + 20);
+    const filenameLen = buffer.readUInt16LE(currOffset + 28);
+    const extraLen = buffer.readUInt16LE(currOffset + 30);
+    const commentLen = buffer.readUInt16LE(currOffset + 32);
+    const localHeaderOffset = buffer.readUInt32LE(currOffset + 42);
+
+    const filename = buffer.toString('utf8', currOffset + 46, currOffset + 46 + filenameLen);
+
+    // Contents/section\d+.xml 일치 엔트리만 추출 (BinData, header 등 전면 스킵)
+    if (/^Contents\/section\d+\.xml$/i.test(filename)) {
+      if (localHeaderOffset + 30 <= buffer.length && buffer.readUInt32LE(localHeaderOffset) === 0x04034b50) {
+        const localFilenameLen = buffer.readUInt16LE(localHeaderOffset + 26);
+        const localExtraLen = buffer.readUInt16LE(localHeaderOffset + 28);
+        const dataStart = localHeaderOffset + 30 + localFilenameLen + localExtraLen;
+        const dataEnd = dataStart + compressedSize;
+
+        if (dataEnd <= buffer.length) {
+          const compressedData = buffer.subarray(dataStart, dataEnd);
+          let xmlStr = '';
+          try {
+            if (compressionMethod === 8) {
+              xmlStr = zlib.inflateRawSync(compressedData).toString('utf8');
+            } else if (compressionMethod === 0) {
+              xmlStr = compressedData.toString('utf8');
+            }
+          } catch {}
+
+          if (xmlStr) {
+            const cleanedXml = xmlStr
+              .replace(/<hp:p\b[^>]*>/gi, '\n')
+              .replace(/<\/hp:p>/gi, '\n')
+              .replace(/<hp:tc\b[^>]*>/gi, '\t')
+              .replace(/<hp:t\b[^>]*>([\s\S]*?)<\/hp:t>/gi, '$1')
+              .replace(/<[^>]+>/g, '')
+              .replace(/&amp;/g, '&')
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/&quot;/g, '"')
+              .replace(/&apos;/g, "'");
+
+            const trimmed = cleanedXml
+              .split('\n')
+              .map(l => l.trim())
+              .filter(Boolean)
+              .join('\n');
+
+            if (trimmed) sectionTexts.push(trimmed);
+          }
+        }
+      }
+    }
+
+    currOffset += 46 + filenameLen + extraLen + commentLen;
+  }
+
+  return sectionTexts.join('\n\n').slice(0, 6000).trim();
+}
+
+/**
+ * 24바이트 순수 이미지 헤더 치수 파서 (PNG, JPEG, WebP, GIF)
+ * @param {Buffer} buffer
+ * @returns {{width: number, height: number, mime: string}|null}
+ */
+function getImageDimensions(buffer) {
+  if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 24) return null;
+
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) {
+    return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20), mime: 'image/png' };
+  }
+
+  // GIF: GIF87a / GIF89a
+  if (buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46) {
+    return { width: buffer.readUInt16LE(6), height: buffer.readUInt16LE(8), mime: 'image/gif' };
+  }
+
+  // JPEG: FF D8 FF
+  if (buffer[0] === 0xFF && buffer[1] === 0xD8) {
+    let offset = 2;
+    while (offset < buffer.length - 8) {
+      if (buffer[offset] !== 0xFF) { offset++; continue; }
+      const marker = buffer[offset + 1];
+      if (
+        (marker >= 0xC0 && marker <= 0xC3) ||
+        (marker >= 0xC5 && marker <= 0xC7) ||
+        (marker >= 0xC9 && marker <= 0xCB) ||
+        (marker >= 0xCD && marker <= 0xCF)
+      ) {
+        return {
+          height: buffer.readUInt16BE(offset + 5),
+          width: buffer.readUInt16BE(offset + 7),
+          mime: 'image/jpeg'
+        };
+      }
+      if (marker === 0xD9 || marker === 0xDA) break;
+      const length = buffer.readUInt16BE(offset + 2);
+      offset += 2 + length;
+    }
+  }
+
+  // WebP: RIFF ... WEBP
+  if (buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP') {
+    const type = buffer.toString('ascii', 12, 16);
+    if (type === 'VP8 ') {
+      return { width: buffer.readUInt16LE(26) & 0x3fff, height: buffer.readUInt16LE(28) & 0x3fff, mime: 'image/webp' };
+    }
+    if (type === 'VP8L') {
+      const b0 = buffer[21], b1 = buffer[22], b2 = buffer[23], b3 = buffer[24];
+      return {
+        width: 1 + (((b1 & 0x3f) << 8) | b0),
+        height: 1 + (((b3 & 0x0f) << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6)),
+        mime: 'image/webp'
+      };
+    }
+    if (type === 'VP8X') {
+      return { width: 1 + buffer.readUIntLE(24, 3), height: 1 + buffer.readUIntLE(27, 3), mime: 'image/webp' };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * HWPX 첨부파일 우선순위 정렬 및 다운로드/텍스트 병합 (최대 2개, 6,000자 상한)
+ * 공고|안내|요강|계획|개요 1순위, 신청서|서식|양식|동의서 후순위
+ * @param {Array<{url: string, filename: string}>} hwpxLinks
+ * @param {boolean} isUi4u
+ * @returns {Promise<string>}
+ */
+async function fetchHwpxAttachments(hwpxLinks, isUi4u = false) {
+  if (!hwpxLinks || hwpxLinks.length === 0) return '';
+
+  const priorityRegex = /공고|안내|요강|계획|개요/i;
+  const depriorityRegex = /신청서|서식|양식|동의서/i;
+
+  const sorted = [...hwpxLinks].sort((a, b) => {
+    const aPrio = priorityRegex.test(a.filename) ? 1 : (depriorityRegex.test(a.filename) ? -1 : 0);
+    const bPrio = priorityRegex.test(b.filename) ? 1 : (depriorityRegex.test(b.filename) ? -1 : 0);
+    return bPrio - aPrio;
+  }).slice(0, 2);
+
+  const texts = [];
+  for (const item of sorted) {
+    try {
+      const fetchOpts = {};
+      if (isUi4u && customDispatcher) {
+        fetchOpts.dispatcher = customDispatcher;
+      }
+      const res = await safeFetch(item.url, fetchOpts, 10000);
+      if (res && res.status === 200) {
+        const buf = Buffer.from(await res.arrayBuffer());
+        const extracted = extractTextFromHwpxBuffer(buf);
+        if (extracted && extracted.trim()) {
+          texts.push(`[${item.filename}]\n${extracted.trim()}`);
+        }
+      }
+    } catch {}
+  }
+
+  return texts.join('\n\n').slice(0, 6000).trim();
+}
+
+/**
+ * 순수 24바이트 이미지 치수 파서 및 황금 비율 필터
+ * 조건: 40KB 이상, height >= 580, width / height <= 1.45 (최대 5장, 누적 용량 4MB 이내)
+ * @param {string[]} imageUrls
+ * @returns {Promise<Array<{url: string, mimeType: string, base64: string, width: number, height: number, ratio: number}>>}
+ */
+async function extractAndFilterImages(imageUrls) {
+  const validImages = [];
+  let totalBytes = 0;
+  const MAX_BYTES = 4 * 1024 * 1024;
+  const MAX_IMAGES = 5;
+
+  for (const url of imageUrls) {
+    if (validImages.length >= MAX_IMAGES) break;
+    try {
+      const res = await safeFetch(url, {}, 8000);
+      if (!res || res.status !== 200) continue;
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length < 40 * 1024) continue; // 40KB 미만 배너/아이콘 차단
+      if (totalBytes + buf.length > MAX_BYTES) break;
+
+      const dim = getImageDimensions(buf);
+      if (!dim || !dim.width || !dim.height) continue;
+      const ratio = dim.width / dim.height;
+
+      // 황금 비율 엄격 기준: height >= 580, width / height <= 1.45 (가로 행사 사진 차단, 카드뉴스·포스터 선별)
+      if (dim.height >= 580 && ratio <= 1.45) {
+        validImages.push({
+          url,
+          mimeType: dim.mime,
+          base64: buf.toString('base64'),
+          width: dim.width,
+          height: dim.height,
+          ratio: Number(ratio.toFixed(2))
+        });
+        totalBytes += buf.length;
+      }
+    } catch {}
+  }
+  return validImages;
+}
+
+/**
+ * 소스 본문 수집 함수 (B-1/B-2/B단계 표준)
  * @param {string} url - RSS 항목의 link
- * @returns {Promise<{text: string, imageCount: number, attachments: string[]}>}
+ * @returns {Promise<{text: string, rawBodyText: string, hwpxText: string, validImages: Array, imageCount: number, attachments: string[]}>}
  */
 async function crawlSourceBody(url) {
   if (!url || typeof url !== 'string' || !url.startsWith('http')) {
-    return { text: '', imageCount: 0, attachments: [] };
+    return { text: '', rawBodyText: '', hwpxText: '', validImages: [], imageCount: 0, attachments: [] };
   }
 
   // 요청 간 1초 간격 준수
@@ -253,14 +499,14 @@ async function crawlSourceBody(url) {
     clearTimeout(timeoutId);
 
     if (res.status !== 200) {
-      return { text: '', imageCount: 0, attachments: [] };
+      return { text: '', rawBodyText: '', hwpxText: '', validImages: [], imageCount: 0, attachments: [] };
     }
 
     const html = await res.text();
 
     // alert 등으로 삭제/존재하지 않거나 권한 없는 페이지 처리
     if (html.includes("alert('게시판이 삭제되었거나 존재하지 않습니다')") || html.includes('alert("게시판이 삭제되었거나') || html.includes('alert("권한이 없습니다') || html.includes("alert('권한이 없습니다")) {
-      return { text: '', imageCount: 0, attachments: [] };
+      return { text: '', rawBodyText: '', hwpxText: '', validImages: [], imageCount: 0, attachments: [] };
     }
 
     // 첨부 링크 검출 (.pdf, .hwp, .hwpx, .xlsx, .zip 등)
@@ -279,6 +525,62 @@ async function crawlSourceBody(url) {
       attachMatches.push(ext ? ext.toLowerCase() : '.첨부');
     }
 
+    // HWPX 첨부파일 링크 정밀 추출 (의정부 eGovFrame fn_egov_downFile 및 네이버 블로그)
+    const hwpxCandidates = [];
+    const seenHwpxUrls = new Set();
+
+    // 의정부 fn_egov_downFile 패턴
+    const downFileRegex = /onclick=["'](?:fn_egov_downFile|fn_egov_downFile_pubc)\(['"]([^'"]+)['"],\s*['"]([^'"]+)['"]\)[^"']*["'][^>]*>([\s\S]*?)<\/a>/gi;
+    while ((match = downFileRegex.exec(html)) !== null) {
+      const cleanName = decodeHtmlEntities(match[3] || '').replace(/<[^>]+>/g, '').trim();
+      if (/\.hwpx/i.test(cleanName)) {
+        const downUrl = `https://www.ui4u.go.kr/cmm/fms/FileDown.do?atchFileId=${match[1]}&fileSn=${match[2]}`;
+        if (!seenHwpxUrls.has(downUrl)) {
+          seenHwpxUrls.add(downUrl);
+          hwpxCandidates.push({ url: downUrl, filename: cleanName });
+          attachMatches.push('.hwpx');
+        }
+      }
+    }
+
+    // 일반 및 네이버 블로그 .hwpx 링크
+    const aTagRegex = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+    while ((match = aTagRegex.exec(html)) !== null) {
+      const href = match[1];
+      const cleanName = decodeHtmlEntities(match[2] || '').replace(/<[^>]+>/g, '').trim();
+      let isHwpx = false;
+      let filename = cleanName;
+
+      if (/\.hwpx(\b|\?|$)/i.test(href)) {
+        isHwpx = true;
+        try {
+          const decodedHref = decodeURIComponent(href);
+          const nameMatch = decodedHref.match(/[^/?#]+\.hwpx/i);
+          if (nameMatch) filename = nameMatch[0];
+        } catch {}
+      } else if (/\.hwpx/i.test(cleanName)) {
+        isHwpx = true;
+      }
+
+      if (isHwpx) {
+        let resolvedUrl = href;
+        if (href.startsWith('/')) {
+          try {
+            const u = new URL(targetUrl);
+            resolvedUrl = `${u.origin}${href}`;
+          } catch {}
+        }
+        if (!seenHwpxUrls.has(resolvedUrl) && resolvedUrl.startsWith('http')) {
+          seenHwpxUrls.add(resolvedUrl);
+          hwpxCandidates.push({ url: resolvedUrl, filename: filename || '공고문.hwpx' });
+          attachMatches.push('.hwpx');
+        }
+      }
+    }
+
+    // HWPX 파일 다운로드 및 텍스트 추출 (최대 2개, 6,000자)
+    const hwpxText = hwpxCandidates.length > 0 ? await fetchHwpxAttachments(hwpxCandidates, isUi4u) : '';
+
     // 본문 컨테이너 추출 (네이버 블로그 및 일반 HTML)
     let container = '';
     if (targetUrl.includes('blog.naver.com') || html.includes('class="se-main-container"') || html.includes('id="postViewArea"')) {
@@ -292,8 +594,7 @@ async function crawlSourceBody(url) {
         const openTagEnd = html.indexOf('>', chosenStart);
         container = openTagEnd !== -1 ? html.substring(openTagEnd + 1, endIdx) : html.substring(chosenStart, endIdx);
       } else {
-        // 네이버 블로그 본문 컨테이너 미발견 시 비공고/오염 방지를 위해 빈 문자열 반환
-        return { text: '', imageCount: 0, attachments: [] };
+        return { text: '', rawBodyText: '', hwpxText: '', validImages: [], imageCount: 0, attachments: [] };
       }
     } else {
       const articleMatch = html.match(/<article[\s\S]*?<\/article>/i);
@@ -314,13 +615,49 @@ async function crawlSourceBody(url) {
         const endIdx = footerIdx !== -1 ? footerIdx : startIdx + 35000;
         container = openTagEnd !== -1 ? html.substring(openTagEnd + 1, endIdx) : html.substring(startIdx, endIdx);
       } else {
-        // 본문 컨테이너 미발견 시 <body> 전체로 대체하지 않고 비공고/홈페이지 오염 방지를 위해 빈 문자열 반환 (B-2)
-        return { text: '', imageCount: 0, attachments: [] };
+        return { text: '', rawBodyText: '', hwpxText: '', validImages: [], imageCount: 0, attachments: [] };
       }
     }
 
-    // 이미지 개수만 카운트 (URL은 수집하지 않음)
-    const imgMatches = (container.match(/<img\b[^>]*>/gi) || []).length;
+    // 본문 내 이미지 URL 추출 및 고해상도 변환
+    const candidateImgUrls = [];
+    const seenImgUrls = new Set();
+    const imgTagRegex = /<img\b[^>]*>/gi;
+    let imgTagMatch;
+    let imgMatches = 0;
+
+    while ((imgTagMatch = imgTagRegex.exec(container)) !== null) {
+      imgMatches++;
+      const tag = imgTagMatch[0];
+      const lazyMatch = tag.match(/data-lazy-src=["']([^"']+)["']/i);
+      const srcMatch = tag.match(/src=["']([^"']+)["']/i);
+      let imgUrl = (lazyMatch ? lazyMatch[1] : (srcMatch ? srcMatch[1] : '')).trim();
+      if (!imgUrl) continue;
+
+      if (/sticker|emoticon|profile|static\.naver|dthumb-phinf|btn_|icon_|blank\.gif/i.test(imgUrl)) {
+        continue;
+      }
+
+      if (imgUrl.startsWith('/')) {
+        try {
+          const u = new URL(targetUrl);
+          imgUrl = `${u.origin}${imgUrl}`;
+        } catch {}
+      }
+
+      // 네이버 블로그 이미지 고해상도(type=w966) 변환
+      if (imgUrl.includes('pstatic.net')) {
+        imgUrl = imgUrl.replace(/\?type=[^&]+/, '') + '?type=w966';
+      }
+
+      if (!seenImgUrls.has(imgUrl) && imgUrl.startsWith('http') && candidateImgUrls.length < 10) {
+        seenImgUrls.add(imgUrl);
+        candidateImgUrls.push(imgUrl);
+      }
+    }
+
+    // 황금 비율 카드뉴스/포스터 이미지 선별 (최대 5장, 4MB)
+    const validImages = candidateImgUrls.length > 0 ? await extractAndFilterImages(candidateImgUrls) : [];
 
     // 불필요한 태그 제거 및 텍스트 정제
     let clean = container
@@ -336,7 +673,7 @@ async function crawlSourceBody(url) {
       .replace(/\s+/g, ' ')
       .trim();
 
-    // 네비게이션·메뉴 문구가 3개 이상 들어가면 비공고/홈페이지 오염 방지를 위해 빈 문자열 반환 (B-2)
+    // 네비게이션·메뉴 문구가 3개 이상 들어가면 비공고/홈페이지 오염 방지를 위해 빈 문자열 반환
     const navKeywords = ["바로가기", "메뉴", "QUICK", "로그인", "사이트맵", "개인정보처리방침", "COPYRIGHT"];
     let navCount = 0;
     for (const kw of navKeywords) {
@@ -346,20 +683,28 @@ async function crawlSourceBody(url) {
       if (navCount >= 3) break;
     }
     if (navCount >= 3) {
-      return { text: '', imageCount: 0, attachments: [] };
+      return { text: '', rawBodyText: '', hwpxText: '', validImages: [], imageCount: 0, attachments: [] };
     }
 
-    // 최대 12,000자로 절단
-    const text = clean.slice(0, 12000);
+    const rawBodyText = clean.slice(0, 12000);
+    let text = rawBodyText;
+
+    // HWPX 추출 텍스트가 있으면 즉시 본문 뒤에 표준 결합
+    if (hwpxText && hwpxText.trim()) {
+      text = text ? `${text}\n\n[첨부 공고문 원문]\n${hwpxText.trim()}` : `[첨부 공고문 원문]\n${hwpxText.trim()}`;
+    }
 
     return {
       text,
+      rawBodyText,
+      hwpxText: hwpxText || '',
+      validImages,
       imageCount: imgMatches,
       attachments: Array.from(new Set(attachMatches))
     };
   } catch {
     clearTimeout(timeoutId);
-    return { text: '', imageCount: 0, attachments: [] };
+    return { text: '', rawBodyText: '', hwpxText: '', validImages: [], imageCount: 0, attachments: [] };
   }
 }
 
@@ -373,6 +718,11 @@ module.exports = {
   safeFetch,
   extractSourceTokens,
   validateSourceNumbers,
+  extractTextFromHwpxBuffer,
+  getImageDimensions,
+  fetchHwpxAttachments,
+  extractAndFilterImages,
   crawlSourceBody
 };
+
 

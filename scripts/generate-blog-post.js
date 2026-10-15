@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { callGemini, isAllQuotaExhausted } = require('./gemini-helper');
+const { callGemini, transcribeImagesWithGemini, isAllQuotaExhausted } = require('./gemini-helper');
 const { sleep, MIN_SOURCE_CHARS, getCleanSourceText, isSourceSufficient, validateSourceNumbers, crawlSourceBody } = require('./pipeline-utils');
 const {
   FALLBACK_HOME_URL,
@@ -114,12 +114,28 @@ async function generateAndSavePost(targetItem, tierLabel) {
   let sourceBody = '';
   if (targetItem.link) {
     const crawled = await crawlSourceBody(targetItem.link);
+    // 조건부 트리거: HWPX 텍스트가 없거나 200자 미만이고, 유효 이미지가 1장 이상이며, 본문 텍스트가 1200자 미만일 때만 Vision 판독 호출
+    if ((!crawled.hwpxText || crawled.hwpxText.length < 200) && crawled.validImages && crawled.validImages.length >= 1 && (crawled.text || '').length < 1200) {
+      const ocrText = await transcribeImagesWithGemini(crawled.validImages);
+      if (ocrText && ocrText.trim()) {
+        console.log(`  -> [카드뉴스/포스터 판독 성공] ${ocrText.trim().length}자 텍스트 결합`);
+        crawled.text = (crawled.text ? crawled.text + '\n\n' : '') + `[첨부 카드뉴스/포스터 판독 원문]\n${ocrText.trim()}`;
+      }
+    }
     sourceBody = crawled.text || '';
     if (sourceBody) {
       console.log(`  -> [소스 본문 수집 성공] ${targetItem.link} (${sourceBody.length}자 수집)`);
     } else {
       console.log(`  -> [소스 본문 수집 실패] ${targetItem.link} (본문 없음 또는 접근 불가)`);
     }
+  }
+
+  // 최종 합산된 crawled.text 기준 원천 분량 게이트 (100자 이상)
+  const combinedItem = { ...targetItem, sourceBody };
+  if (!isSourceSufficient(combinedItem)) {
+    const cleanLen = getCleanSourceText(combinedItem).length;
+    console.warn(`  ❌ [원천 분량 부족] "${targetItem.title}" (${cleanLen}자 < ${MIN_SOURCE_CHARS}자) -> 포스팅 스킵`);
+    return null;
   }
 
   const promptItem = sourceBody ? { ...targetItem, sourceBody } : targetItem;
@@ -180,6 +196,8 @@ async function generateAndSavePost(targetItem, tierLabel) {
 function filterTier1Candidates(queue) {
   return (queue || []).filter(item => {
     if (!item || !item.title) return false;
+    // URL 링크가 있으면 crawlSourceBody 및 HWPX/이미지 판독을 통해 본문이 보강되므로 조기 탈락 방지
+    if (item.link && !isFallbackOrEmptyUrl(item.link)) return true;
     if (!isSourceSufficient(item)) {
       const cleanLen = getCleanSourceText(item).length;
       console.log(`  [분량 미달 제외] "${item.title}" (원천 글자수: ${cleanLen}자 < ${MIN_SOURCE_CHARS}자)`);

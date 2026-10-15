@@ -188,6 +188,85 @@ async function callGemini(prompt, schema = null, targetTier = 'auto') {
   throw err;
 }
 
+/**
+ * 첨부 카드뉴스/포스터 이미지 안전 전사(OCR) 함수 (B단계 표준)
+ * @param {Array<{url: string, mimeType: string, base64: string, width: number, height: number, ratio: number}>} validImages
+ * @returns {Promise<string>}
+ */
+async function transcribeImagesWithGemini(validImages) {
+  if (!validImages || !Array.isArray(validImages) || validImages.length === 0) {
+    return '';
+  }
+
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey.length < 10) {
+    return '';
+  }
+
+  const promptText = '첨부된 카드뉴스/포스터 이미지에서 공고문, 행사 일정, 신청 자격, 장소, 연락처 등 핵심 텍스트만 정확히 추출하라. 흐릿하거나 식별 불가능한 숫자·날짜·전화번호는 절대 추측하지 말고 [판독불가]로 표기하며, 단순 풍경 사진이나 시정 슬로건/하단 배너 문구는 무시하라.';
+
+  const parts = [
+    { text: promptText },
+    ...validImages.map(img => ({
+      inlineData: {
+        mimeType: img.mimeType || 'image/jpeg',
+        data: img.base64
+      }
+    }))
+  ];
+
+  const candidateModels = [PRIMARY_MODEL, FALLBACK_MODEL];
+  const activeModels = candidateModels.filter(m => !perDayExhaustedModels.has(m) && !unavailableModels.has(m));
+  if (activeModels.length === 0) {
+    return '';
+  }
+
+  const baseConfig = {
+    temperature: 0.1
+  };
+
+  for (const model of activeModels) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+    try {
+      console.log(`  [이미지 판독 API] ${model} 호출 중... (${validImages.length}장)`);
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
+        body: JSON.stringify({
+          contents: [{ parts }],
+          generationConfig: baseConfig,
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        return text.trim();
+      }
+
+      const errText = await res.text();
+      console.warn(`  ⚠️ [이미지 판독 오류] ${model} HTTP ${res.status}: ${errText.slice(0, 80)}`);
+      if (res.status === 429 && errText.includes('PerDay')) {
+        perDayExhaustedModels.add(model);
+      }
+    } catch (err) {
+      clearTimeout(timeoutId);
+      console.warn(`  ⚠️ [이미지 판독 네트워크 오류] ${model}: ${err.message}`);
+    }
+  }
+
+  return '';
+}
+
 function isAllQuotaExhausted() {
   const allModels = [PRIMARY_MODEL, FALLBACK_MODEL];
   return allModels.length > 0 && allModels.every(m => perDayExhaustedModels.has(m));
@@ -202,6 +281,7 @@ async function discoverModels() {
 
 module.exports = {
   callGemini,
+  transcribeImagesWithGemini,
   discoverModels,
   isAllQuotaExhausted,
   exhaustedModels: perDayExhaustedModels,
