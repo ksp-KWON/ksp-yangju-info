@@ -216,4 +216,53 @@ describe('Pipeline Core Test Suite', () => {
       assert.deepEqual(res.attachments, []);
     });
   });
+
+  describe('프롬프트 빌더 헌법 규칙 검증', () => {
+    const { buildContentPrompt } = require('../scripts/prompt-builder');
+
+    test('buildContentPrompt (가)(나)(다) 신규 규칙 반영 및 옛 규칙 제거 검증', () => {
+      const sampleItem = {
+        title: '테스트 공고',
+        sourceBody: '테스트 본문 내용입니다. 문의처: 031-828-1234'
+      };
+      const samplePlan = {
+        frontmatter: {
+          title: '테스트 기획 제목',
+          category: '일자리·생활',
+          summary: '테스트 요약문'
+        },
+        thoughtProcess: '기획 연쇄 사고'
+      };
+      const sampleAngle = {
+        name: '시민 안내 관점',
+        instruction: '필수 정보를 정확하게 전달하십시오.'
+      };
+
+      const prompt = buildContentPrompt(sampleItem, samplePlan, sampleAngle);
+
+      // (가) 실무 정보 누락 없이 포함 및 구조화 재구성 문구 검증
+      assert.ok(
+        prompt.includes('소스 본문에 명시된 신청자 실무 정보(문의 전화·담당 부서, 신청·접수 방법, 필수 동의서·보호자 동의, 안전·보험·면책 안내, 결제·환불, 주차, 중복 신청 제한)를 해당할 때 누락 없이 포함하되'),
+        '(가) 실무 정보 포함 및 재구성 지시 문구가 포함되어야 함'
+      );
+
+      // (나) 문의 전화·담당 부서 명시 시 본문 포함 및 미명시 시 하단 박스 안내 검증
+      assert.ok(
+        prompt.includes('소스에 문의 전화·담당 부서가 명시돼 있으면 본문에 포함하고, 명시돼 있지 않을 때만 하단 박스로 안내한다'),
+        '(나) 문의 전화 본문 포함 규칙이 포함되어야 함'
+      );
+
+      // (다) 소스에 없는 대상 제한이나 포괄 표현('관내', '누구나', '시민' 한정, '모두') 금지 검증
+      assert.ok(
+        prompt.includes("소스에 없는 대상 제한이나 포괄 표현('관내', '누구나', '시민' 한정, '모두')을 쓰지 않는다"),
+        '(다) 관내/누구나/시민 한정 표현 금지 규칙이 포함되어야 함'
+      );
+
+      // 옛 문구 부재 검증
+      assert.ok(
+        !prompt.includes('확인되지 않은 문의 및 접수는 글 하단의 공식 접수처 박스에서 확인하도록만'),
+        '옛 문의처 제한 문구가 남아있지 않아야 함'
+      );
+    });
+  });
 });
