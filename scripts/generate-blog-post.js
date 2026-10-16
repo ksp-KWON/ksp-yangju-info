@@ -119,7 +119,7 @@ async function generateAndSavePost(targetItem, tierLabel) {
     const validImgCount = (crawled.validImages || []).length;
     const srcTextLen = (crawled.rawBodyText || crawled.text || '').length;
 
-    if (hwpxLen < 200 && validImgCount >= 1 && srcTextLen < 1200) {
+    if (process.env.ENABLE_VISION_OCR === '1' && hwpxLen < 200 && validImgCount >= 1 && srcTextLen < 1200) {
       const ocrText = await transcribeImagesWithGemini(crawled.validImages);
       if (ocrText && ocrText.trim()) {
         console.log(`  -> [카드뉴스/포스터 판독 성공] ${ocrText.trim().length}자 텍스트 결합`);
