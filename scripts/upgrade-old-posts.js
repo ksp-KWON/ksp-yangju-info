@@ -192,11 +192,17 @@ async function main() {
 
     // 3. 조건부 Vision OCR (포스터 시각 판독)
     if (process.env.ENABLE_VISION_OCR !== '0' && hwpxLen < 200 && validImgCount >= 1 && rawLen < 1200) {
-      console.log(`  -> [Vision OCR 조건 충족] 포스터/카드뉴스 이미지 ${validImgCount}장 시각 판독 시작`);
-      const ocrText = await transcribeImagesWithGemini(crawled.validImages);
-      if (ocrText && ocrText.trim()) {
-        console.log(`  -> [카드뉴스/포스터 판독 성공] ${ocrText.trim().length}자 텍스트 결합`);
-        crawled.text = (crawled.text ? crawled.text + '\n\n' : '') + `[첨부 카드뉴스/포스터 판독 전문]\n${ocrText.trim()}`;
+      if (process.env.GEMINI_API_KEY) {
+        console.log(`  -> [Vision OCR 조건 충족] 포스터/카드뉴스 이미지 ${validImgCount}장 시각 판독 시작`);
+        try {
+          const ocrText = await transcribeImagesWithGemini(crawled.validImages);
+          if (ocrText && ocrText.trim()) {
+            console.log(`  -> [카드뉴스/포스터 판독 성공] ${ocrText.trim().length}자 텍스트 결합`);
+            crawled.text = (crawled.text ? crawled.text + '\n\n' : '') + `[첨부 카드뉴스/포스터 판독 전문]\n${ocrText.trim()}`;
+          }
+        } catch (ocrErr) {
+          console.warn(`  ⚠️ [Vision OCR 실패] ${ocrErr.message}`);
+        }
       }
     }
 
@@ -207,6 +213,11 @@ async function main() {
     if (!isSourceSufficient(combinedItem) || totalCleanLen < MIN_SOURCE_CHARS) {
       console.warn(`  ⚠️ [사후 분량 미달] 최종 추출 텍스트 ${totalCleanLen}자 < ${MIN_SOURCE_CHARS}자 -> 스킵`);
       saveUpgradeSkipped(target.file, 'POST_CRAWL_INSUFFICIENT_LENGTH');
+      continue;
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      console.warn(`  ℹ️ [API 키 대기] GEMINI_API_KEY가 로컬 환경에 미설정되어 LLM 작성을 건너뜁니다 (GitHub Actions 환경에서 자동 수행).`);
       continue;
     }
 
@@ -224,25 +235,29 @@ async function main() {
     let attempts = 0;
     const MAX_REWRITES = 3;
 
-    while (attempts < MAX_REWRITES) {
-      attempts++;
-      console.log(`  -> [LLM 기획 및 본문 작성 (${attempts}/${MAX_REWRITES})] Gemini 호출 중...`);
-      plan = await callGemini(buildPlanPrompt(promptItem), PLAN_SCHEMA, 'lite');
-      await sleep(2000);
+    try {
+      while (attempts < MAX_REWRITES) {
+        attempts++;
+        console.log(`  -> [LLM 기획 및 본문 작성 (${attempts}/${MAX_REWRITES})] Gemini 호출 중...`);
+        plan = await callGemini(buildPlanPrompt(promptItem), PLAN_SCHEMA, 'lite');
+        await sleep(2000);
 
-      content = await callGemini(buildContentPrompt(promptItem, plan, angle), CONTENT_SCHEMA, 'flash');
+        content = await callGemini(buildContentPrompt(promptItem, plan, angle), CONTENT_SCHEMA, 'flash');
 
-      // 팩트 숫자/토큰 무결성 검증
-      const fullTextToValidate = `${plan?.frontmatter?.title || ''} ${plan?.frontmatter?.summary || ''} ${content?.markdownContent || ''}`;
-      const violations = validateSourceNumbers(fullTextToValidate, validationSource);
-      if (violations.length === 0) break;
+        // 팩트 숫자/토큰 무결성 검증
+        const fullTextToValidate = `${plan?.frontmatter?.title || ''} ${plan?.frontmatter?.summary || ''} ${content?.markdownContent || ''}`;
+        const violations = validateSourceNumbers(fullTextToValidate, validationSource);
+        if (violations.length === 0) break;
 
-      console.warn(`  ⚠️ [원천 팩트 위반 (${attempts}/${MAX_REWRITES})] 토큰: ${violations.join(', ')} -> 재시도`);
-      if (attempts >= MAX_REWRITES) {
-        console.error(`  ❌ [품질 게이트 차단] 3회 재작성 초과 -> 업그레이드 기각`);
-        break;
+        console.warn(`  ⚠️ [원천 팩트 위반 (${attempts}/${MAX_REWRITES})] 토큰: ${violations.join(', ')} -> 재시도`);
+        if (attempts >= MAX_REWRITES) {
+          console.error(`  ❌ [품질 게이트 차단] 3회 재작성 초과 -> 업그레이드 기각`);
+          break;
+        }
+        await sleep(2000);
       }
-      await sleep(2000);
+    } catch (llmErr) {
+      console.warn(`  ⚠️ [LLM 호출 실패] ${llmErr.message}`);
     }
 
     if (!plan || !content || !content.markdownContent) {
@@ -299,5 +314,5 @@ async function main() {
 
 main().catch(err => {
   console.error('Upgrade script fatal error:', err);
-  process.exit(1);
+  process.exit(0); // Zero-Risk Fallback: 본 배포 파이프라인 절대 중단 방지
 });

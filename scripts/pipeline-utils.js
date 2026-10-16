@@ -74,7 +74,7 @@ function decodeHtmlEntities(text) {
 function getCleanSourceText(item) {
   if (!item) return '';
   if (typeof item === 'string') return decodeHtmlEntities(item).replace(/<[^>]+>/g, '').replace(/\s+/g, '');
-  const raw = item.intro || item.description || item.content || [
+  const raw = item.sourceBody || item.intro || item.description || item.content || [
     item.summary,
     item.target,
     item.location,
