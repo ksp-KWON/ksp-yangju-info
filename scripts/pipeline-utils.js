@@ -392,7 +392,7 @@ function getImageDimensions(buffer) {
 }
 
 /**
- * HWPX 첨부파일 우선순위 정렬 및 다운로드/텍스트 병합 (최대 2~3개, 6,000자 상한)
+ * HWPX 첨부파일 우선순위 정렬 및 다운로드/텍스트 병합 (최대 2개, 6,000자 상한)
  * [보완 2] 공고|안내|요강|계획|개요|모집|선발 1순위, 신청서|서식|양식|동의서 후순위
  * @param {Array<{url: string, filename: string}>} hwpxLinks
  * @param {boolean} isUi4u
@@ -408,7 +408,7 @@ async function fetchHwpxAttachments(hwpxLinks, isUi4u = false) {
     const aPrio = priorityRegex.test(a.filename) ? 1 : (depriorityRegex.test(a.filename) ? -1 : 0);
     const bPrio = priorityRegex.test(b.filename) ? 1 : (depriorityRegex.test(b.filename) ? -1 : 0);
     return bPrio - aPrio;
-  }).slice(0, 3);
+  }).slice(0, 2);
 
   const texts = [];
   for (const item of sorted) {
