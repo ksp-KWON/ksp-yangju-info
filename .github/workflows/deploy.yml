@@ -80,7 +80,9 @@ jobs:
 
       - name: 변경사항 스테이징
         run: |
-          git add public/data/city-rss.json public/data/local-info.json public/data/learning-courses.json public/data/skipped-urls.json public/data/upgrade-skipped.json src/data/learning-courses.json src/content/posts/ || true
+          for f in public/data/city-rss.json public/data/local-info.json public/data/learning-courses.json public/data/skipped-urls.json public/data/upgrade-skipped.json src/data/learning-courses.json src/content/posts/; do
+            [ -e "$f" ] && git add "$f" || true
+          done
 
       - name: 캐시 변경 여부
         id: cache_check
