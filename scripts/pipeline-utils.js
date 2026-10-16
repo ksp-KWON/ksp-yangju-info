@@ -210,15 +210,15 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
 }
 
 /**
- * 무의존성 HWPX Central Directory 파서 (B단계 표준)
+ * 무의존성 ZIP Central Directory 파서 (B단계 표준)
  * EOCD(0x06054b50) -> Central Directory(0x02014b50) 순회
- * Contents/section\d+.xml 엔트리만 zlib.inflateRawSync 압축 해제 (최대 6,000자)
+ * [보완 1] 불필요한 엔트리 압축 해제 스킵: Contents/section\d+.xml 패턴만 zlib.inflateRawSync 수행
  * @param {Buffer} buffer
- * @returns {string}
+ * @returns {Array<{filename: string, text: string}>}
  */
-function extractTextFromHwpxBuffer(buffer) {
+function parseZipCentralDirectory(buffer) {
   if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 22) {
-    return '';
+    return [];
   }
 
   // 1. EOCD 시그니처(0x06054b50) 역방향 탐색
@@ -234,16 +234,16 @@ function extractTextFromHwpxBuffer(buffer) {
     }
   }
 
-  if (eocdOffset === -1) return '';
+  if (eocdOffset === -1) return [];
 
   const cdTotalEntries = buffer.readUInt16LE(eocdOffset + 10);
   const cdSize = buffer.readUInt32LE(eocdOffset + 12);
   const cdOffset = buffer.readUInt32LE(eocdOffset + 16);
 
-  if (cdOffset + cdSize > buffer.length) return '';
+  if (cdOffset + cdSize > buffer.length) return [];
 
   let currOffset = cdOffset;
-  const sectionTexts = [];
+  const sections = [];
 
   for (let i = 0; i < cdTotalEntries && currOffset < buffer.length - 46; i++) {
     const sig = buffer.readUInt32LE(currOffset);
@@ -258,45 +258,50 @@ function extractTextFromHwpxBuffer(buffer) {
 
     const filename = buffer.toString('utf8', currOffset + 46, currOffset + 46 + filenameLen);
 
-    // Contents/section\d+.xml 일치 엔트리만 추출 (BinData, header 등 전면 스킵)
-    if (/^Contents\/section\d+\.xml$/i.test(filename)) {
-      if (localHeaderOffset + 30 <= buffer.length && buffer.readUInt32LE(localHeaderOffset) === 0x04034b50) {
-        const localFilenameLen = buffer.readUInt16LE(localHeaderOffset + 26);
-        const localExtraLen = buffer.readUInt16LE(localHeaderOffset + 28);
-        const dataStart = localHeaderOffset + 30 + localFilenameLen + localExtraLen;
-        const dataEnd = dataStart + compressedSize;
+    // [보완 1] 불필요한 엔트리 압축 해제 스킵: header.xml, BinData/* 이미지 압축 해제 방지
+    if (!/^Contents\/section\d+\.xml$/i.test(filename)) {
+      currOffset += 46 + filenameLen + extraLen + commentLen;
+      continue;
+    }
 
-        if (dataEnd <= buffer.length) {
-          const compressedData = buffer.subarray(dataStart, dataEnd);
-          let xmlStr = '';
-          try {
-            if (compressionMethod === 8) {
-              xmlStr = zlib.inflateRawSync(compressedData).toString('utf8');
-            } else if (compressionMethod === 0) {
-              xmlStr = compressedData.toString('utf8');
-            }
-          } catch {}
+    if (localHeaderOffset + 30 <= buffer.length && buffer.readUInt32LE(localHeaderOffset) === 0x04034b50) {
+      const localFilenameLen = buffer.readUInt16LE(localHeaderOffset + 26);
+      const localExtraLen = buffer.readUInt16LE(localHeaderOffset + 28);
+      const dataStart = localHeaderOffset + 30 + localFilenameLen + localExtraLen;
+      const dataEnd = dataStart + compressedSize;
 
-          if (xmlStr) {
-            const cleanedXml = xmlStr
-              .replace(/<hp:p\b[^>]*>/gi, '\n')
-              .replace(/<\/hp:p>/gi, '\n')
-              .replace(/<hp:tc\b[^>]*>/gi, '\t')
-              .replace(/<hp:t\b[^>]*>([\s\S]*?)<\/hp:t>/gi, '$1')
-              .replace(/<[^>]+>/g, '')
-              .replace(/&amp;/g, '&')
-              .replace(/&lt;/g, '<')
-              .replace(/&gt;/g, '>')
-              .replace(/&quot;/g, '"')
-              .replace(/&apos;/g, "'");
+      if (dataEnd <= buffer.length) {
+        const compressedData = buffer.subarray(dataStart, dataEnd);
+        let xmlStr = '';
+        try {
+          if (compressionMethod === 8) {
+            xmlStr = zlib.inflateRawSync(compressedData).toString('utf8');
+          } else if (compressionMethod === 0) {
+            xmlStr = compressedData.toString('utf8');
+          }
+        } catch {}
 
-            const trimmed = cleanedXml
-              .split('\n')
-              .map(l => l.trim())
-              .filter(Boolean)
-              .join('\n');
+        if (xmlStr) {
+          const cleanedXml = xmlStr
+            .replace(/<hp:p\b[^>]*>/gi, '\n')
+            .replace(/<\/hp:p>/gi, '\n')
+            .replace(/<hp:tc\b[^>]*>/gi, '\t')
+            .replace(/<hp:t\b[^>]*>([\s\S]*?)<\/hp:t>/gi, '$1')
+            .replace(/<[^>]+>/g, '')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&apos;/g, "'");
 
-            if (trimmed) sectionTexts.push(trimmed);
+          const trimmed = cleanedXml
+            .split('\n')
+            .map(l => l.trim())
+            .filter(Boolean)
+            .join('\n');
+
+          if (trimmed) {
+            sections.push({ filename, text: trimmed });
           }
         }
       }
@@ -305,8 +310,22 @@ function extractTextFromHwpxBuffer(buffer) {
     currOffset += 46 + filenameLen + extraLen + commentLen;
   }
 
-  return sectionTexts.join('\n\n').slice(0, 6000).trim();
+  return sections;
 }
+
+/**
+ * HWPX 텍스트 추출 통합 함수 (Central Directory 기반, 최대 6,000자 상한)
+ * @param {Buffer} buffer
+ * @returns {string}
+ */
+function extractHwpxText(buffer) {
+  const sections = parseZipCentralDirectory(buffer);
+  if (!sections || sections.length === 0) return '';
+  return sections.map(s => s.text).join('\n\n').slice(0, 6000).trim();
+}
+
+// 기존 인터페이스 하위 호환 별칭
+const extractTextFromHwpxBuffer = extractHwpxText;
 
 /**
  * 24바이트 순수 이미지 헤더 치수 파서 (PNG, JPEG, WebP, GIF)
@@ -373,8 +392,8 @@ function getImageDimensions(buffer) {
 }
 
 /**
- * HWPX 첨부파일 우선순위 정렬 및 다운로드/텍스트 병합 (최대 2개, 6,000자 상한)
- * 공고|안내|요강|계획|개요 1순위, 신청서|서식|양식|동의서 후순위
+ * HWPX 첨부파일 우선순위 정렬 및 다운로드/텍스트 병합 (최대 2~3개, 6,000자 상한)
+ * [보완 2] 공고|안내|요강|계획|개요|모집|선발 1순위, 신청서|서식|양식|동의서 후순위
  * @param {Array<{url: string, filename: string}>} hwpxLinks
  * @param {boolean} isUi4u
  * @returns {Promise<string>}
@@ -382,14 +401,14 @@ function getImageDimensions(buffer) {
 async function fetchHwpxAttachments(hwpxLinks, isUi4u = false) {
   if (!hwpxLinks || hwpxLinks.length === 0) return '';
 
-  const priorityRegex = /공고|안내|요강|계획|개요/i;
-  const depriorityRegex = /신청서|서식|양식|동의서/i;
+  const priorityRegex = /공고|안내|요강|계획|개요|선발|모집|기준/i;
+  const depriorityRegex = /신청서|서식|양식|동의서|위임장|확인서/i;
 
   const sorted = [...hwpxLinks].sort((a, b) => {
     const aPrio = priorityRegex.test(a.filename) ? 1 : (depriorityRegex.test(a.filename) ? -1 : 0);
     const bPrio = priorityRegex.test(b.filename) ? 1 : (depriorityRegex.test(b.filename) ? -1 : 0);
     return bPrio - aPrio;
-  }).slice(0, 2);
+  }).slice(0, 3);
 
   const texts = [];
   for (const item of sorted) {
@@ -401,7 +420,7 @@ async function fetchHwpxAttachments(hwpxLinks, isUi4u = false) {
       const res = await safeFetch(item.url, fetchOpts, 10000);
       if (res && res.status === 200) {
         const buf = Buffer.from(await res.arrayBuffer());
-        const extracted = extractTextFromHwpxBuffer(buf);
+        const extracted = extractHwpxText(buf);
         if (extracted && extracted.trim()) {
           texts.push(`[${item.filename}]\n${extracted.trim()}`);
         }
@@ -547,13 +566,22 @@ async function crawlSourceBody(url) {
       }
     }
 
-    // 일반 및 네이버 블로그 .hwpx 링크
-    const aTagRegex = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+    // 2) 일반 및 네이버 블로그 .hwpx 링크 (URL 자체 .hwpx 또는 텍스트/속성에 .hwpx가 있고 URL은 fileDown.do 형태)
+    const aTagRegex = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
     while ((match = aTagRegex.exec(html)) !== null) {
-      const href = match[1];
-      const cleanName = decodeHtmlEntities(match[2] || '').replace(/<[^>]+>/g, '').trim();
+      const tagAttrs = match[1];
+      const tagBody = match[2];
+
+      const hrefMatch = tagAttrs.match(/href=["']([^"']+)["']/i);
+      if (!hrefMatch) continue;
+      const href = hrefMatch[1];
+
+      const cleanText = decodeHtmlEntities(tagBody || '').replace(/<[^>]+>/g, '').trim();
+      const titleMatch = tagAttrs.match(/title=["']([^"']+)["']/i);
+      const cleanTitle = titleMatch ? decodeHtmlEntities(titleMatch[1]).trim() : '';
+
       let isHwpx = false;
-      let filename = cleanName;
+      let filename = cleanText || cleanTitle;
 
       if (/\.hwpx(\b|\?|$)/i.test(href)) {
         isHwpx = true;
@@ -562,8 +590,11 @@ async function crawlSourceBody(url) {
           const nameMatch = decodedHref.match(/[^/?#]+\.hwpx/i);
           if (nameMatch) filename = nameMatch[0];
         } catch {}
-      } else if (/\.hwpx/i.test(cleanName)) {
+      } else if (/\.hwpx/i.test(cleanText) || /\.hwpx/i.test(cleanTitle)) {
         isHwpx = true;
+        if (!filename || !/\.hwpx/i.test(filename)) {
+          filename = cleanTitle || cleanText;
+        }
       }
 
       if (isHwpx) {
@@ -573,7 +604,13 @@ async function crawlSourceBody(url) {
             const u = new URL(targetUrl);
             resolvedUrl = `${u.origin}${href}`;
           } catch {}
+        } else if (!href.startsWith('http')) {
+          try {
+            const u = new URL(targetUrl);
+            resolvedUrl = new URL(href, u.origin).href;
+          } catch {}
         }
+
         if (!seenHwpxUrls.has(resolvedUrl) && resolvedUrl.startsWith('http')) {
           seenHwpxUrls.add(resolvedUrl);
           hwpxCandidates.push({ url: resolvedUrl, filename: filename || '공고문.hwpx' });
@@ -722,6 +759,8 @@ module.exports = {
   safeFetch,
   extractSourceTokens,
   validateSourceNumbers,
+  parseZipCentralDirectory,
+  extractHwpxText,
   extractTextFromHwpxBuffer,
   getImageDimensions,
   fetchHwpxAttachments,

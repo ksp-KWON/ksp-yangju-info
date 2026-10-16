@@ -2,7 +2,9 @@ const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
 
-const { validateSourceNumbers, crawlSourceBody } = require('../scripts/pipeline-utils');
+const zlib = require('node:zlib');
+
+const { validateSourceNumbers, crawlSourceBody, parseZipCentralDirectory, extractHwpxText } = require('../scripts/pipeline-utils');
 const { sanitizeCalendarDays } = require('../scripts/markdown-standard');
 
 describe('Pipeline Core Test Suite', () => {
@@ -217,6 +219,99 @@ describe('Pipeline Core Test Suite', () => {
     });
   });
 
+  describe('4. parseZipCentralDirectory & extractHwpxText', () => {
+    function createMockZip(entries) {
+      const localHeaders = [];
+      const cdHeaders = [];
+      let offset = 0;
+
+      for (const ent of entries) {
+        const fnBuf = Buffer.from(ent.name, 'utf8');
+        const compData = zlib.deflateRawSync(Buffer.from(ent.data, 'utf8'));
+
+        const lh = Buffer.alloc(30 + fnBuf.length + compData.length);
+        lh.writeUInt32LE(0x04034b50, 0);
+        lh.writeUInt16LE(20, 4);
+        lh.writeUInt16LE(0, 6);
+        lh.writeUInt16LE(8, 8);
+        lh.writeUInt16LE(0, 10);
+        lh.writeUInt16LE(0, 12);
+        lh.writeUInt32LE(0, 14);
+        lh.writeUInt32LE(compData.length, 18);
+        lh.writeUInt32LE(ent.data.length, 22);
+        lh.writeUInt16LE(fnBuf.length, 26);
+        lh.writeUInt16LE(0, 28);
+        fnBuf.copy(lh, 30);
+        compData.copy(lh, 30 + fnBuf.length);
+
+        const cd = Buffer.alloc(46 + fnBuf.length);
+        cd.writeUInt32LE(0x02014b50, 0);
+        cd.writeUInt16LE(20, 4);
+        cd.writeUInt16LE(20, 6);
+        cd.writeUInt16LE(0, 8);
+        cd.writeUInt16LE(8, 10);
+        cd.writeUInt16LE(0, 12);
+        cd.writeUInt16LE(0, 14);
+        cd.writeUInt32LE(0, 16);
+        cd.writeUInt32LE(compData.length, 20);
+        cd.writeUInt32LE(ent.data.length, 24);
+        cd.writeUInt16LE(fnBuf.length, 28);
+        cd.writeUInt16LE(0, 30);
+        cd.writeUInt16LE(0, 32);
+        cd.writeUInt16LE(0, 34);
+        cd.writeUInt16LE(0, 36);
+        cd.writeUInt32LE(0, 38);
+        cd.writeUInt32LE(offset, 42);
+        fnBuf.copy(cd, 46);
+
+        localHeaders.push(lh);
+        cdHeaders.push(cd);
+        offset += lh.length;
+      }
+
+      const allLh = Buffer.concat(localHeaders);
+      const allCd = Buffer.concat(cdHeaders);
+      const cdOffset = allLh.length;
+      const cdSize = allCd.length;
+
+      const eocd = Buffer.alloc(22);
+      eocd.writeUInt32LE(0x06054b50, 0);
+      eocd.writeUInt16LE(0, 4);
+      eocd.writeUInt16LE(0, 6);
+      eocd.writeUInt16LE(entries.length, 8);
+      eocd.writeUInt16LE(entries.length, 10);
+      eocd.writeUInt32LE(cdSize, 12);
+      eocd.writeUInt32LE(cdOffset, 16);
+      eocd.writeUInt16LE(0, 20);
+
+      return Buffer.concat([allLh, allCd, eocd]);
+    }
+
+    test('비-section 엔트리 압축 해제 스킵 및 section 엔트리 추출 검증', () => {
+      const mockZip = createMockZip([
+        { name: 'header.xml', data: '<header>스킵 대상</header>' },
+        { name: 'BinData/image1.png', data: 'binary image data should be skipped' },
+        { name: 'Contents/section0.xml', data: '<hp:p><hp:t>2026년 공고문 본문 내용입니다.</hp:t></hp:p>' },
+        { name: 'Contents/section1.xml', data: '<hp:p><hp:t>문의처: 031-828-1234</hp:t></hp:p>' }
+      ]);
+
+      const sections = parseZipCentralDirectory(mockZip);
+      assert.equal(sections.length, 2, '오직 section0, section1 2개만 추출되어야 함');
+      assert.deepEqual(sections.map(s => s.filename), ['Contents/section0.xml', 'Contents/section1.xml']);
+
+      const extracted = extractHwpxText(mockZip);
+      assert.ok(extracted.includes('2026년 공고문 본문 내용입니다.'));
+      assert.ok(extracted.includes('문의처: 031-828-1234'));
+      assert.ok(!extracted.includes('스킵 대상'));
+    });
+
+    test('비정상 버퍼 및 빈 버퍼 안전 처리', () => {
+      assert.deepEqual(parseZipCentralDirectory(null), []);
+      assert.deepEqual(parseZipCentralDirectory(Buffer.from('not-a-zip')), []);
+      assert.equal(extractHwpxText(Buffer.from('')), '');
+    });
+  });
+
   describe('프롬프트 빌더 헌법 규칙 검증', () => {
     const { buildContentPrompt } = require('../scripts/prompt-builder');
 
@@ -266,3 +361,4 @@ describe('Pipeline Core Test Suite', () => {
     });
   });
 });
+
