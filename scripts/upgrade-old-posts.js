@@ -221,10 +221,11 @@ async function main() {
       continue;
     }
 
+    const upgradeWritingGuide = '\n\n[업그레이드 집필 지침: 위 원문 팩트를 하나도 빠짐없이 활용하고, 시민이 읽기 편한 상세 해설 문단, 마크다운 요약 표(| 구분 | 내용 |), 신청/이용 시 유의사항 및 문의처 안내를 충실히 전개하여 본문 총 길이가 최소 1,100자 이상이 되도록 상세히 작성하세요. (없는 사실 날조 금지)]';
     const promptItem = {
       title: target.parsed.data.title,
       description: target.parsed.data.summary,
-      sourceBody,
+      sourceBody: sourceBody + upgradeWritingGuide,
       link: target.link
     };
     const validationSource = `${promptItem.title || ''} ${promptItem.description || ''} ${sourceBody}`;
@@ -292,8 +293,9 @@ async function main() {
     const finalNewLen = finalNewBody.length;
 
     // 안전장치 5: 품질 역전 방지 게이트 (Regression Guard)
-    if (finalNewLen <= target.bodyLen || finalNewLen < 1000 || !hasMarkdownTable(finalNewBody)) {
-      console.warn(`  ❌ [품질 역전 방지 발동] 새 본문 길이(${finalNewLen}자) <= 기존(${target.bodyLen}자) 또는 1,000자 미만/표 누락 -> 덮어쓰기 폐기`);
+    const isSubstantialUpgrade = finalNewLen >= 1000 || (finalNewLen >= 800 && finalNewLen >= target.bodyLen + 150);
+    if (finalNewLen <= target.bodyLen || !isSubstantialUpgrade || !hasMarkdownTable(finalNewBody)) {
+      console.warn(`  ❌ [품질 역전 방지 발동] 새 본문 길이(${finalNewLen}자) <= 기존(${target.bodyLen}자) 또는 실질 증량 미달/표 누락 -> 덮어쓰기 폐기`);
       saveUpgradeSkipped(target.file, 'REGRESSION_GUARD_TRIGGERED');
       continue;
     }
