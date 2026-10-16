@@ -33,10 +33,44 @@ const {
 
 const CITY_RSS_PATH = path.join(process.cwd(), 'public/data/city-rss.json');
 const LOCAL_INFO_PATH = path.join(process.cwd(), 'public/data/local-info.json');
+const SKIPPED_URLS_PATH = path.join(process.cwd(), 'public/data/skipped-urls.json');
 
 const MAX_POSTS_PER_RUN = 1;
-const MAX_CONTENT_CALLS_PER_RUN = 2;
+const MAX_CONTENT_CALLS_PER_RUN = 1;
 let totalContentCalls = 0;
+
+/**
+ * 분량 미달 스킵 URL 목록 조회 (반복 다운로드 방지)
+ */
+function getSkippedUrls() {
+  if (!fs.existsSync(SKIPPED_URLS_PATH)) return [];
+  try {
+    const raw = JSON.parse(fs.readFileSync(SKIPPED_URLS_PATH, 'utf8'));
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * 분량 미달 스킵 URL 영구 기록 (최대 최근 200개 유지)
+ */
+function saveSkippedUrl(url) {
+  if (!url || typeof url !== 'string' || isFallbackOrEmptyUrl(url)) return;
+  const trimmed = url.trim();
+  try {
+    const current = getSkippedUrls();
+    if (!current.includes(trimmed)) {
+      current.push(trimmed);
+      const trimmedList = current.slice(-200);
+      fs.mkdirSync(path.dirname(SKIPPED_URLS_PATH), { recursive: true });
+      fs.writeFileSync(SKIPPED_URLS_PATH, JSON.stringify(trimmedList, null, 2), 'utf8');
+      console.log(`  [분량 미달 블랙리스트 등록] ${trimmed} (누적 ${trimmedList.length}건)`);
+    }
+  } catch (e) {
+    console.warn('  ⚠️ skipped-urls.json 저장 실패:', e.message);
+  }
+}
 
 // ── 마감일자 결정적 추출 헬퍼 (LLM 개입 배제) ──────────────────────────
 function extractExpiryDate(text) {
@@ -139,6 +173,9 @@ async function generateAndSavePost(targetItem, tierLabel) {
   const totalCleanLen = getCleanSourceText(combinedItem).length;
   if (!isSourceSufficient(combinedItem) || totalCleanLen < MIN_SOURCE_CHARS) {
     console.warn(`  ❌ [사후 원천 분량 게이트] "${targetItem.title}" (${totalCleanLen}자 < ${MIN_SOURCE_CHARS}자) -> 포스팅 스킵`);
+    if (targetItem.link && !isFallbackOrEmptyUrl(targetItem.link)) {
+      saveSkippedUrl(targetItem.link);
+    }
     return null;
   }
 
@@ -222,7 +259,8 @@ async function runTier1CityRss(limit = MAX_POSTS_PER_RUN) {
 
   const existingSourceIds = getExistingSourceIds();
   const existingSourceLinks = getExistingSourceLinks();
-  const existingSet = new Set([...existingSourceIds, ...existingSourceLinks]);
+  const skippedUrls = getSkippedUrls();
+  const existingSet = new Set([...existingSourceIds, ...existingSourceLinks, ...skippedUrls]);
   const rssQueue = JSON.parse(fs.readFileSync(CITY_RSS_PATH, 'utf8'));
 
   const qualified = filterTier1Candidates(rssQueue);
@@ -231,11 +269,6 @@ async function runTier1CityRss(limit = MAX_POSTS_PER_RUN) {
   for (const item of qualified) {
     if (!isDuplicatePost(item, existingSet)) {
       pending.push(item);
-      const sid = item.sourceId || generateSourceId(item.title);
-      existingSet.add(sid);
-      if (item.link && !isFallbackOrEmptyUrl(item.link)) {
-        existingSet.add(item.link.trim());
-      }
       if (pending.length >= MAX_CANDIDATE_ATTEMPTS) break;
     }
   }
@@ -252,18 +285,22 @@ async function runTier1CityRss(limit = MAX_POSTS_PER_RUN) {
     if (totalContentCalls >= MAX_CONTENT_CALLS_PER_RUN) break;
     if (isAllQuotaExhausted()) break;
     const item = pending[i];
+
+    // 실제로 시도하는 후보만 existingSet에 등록
+    const sid = item.sourceId || generateSourceId(item.title);
+    existingSet.add(sid);
+    if (item.link && !isFallbackOrEmptyUrl(item.link)) {
+      existingSet.add(item.link.trim());
+    }
+
     item.expiresAt = extractExpiryDate(item.description);
     try {
       console.log(`\n[${i + 1}/${pending.length}] 글 작성 진행: "${item.title}"`);
       const fileName = await generateAndSavePost(item, 'Tier 1: 시청 공식 RSS');
       if (fileName) {
         published.push(fileName);
-        const sid = item.sourceId || generateSourceId(item.title);
-        existingSet.add(sid);
-        if (item.link && !isFallbackOrEmptyUrl(item.link)) {
-          existingSet.add(item.link.trim());
-        }
-        await sleep(2500); // Gemini API 레이트 리밋 방지 쾌적 대기
+        console.log(`  -> 목표 포스트 1건 생성 성공 (${fileName}). 루프를 종료합니다.`);
+        break; // 1건 성공 즉시 탈출
       }
     } catch (err) {
       console.error(`  ❌ "${item.title}" 생성 실패:`, err.message);
@@ -326,7 +363,8 @@ async function runTier2LocalInfo(limit = MAX_POSTS_PER_RUN) {
       if (fileName) {
         published.push(fileName);
         existingSourceIds.add(generateSourceId(item.title));
-        await sleep(2500);
+        console.log(`  -> 목표 포스트 1건 생성 성공 (${fileName}). 루프를 종료합니다.`);
+        break; // 1건 성공 즉시 탈출
       }
     } catch (err) {
       console.error(`  ❌ "${item.title}" 생성 실패:`, err.message);
@@ -448,7 +486,8 @@ async function runTier3LifelongLearning(limit = MAX_POSTS_PER_RUN) {
       if (fileName) {
         published.push(fileName);
         existingSourceIds.add(course.id);
-        await sleep(2500);
+        console.log(`  -> 목표 포스트 1건 생성 성공 (${fileName}). 루프를 종료합니다.`);
+        break; // 1건 성공 즉시 탈출
       }
     } catch (err) {
       console.error(`  ❌ "${course.title}" 생성 실패:`, err.message);

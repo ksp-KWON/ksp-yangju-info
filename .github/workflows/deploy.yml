@@ -2,8 +2,8 @@ name: 양주인 통합 자동화 파이프라인
 
 on:
   schedule:
-    # 매시 정각 08:00~19:00 (KST) = UTC 23:00, 00:00~10:00 (12개 슬롯)
-    - cron: '0 23,0-10 * * *'
+    # 매시간 정각 24시간 실행
+    - cron: '0 * * * *'
   push:
     branches:
       - main
@@ -68,7 +68,7 @@ jobs:
 
       - name: 변경사항 스테이징
         run: |
-          git add public/data/city-rss.json public/data/local-info.json public/data/learning-courses.json src/data/learning-courses.json src/content/posts/ || true
+          git add public/data/city-rss.json public/data/local-info.json public/data/learning-courses.json public/data/skipped-urls.json src/data/learning-courses.json src/content/posts/ || true
 
       - name: 캐시 변경 여부
         id: cache_check
