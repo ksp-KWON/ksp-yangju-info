@@ -136,15 +136,105 @@ function extractSourceTokens(sourceRaw) {
   const clean = text.replace(/,/g, '');
   const tokens = new Set();
 
+  function addTimeVariants(h24, rawM, targetSet, originalRawH) {
+    const hh = h24.toString().padStart(2, '0');
+    const mm = rawM.toString().padStart(2, '0');
+
+    // HH:MM (24시간제)
+    targetSet.add(`${hh}:${mm}`);
+    targetSet.add(`${h24}:${mm}`);
+
+    // 시 단위
+    targetSet.add(`${h24}시`);
+    targetSet.add(`${hh}시`);
+    if (originalRawH !== undefined) {
+      targetSet.add(`${originalRawH}시`);
+      targetSet.add(`${originalRawH.toString().padStart(2, '0')}시`);
+    }
+
+    // HHMM
+    targetSet.add(`${hh}${mm}`);
+
+    // 분 단위
+    if (rawM > 0) {
+      targetSet.add(`${rawM}분`);
+      targetSet.add(`${mm}분`);
+    }
+  }
+
+  // (가)-1: 한국어 시각 표현 (오전|오후|낮|밤|새벽)?\s*(\d{1,2})\s*시(\s*(\d{1,2})\s*분)?
+  const korTimeRegex = /(오전|오후|낮|밤|새벽)?\s*(\d{1,2})\s*시(?:\s*(\d{1,2})\s*분)?/g;
+  let kt;
+  while ((kt = korTimeRegex.exec(clean)) !== null) {
+    const prefix = kt[1] || '';
+    const rawH = parseInt(kt[2], 10);
+    const rawM = kt[3] !== undefined ? parseInt(kt[3], 10) : 0;
+
+    if (rawH < 0 || rawH > 24 || rawM < 0 || rawM > 59) continue;
+
+    let h24 = rawH;
+    if (prefix === '오후' || prefix === '밤') {
+      if (rawH < 12) h24 = rawH + 12;
+    } else if (prefix === '오전' || prefix === '새벽') {
+      if (rawH === 12) h24 = 0;
+    } else if (prefix === '낮') {
+      if (rawH === 12) h24 = 12;
+    }
+
+    addTimeVariants(h24, rawM, tokens, rawH);
+  }
+
+  // (가)-2: 소스의 (\d{2})(\d{2})\s*[-~]\s*(\d{2})(\d{2}) 구간 표기 (예: 1000-2100)
+  const rangeRegex = /\b(\d{2})(\d{2})\s*[-~]\s*(\d{2})(\d{2})\b/g;
+  let rm;
+  while ((rm = rangeRegex.exec(clean)) !== null) {
+    const h1 = parseInt(rm[1], 10), m1 = parseInt(rm[2], 10);
+    const h2 = parseInt(rm[3], 10), m2 = parseInt(rm[4], 10);
+
+    if (h1 >= 0 && h1 <= 23 && m1 >= 0 && m1 <= 59 &&
+        h2 >= 0 && h2 <= 23 && m2 >= 0 && m2 <= 59) {
+      addTimeVariants(h1, m1, tokens, h1);
+      addTimeVariants(h2, m2, tokens, h2);
+    }
+  }
+
+  // (가)-3: 단독 (\d{4}) 시각 후보 (0000~2359 범위만, 영업|운영|시간 근처 또는 10자 이내 테스트 문자열)
+  const singleRegex = /\b(\d{2})(\d{2})\b/g;
+  let sm;
+  while ((sm = singleRegex.exec(clean)) !== null) {
+    const idx = sm.index;
+
+    // "2026년" 처럼 년, 월, 일, 호, 번지 뒤에 붙은 것은 제외
+    const afterChar = clean.slice(idx + 4, idx + 6);
+    if (/^[년월일호번]/.test(afterChar)) continue;
+
+    const h = parseInt(sm[1], 10);
+    const m = parseInt(sm[2], 10);
+    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+      const start = Math.max(0, idx - 20);
+      const end = Math.min(clean.length, idx + 4 + 20);
+      const surrounding = clean.slice(start, end);
+      const isTimeContext = /영업|운영|시간|[-~]/.test(surrounding) || (clean.length <= 10 && !/년/.test(clean));
+
+      if (isTimeContext) {
+        addTimeVariants(h, m, tokens, h);
+      }
+    }
+  }
+
   // 1) HH:MM (시간 및 분 분해)
   const timeMatches = clean.match(/\b\d{1,2}\s*:\s*\d{2}\b/g) || [];
   timeMatches.forEach(t => {
     const norm = t.replace(/\s+/g, '');
     tokens.add(norm);
     const [hh, mm] = norm.split(':');
-    tokens.add(`${parseInt(hh, 10)}시`);
+    const h = parseInt(hh, 10);
+    const m = parseInt(mm, 10);
+    tokens.add(`${h}시`);
+    tokens.add(`${h.toString().padStart(2, '0')}시`);
     if (mm !== '00') {
-      tokens.add(`${parseInt(mm, 10)}분`);
+      tokens.add(`${m}분`);
+      tokens.add(`${mm}분`);
     }
   });
 
@@ -186,7 +276,12 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
   while ((tm = timeRegex.exec(bodyOnly)) !== null) {
     const rawTime = tm[0];
     const normTime = rawTime.replace(/\s+/g, '');
-    if (!validTokens.has(normTime) && !compactText.includes(normTime)) {
+    const [hh, mm] = normTime.split(':');
+    const h24 = parseInt(hh, 10);
+    const mVal = parseInt(mm, 10);
+    const padTime = `${h24.toString().padStart(2, '0')}:${mVal.toString().padStart(2, '0')}`;
+
+    if (!validTokens.has(normTime) && !validTokens.has(padTime) && !compactText.includes(normTime)) {
       violations.push(rawTime.trim());
     }
   }
@@ -201,7 +296,17 @@ function validateSourceNumbers(markdownBody, sourceRaw) {
     const unit = um[2];
     const normToken = `${num}${unit.replace(/\s+/g, '')}`;
 
-    if (!validTokens.has(normToken) && !compactText.includes(normToken)) {
+    let isMatch = validTokens.has(normToken) || compactText.includes(normToken);
+
+    // 시 단위 추가 정규화 일치 검사 (예: 본문 '09시' <-> 토큰 '9시')
+    if (!isMatch && unit.startsWith('시')) {
+      const h = parseInt(num, 10);
+      if (validTokens.has(`${h}시`) || validTokens.has(`${h.toString().padStart(2, '0')}시`)) {
+        isMatch = true;
+      }
+    }
+
+    if (!isMatch) {
       violations.push(rawToken.trim());
     }
   }

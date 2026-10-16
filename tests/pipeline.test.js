@@ -138,6 +138,43 @@ describe('Pipeline Core Test Suite', () => {
       const violations = validateSourceNumbers(markdown, source);
       assert.deepEqual(violations, []);
     });
+
+    // 시각 동치 테스트 케이스
+    test('시각 동치: 소스 "1000-2100" 에 본문 "10시 21시" 통과', () => {
+      assert.deepEqual(validateSourceNumbers('운영 시간 10시 21시', '1000-2100'), []);
+    });
+
+    test('시각 동치: 소스 "0900-2100" 에 본문 "09시 21시" 통과', () => {
+      assert.deepEqual(validateSourceNumbers('운영 시간 09시 21시', '0900-2100'), []);
+    });
+
+    test('시각 동치: 소스 "오후 6시" 에 본문 "18:00" 통과', () => {
+      assert.deepEqual(validateSourceNumbers('통제 시간 18:00', '오후 6시'), []);
+    });
+
+    test('시각 동치: 소스 "낮 12시부터 오후 5시" 에 본문 "12:00 17:00" 통과', () => {
+      assert.deepEqual(validateSourceNumbers('운영 시간 12:00 17:00', '낮 12시부터 오후 5시'), []);
+    });
+
+    test('시각 동치: 소스 "오전 9시 30분" 에 본문 "09:30" 통과', () => {
+      assert.deepEqual(validateSourceNumbers('시작 시각 09:30', '오전 9시 30분'), []);
+    });
+
+    test('시각 동치 위반: 소스 "오후 6시" 에 본문 "19:00" 차단', () => {
+      assert.deepEqual(validateSourceNumbers('종료 시각 19:00', '오후 6시'), ['19:00']);
+    });
+
+    test('시각 동치 위반: 소스 "2026년" 에 본문 "20:26" 차단', () => {
+      assert.deepEqual(validateSourceNumbers('시간 20:26', '2026년'), ['20:26']);
+    });
+
+    test('시각 동치 위반: 소스 "1000-2100" 에 본문 "11시" 차단', () => {
+      assert.deepEqual(validateSourceNumbers('시간 11시', '1000-2100'), ['11시']);
+    });
+
+    test('시각 동치 위반: 소스 "오후 5시" 에 본문 "05:00" 차단', () => {
+      assert.deepEqual(validateSourceNumbers('시간 05:00', '오후 5시'), ['05:00']);
+    });
   });
 
   describe('2. sanitizeCalendarDays', () => {
