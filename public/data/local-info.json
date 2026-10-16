@@ -2,6 +2,20 @@
   "events": [],
   "benefits": [
     {
+      "id": "137100000035",
+      "title": "장애 체육인 장학금 지원",
+      "category": [
+        "체육·공원",
+        "복지·돌봄"
+      ],
+      "startDate": "2026-10-16",
+      "endDate": "상시",
+      "location": "전국",
+      "target": "체육회 또는 경기단체가 주관하는 전국규모대회에서 입상한 장애 학생 선수",
+      "summary": "우수한 장애 학생 선수에게 1인당 최대 200만원의 장학금 지원",
+      "link": "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/137100000035"
+    },
+    {
       "id": "135200005017",
       "title": "한국형 상병수당 시범사업",
       "category": [
@@ -15,5 +29,5 @@
       "link": "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/135200005017"
     }
   ],
-  "lastUpdated": "2026-10-08"
+  "lastUpdated": "2026-10-16"
 }
