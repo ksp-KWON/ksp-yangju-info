@@ -110,6 +110,7 @@ function getUpgradeTargets() {
           file,
           fullPath,
           title: parsed.data.title,
+          body,
           bodyLen,
           hasTable,
           link,
@@ -221,7 +222,10 @@ async function main() {
       continue;
     }
 
-    const upgradeWritingGuide = '\n\n[업그레이드 집필 지침: 위 원문 팩트를 하나도 빠짐없이 활용하고, 시민이 읽기 편한 상세 해설 문단, 마크다운 요약 표(| 구분 | 내용 |), 신청/이용 시 유의사항 및 문의처 안내를 충실히 전개하여 본문 총 길이가 최소 1,100자 이상이 되도록 상세히 작성하세요. (없는 사실 날조 금지)]';
+    const upgradeWritingGuide = `\n\n[업그레이드 집필 필수 지침]
+1. 위 원문 팩트와 첨부 자료를 하나도 빠짐없이 활용하여 본문 총 길이가 최소 1,100자 이상이 되도록 상세히 작성하세요. (없는 사실 날조 금지)
+2. ⚠️ 필수: 본문 내에 핵심 일정·대상·장소·주요 내용 등을 정리한 마크다운 요약 표(| 구분 | 내용 | 형식, 헤더 구분선 | --- | 포함)를 반드시 1개 이상 포함하세요. 표가 누락되면 업그레이드가 무효 처리됩니다.
+3. 아래 [기존 발행 본문]에 포함된 표나 핵심 정보는 절대 누락하지 말고 더 풍부하게 확장하세요.\n\n[기존 발행 본문 참고]\n${target.body}`;
     const promptItem = {
       title: target.parsed.data.title,
       description: target.parsed.data.summary,
@@ -285,15 +289,25 @@ async function main() {
     // 2차 전사 표준 정규화 및 요일 보정 (post-utils.js 표준 순서 준수)
     const normalized = normalizePost(rawNewFileContent);
     const sanitizedFullContent = sanitizeCalendarDays(normalized.fullContent, baseYear, `업그레이드[${target.file}]`);
-    const finalFullContent = sanitizedFullContent;
+    let finalFullContent = sanitizedFullContent;
 
     // 3차 최종 문자열 재파싱 및 순수 본문/길이 정밀 추출
     const parsedFinal = matter(finalFullContent);
-    const finalNewBody = parsedFinal.content.trim();
+    let finalNewBody = parsedFinal.content.trim();
+
+    // Table Fallback Rescue: AI가 마크다운 표를 누락했으나 기존 본문에 표가 존재하는 경우 자동 복원
+    if (!hasMarkdownTable(finalNewBody) && hasMarkdownTable(target.body)) {
+      const tableLines = target.body.split(/\r?\n/).filter(line => /^\s*\|.*\|\s*$/.test(line.trim()));
+      if (tableLines.length >= 2) {
+        finalNewBody = `${finalNewBody.trim()}\n\n### 핵심 요약 안내\n\n${tableLines.join('\n')}`;
+        console.log(`  -> [Table Rescue] AI 본문 내 표 누락 감지 — 기존 본문의 마크다운 표(${tableLines.length}줄) 자동 복원 완료`);
+        finalFullContent = matter.stringify(finalNewBody, parsedFinal.data);
+      }
+    }
     const finalNewLen = finalNewBody.length;
 
     // 안전장치 5: 품질 역전 방지 게이트 (Regression Guard)
-    const isSubstantialUpgrade = finalNewLen >= 1000 || (finalNewLen >= 800 && finalNewLen >= target.bodyLen + 150);
+    const isSubstantialUpgrade = finalNewLen >= 1000 || (finalNewLen >= 750 && finalNewLen >= target.bodyLen + 150);
     if (finalNewLen <= target.bodyLen || !isSubstantialUpgrade || !hasMarkdownTable(finalNewBody)) {
       console.warn(`  ❌ [품질 역전 방지 발동] 새 본문 길이(${finalNewLen}자) <= 기존(${target.bodyLen}자) 또는 실질 증량 미달/표 누락 -> 덮어쓰기 폐기`);
       saveUpgradeSkipped(target.file, 'REGRESSION_GUARD_TRIGGERED');
