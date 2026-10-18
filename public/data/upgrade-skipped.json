@@ -3,5 +3,25 @@
     "file": "2026-10-09-je24hoe-yangju-siminui-nal-ginyeomsik-gaechoe-annae-mich-ilj.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-17"
+  },
+  {
+    "file": "2026-10-09-yangju-baekseok.md",
+    "reason": "INSUFFICIENT_NEW_MATERIAL",
+    "skippedAt": "2026-10-18"
+  },
+  {
+    "file": "2026-10-16-2026-yangju-si-kaist-jeongjaeseung-gyosu-chocheong-robostamg.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-18"
+  },
+  {
+    "file": "2026-10-17-2026-yangju-si-nongeochonteukbyeoljeonhyeong-daehakipsiseolm.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-18"
+  },
+  {
+    "file": "2026-10-17-yangju-gwangsadong-sanchaek-koseu-chucheon-pyeonanhan-hyusik.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-18"
   }
 ]
