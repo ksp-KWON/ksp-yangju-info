@@ -28,5 +28,10 @@
     "file": "2026-10-15-yangju-jangheung-gaeul-nadeuli-koseu-oksangjeongwon-opin-bei.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-18"
+  },
+  {
+    "file": "2026-10-17-2026-chaek-ilgneun-tema-park-unyeong-annae-hoecheon-neutinam.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-19"
   }
 ]
