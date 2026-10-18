@@ -33,5 +33,10 @@
     "file": "2026-10-17-2026-chaek-ilgneun-tema-park-unyeong-annae-hoecheon-neutinam.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-19"
+  },
+  {
+    "file": "2026-10-18-gaeul-sanchaekgwa-yeoksaga-hamkkehaneun-yangju-okjeong-dokba.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-19"
   }
 ]
