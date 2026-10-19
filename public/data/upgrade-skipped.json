@@ -38,5 +38,10 @@
     "file": "2026-10-18-gaeul-sanchaekgwa-yeoksaga-hamkkehaneun-yangju-okjeong-dokba.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-19"
+  },
+  {
+    "file": "2026-10-20-2026-yangju-si-sahoe-welfare-bakramhoe-gaechoe-annae-iljeong.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-20"
   }
 ]
