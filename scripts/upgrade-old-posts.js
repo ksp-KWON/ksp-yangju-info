@@ -23,6 +23,38 @@ const { normalizePost, sanitizeCalendarDays } = require('./markdown-standard');
 
 const UPGRADE_SKIPPED_PATH = path.join(process.cwd(), 'public/data/upgrade-skipped.json');
 
+// ── im-not-ai 결정론적 정제기 ──────────────────────────────────────────
+function sanitizeImNotAiSummary(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/!+/g, '.')
+    .replace(/되어집니다/g, '됩니다')
+    .replace(/되어지고/g, '되고')
+    .replace(/에 있어서/g, '에서')
+    .trim();
+}
+
+function sanitizeImNotAiTitle(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/!+/g, '')
+    .replace(/되어집니다/g, '됩니다')
+    .replace(/되어지고/g, '되고')
+    .replace(/에 있어서/g, '에서')
+    .trim();
+}
+
+function sanitizeImNotAiBody(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/되어집니다/g, '됩니다')
+    .replace(/되어지고/g, '되고')
+    .replace(/에 있어서/g, '에서')
+    .replace(/(하며|하고|이고|으며|지만),\s+/g, '$1 ')
+    .replace(/^(>\s*-\s*\*\*[^*\n]+\*\*\s*:\s*)\*\*([^*\n]+)\*\*$/gm, '$1$2');
+}
+
+
 /**
  * 마크다운 정규 표 구분선 감지 (파이프 및 3개 이상 하이픈)
  */
@@ -275,7 +307,7 @@ async function main() {
     const todayKST = getKSTDateString();
     const updatedFrontmatter = {
       ...target.parsed.data,
-      summary: plan?.frontmatter?.summary || target.parsed.data.summary,
+      summary: sanitizeImNotAiSummary(plan?.frontmatter?.summary || target.parsed.data.summary),
       upgradedAt: todayKST
     };
 
@@ -284,7 +316,8 @@ async function main() {
     const baseYear = dateMatch ? parseInt(dateMatch[1], 10) : 2026;
 
     // 1차 결합 (새 마크다운 본문 + 보존된 Frontmatter)
-    const rawNewFileContent = matter.stringify(content.markdownContent, updatedFrontmatter);
+    const sanitizedBody = sanitizeImNotAiBody(content.markdownContent);
+    const rawNewFileContent = matter.stringify(sanitizedBody, updatedFrontmatter);
 
     // 2차 전사 표준 정규화 및 요일 보정 (post-utils.js 표준 순서 준수)
     const normalized = normalizePost(rawNewFileContent);
@@ -293,7 +326,7 @@ async function main() {
 
     // 3차 최종 문자열 재파싱 및 순수 본문/길이 정밀 추출
     const parsedFinal = matter(finalFullContent);
-    let finalNewBody = parsedFinal.content.trim();
+    let finalNewBody = sanitizeImNotAiBody(parsedFinal.content.trim());
 
     // Table Fallback Rescue: AI가 마크다운 표를 누락했으나 기존 본문에 표가 존재하는 경우 자동 복원
     if (!hasMarkdownTable(finalNewBody) && hasMarkdownTable(target.body)) {
