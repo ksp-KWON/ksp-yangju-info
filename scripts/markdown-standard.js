@@ -355,7 +355,7 @@ function sanitizeImNotAiBody(text) {
     .replace(/되어지고/g, '되고')
     .replace(/에 있어서/g, '에서')
     .replace(/(?:하며|하고|이고|으며|지만),\s+/g, (m) => m.replace(/,\s+$/, ' '))
-    .replace(/^(>\s*-\s*\*\*[^*\n]+\*\*\s*:\s*)\*\*([^*\n]+)\*\*$/gm, '$1$2');
+    .replace(/^(>\s*-\s*\*\*[^*\r\n]+\*\*\s*:\s*)\*\*([^*\r\n]+)\*\*(?=\r?$)/gm, '$1$2');
 }
 
 module.exports = {
