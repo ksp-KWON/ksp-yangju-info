@@ -327,6 +327,37 @@ function normalizePost(rawFileContent) {
   };
 }
 
+
+function sanitizeImNotAiTitle(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/!+/g, '')
+    .replace(/되어집니다/g, '됩니다')
+    .replace(/되어지고/g, '되고')
+    .replace(/에 있어서/g, '에서')
+    .trim();
+}
+
+function sanitizeImNotAiSummary(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/!+/g, '.')
+    .replace(/되어집니다/g, '됩니다')
+    .replace(/되어지고/g, '되고')
+    .replace(/에 있어서/g, '에서')
+    .trim();
+}
+
+function sanitizeImNotAiBody(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/되어집니다/g, '됩니다')
+    .replace(/되어지고/g, '되고')
+    .replace(/에 있어서/g, '에서')
+    .replace(/(?:하며|하고|이고|으며|지만),\s+/g, (m) => m.replace(/,\s+$/, ' '))
+    .replace(/^(>\s*-\s*\*\*[^*\n]+\*\*\s*:\s*)\*\*([^*\n]+)\*\*$/gm, '$1$2');
+}
+
 module.exports = {
   KOREAN_DAYS,
   sanitizeCalendarDays,
@@ -334,4 +365,7 @@ module.exports = {
   repairLineBold,
   normalizeMarkdownBody,
   normalizePost,
+  sanitizeImNotAiTitle,
+  sanitizeImNotAiSummary,
+  sanitizeImNotAiBody,
 };

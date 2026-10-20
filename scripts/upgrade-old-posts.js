@@ -19,41 +19,9 @@ const { callGemini, transcribeImagesWithGemini } = require('./gemini-helper');
 const { sleep, MIN_SOURCE_CHARS, getCleanSourceText, isSourceSufficient, validateSourceNumbers, crawlSourceBody } = require('./pipeline-utils');
 const { POSTS_DIR, FALLBACK_HOME_URL, isFallbackOrEmptyUrl, getKSTDateString } = require('./post-utils');
 const { PLAN_SCHEMA, CONTENT_SCHEMA, getRandomAngle, buildPlanPrompt, buildContentPrompt } = require('./prompt-builder');
-const { normalizePost, sanitizeCalendarDays } = require('./markdown-standard');
+const { normalizePost, sanitizeCalendarDays, sanitizeImNotAiSummary, sanitizeImNotAiBody } = require('./markdown-standard');
 
 const UPGRADE_SKIPPED_PATH = path.join(process.cwd(), 'public/data/upgrade-skipped.json');
-
-// ── im-not-ai 결정론적 정제기 ──────────────────────────────────────────
-function sanitizeImNotAiSummary(text) {
-  if (!text || typeof text !== 'string') return '';
-  return text
-    .replace(/!+/g, '.')
-    .replace(/되어집니다/g, '됩니다')
-    .replace(/되어지고/g, '되고')
-    .replace(/에 있어서/g, '에서')
-    .trim();
-}
-
-function sanitizeImNotAiTitle(text) {
-  if (!text || typeof text !== 'string') return '';
-  return text
-    .replace(/!+/g, '')
-    .replace(/되어집니다/g, '됩니다')
-    .replace(/되어지고/g, '되고')
-    .replace(/에 있어서/g, '에서')
-    .trim();
-}
-
-function sanitizeImNotAiBody(text) {
-  if (!text || typeof text !== 'string') return '';
-  return text
-    .replace(/되어집니다/g, '됩니다')
-    .replace(/되어지고/g, '되고')
-    .replace(/에 있어서/g, '에서')
-    .replace(/(하며|하고|이고|으며|지만),\s+/g, '$1 ')
-    .replace(/^(>\s*-\s*\*\*[^*\n]+\*\*\s*:\s*)\*\*([^*\n]+)\*\*$/gm, '$1$2');
-}
-
 
 /**
  * 마크다운 정규 표 구분선 감지 (파이프 및 3개 이상 하이픈)
@@ -316,8 +284,7 @@ async function main() {
     const baseYear = dateMatch ? parseInt(dateMatch[1], 10) : 2026;
 
     // 1차 결합 (새 마크다운 본문 + 보존된 Frontmatter)
-    const sanitizedBody = sanitizeImNotAiBody(content.markdownContent);
-    const rawNewFileContent = matter.stringify(sanitizedBody, updatedFrontmatter);
+    const rawNewFileContent = matter.stringify(content.markdownContent, updatedFrontmatter);
 
     // 2차 전사 표준 정규화 및 요일 보정 (post-utils.js 표준 순서 준수)
     const normalized = normalizePost(rawNewFileContent);

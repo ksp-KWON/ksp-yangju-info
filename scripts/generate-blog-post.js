@@ -30,38 +30,12 @@ const {
   buildPlanPrompt,
   buildContentPrompt
 } = require('./prompt-builder');
+const {
+  sanitizeImNotAiTitle,
+  sanitizeImNotAiSummary,
+  sanitizeImNotAiBody
+} = require('./markdown-standard');
 
-
-// ── im-not-ai 결정론적 정제기 ──────────────────────────────────────────
-function sanitizeImNotAiSummary(text) {
-  if (!text || typeof text !== 'string') return '';
-  return text
-    .replace(/!+/g, '.')
-    .replace(/되어집니다/g, '됩니다')
-    .replace(/되어지고/g, '되고')
-    .replace(/에 있어서/g, '에서')
-    .trim();
-}
-
-function sanitizeImNotAiTitle(text) {
-  if (!text || typeof text !== 'string') return '';
-  return text
-    .replace(/!+/g, '')
-    .replace(/되어집니다/g, '됩니다')
-    .replace(/되어지고/g, '되고')
-    .replace(/에 있어서/g, '에서')
-    .trim();
-}
-
-function sanitizeImNotAiBody(text) {
-  if (!text || typeof text !== 'string') return '';
-  return text
-    .replace(/되어집니다/g, '됩니다')
-    .replace(/되어지고/g, '되고')
-    .replace(/에 있어서/g, '에서')
-    .replace(/(하며|하고|이고|으며|지만),\s+/g, '$1 ')
-    .replace(/^(>\s*-\s*\*\*[^*\n]+\*\*\s*:\s*)\*\*([^*\n]+)\*\*$/gm, '$1$2');
-}
 
 const CITY_RSS_PATH = path.join(process.cwd(), 'public/data/city-rss.json');
 const LOCAL_INFO_PATH = path.join(process.cwd(), 'public/data/local-info.json');
