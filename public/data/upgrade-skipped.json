@@ -43,5 +43,10 @@
     "file": "2026-10-20-2026-yangju-si-sahoe-welfare-bakramhoe-gaechoe-annae-iljeong.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-20"
+  },
+  {
+    "file": "2026-10-21-2026-yangju-sibogeonso-dongbu-health-saenghwal-support-sente.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-22"
   }
 ]
