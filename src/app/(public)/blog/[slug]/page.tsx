@@ -3,7 +3,6 @@ import { getLearningData } from '@/lib/learning';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import BlogPostClient from '@/components/blog/BlogPostClient';
-import { parseBlogPost } from '@/lib/blog-utils';
 import AppIcon from '@/components/ui/AppIcon';
 import Link from 'next/link';
 import ExpiredNoticeBanner from '@/components/blog/ExpiredNoticeBanner';
@@ -44,6 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       locale: 'ko_KR',
       type: 'article',
       ...(post.date ? { publishedTime: post.date } : {}),
+      ...((post.updatedAt || post.date) ? { modifiedTime: post.updatedAt || post.date } : {}),
     },
     twitter: {
       card: 'summary_large_image',
@@ -127,20 +127,6 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     ],
   };
 
-  // 3. FAQPage 스키마 (구글 검색결과 FAQ 리치 스니펫, 보상스쿨 SSOT 표준 일원화)
-  const { faqItems: faqs } = parseBlogPost(post.content);
-  const faqSchema = faqs.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.q.replace(/[*#_]/g, '').trim(),
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.a.replace(/\*\*/g, '').replace(/<[^>]*>/g, '').trim(),
-      },
-    })),
-  } : null;
 
   // 카테고리별 테마 뱃지 스타일
   const getCategoryBadgeClass = (categoryName: string) => {
@@ -176,9 +162,6 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     <div className="w-full space-y-4">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      {faqSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      )}
 
       {/* 상단 네비게이션 브레드크럼 */}
       <nav className="mb-2">
@@ -212,10 +195,17 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                   {(post.category as string).replace(/^[^\s]+\s/, '')}
                 </span>
               ) : null}
-              <time dateTime={post.date} className="text-zinc-500 dark:text-zinc-400 font-medium tracking-wide flex items-center gap-1 ml-auto">
-                <AppIcon name="calendar" size={14} strokeWidth={2} />
-                <span>{post.date}</span>
-              </time>
+              <div className="flex items-center gap-2.5 ml-auto">
+                <time dateTime={post.date} className="text-zinc-500 dark:text-zinc-400 font-medium tracking-wide flex items-center gap-1">
+                  <AppIcon name="calendar" size={14} strokeWidth={2} />
+                  <span>{post.date}</span>
+                </time>
+                {post.updatedAt && post.updatedAt !== post.date && (
+                  <time dateTime={post.updatedAt} className="text-[#1A73E8] dark:text-[#8ab4f8] font-bold tracking-wide flex items-center gap-1">
+                    <span>(업데이트 {post.updatedAt})</span>
+                  </time>
+                )}
+              </div>
             </div>
 
             <h1 className="text-lg sm:text-xl md:text-2xl lg:text-[26px] font-extrabold tracking-tight text-zinc-950 dark:text-white leading-snug break-keep">

@@ -92,6 +92,7 @@ export default function RootLayout({
         "@id": `${SITE_URL}/#website`,
         "url": SITE_URL,
         "name": SITE_NAME,
+        "alternateName": "양주 건강·생활 정보 포털",
         "publisher": {
           "@id": `${SITE_URL}/#organization`,
         },

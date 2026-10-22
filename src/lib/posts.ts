@@ -40,7 +40,8 @@ let cachedPosts: PostData[] | null = null;
 
 function parsePostMetadata(slug: string, matterResult: matter.GrayMatterFile<string>): PostData {
   const dateStr = formatDate(matterResult.data.date);
-  const updatedAtStr = matterResult.data.updatedAt ? formatDate(matterResult.data.updatedAt) : undefined;
+  const rawUpdated = matterResult.data.updatedAt || matterResult.data.upgradedAt;
+  const updatedAtStr = rawUpdated ? formatDate(rawUpdated) : undefined;
   const expiresAtStr = matterResult.data.expiresAt ? formatDate(matterResult.data.expiresAt) : undefined;
 
   let categoryArray: string[] = [];

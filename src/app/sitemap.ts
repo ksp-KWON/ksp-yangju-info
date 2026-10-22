@@ -11,51 +11,44 @@ const SITE_LAUNCH_DATE = '2026-01-01';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
+  const posts = getSortedPostsData();
 
-  // 1. 핵심 서비스 및 공공 안내 정적 라우트 (W3C & Google Search Central 표준)
+  // 전체 포스트 중 가장 최신 발행/수정 날짜 (홈 및 블로그 목록 lastmod 연동)
+  const latestPostDate = posts.reduce((max, p) => {
+    const d = p.updatedAt || p.date || SITE_LAUNCH_DATE;
+    return d > max ? d : max;
+  }, SITE_LAUNCH_DATE);
+
+  // 1. 핵심 서비스 및 공공 안내 정적 라우트 (W3C & Google Search Central 2026 경량화)
   const routes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: SITE_LAUNCH_DATE,
-      changeFrequency: 'daily',
-      priority: 1.0,
+      lastModified: latestPostDate,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: SITE_LAUNCH_DATE,
-      changeFrequency: 'daily',
-      priority: 0.9,
+      lastModified: latestPostDate,
     },
     {
       url: `${baseUrl}/services/emergency`,
       lastModified: SITE_LAUNCH_DATE,
-      changeFrequency: 'weekly',
-      priority: 0.9,
     },
     {
       url: `${baseUrl}/services/learning`,
       lastModified: SITE_LAUNCH_DATE,
-      changeFrequency: 'weekly',
-      priority: 0.9,
     },
     // Google E-E-A-T 신뢰도 & 투명성 필수 페이지
     {
       url: `${baseUrl}/about`,
       lastModified: SITE_LAUNCH_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.4,
     },
     {
       url: `${baseUrl}/terms`,
       lastModified: SITE_LAUNCH_DATE,
-      changeFrequency: 'yearly',
-      priority: 0.3,
     },
     {
       url: `${baseUrl}/privacy`,
       lastModified: SITE_LAUNCH_DATE,
-      changeFrequency: 'yearly',
-      priority: 0.3,
     },
   ];
 
@@ -63,17 +56,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const emergencyPlaceRoutes: MetadataRoute.Sitemap = EMERGENCY_PLACES.map((place) => ({
     url: `${baseUrl}/services/emergency/${place.slug}`,
     lastModified: SITE_LAUNCH_DATE,
-    changeFrequency: 'weekly',
-    priority: 0.8,
   }));
 
   // 3. 블로그 상세 페이지들 (실제 포스트 발행일 및 수정일 반영)
-  const posts = getSortedPostsData();
   const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: post.updatedAt || post.date || SITE_LAUNCH_DATE,
-    changeFrequency: 'monthly',
-    priority: 0.8,
   }));
 
   // 4. 양주 평생학습 실시간 강좌 상세 페이지 (전수 색인)
@@ -81,8 +69,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const learningRoutes: MetadataRoute.Sitemap = courses.map((c) => ({
     url: `${baseUrl}/services/learning/${c.id}`,
     lastModified: SITE_LAUNCH_DATE,
-    changeFrequency: 'weekly',
-    priority: 0.7,
   }));
 
   return [...routes, ...emergencyPlaceRoutes, ...postRoutes, ...learningRoutes];

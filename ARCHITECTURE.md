@@ -110,3 +110,21 @@
 3. **전 파이프라인 무결 연동**:
    - **신규 글 자동 발행 (`scripts/generate-blog-post.js`)**: `saveMarkdownPost` 저장 직전 제목, 요약, 본문에 결정론적 정제기를 적용하여 영구 보존.
    - **구버전 In-Place 업그레이드 (`scripts/upgrade-old-posts.js`)**: `normalizePost` 이후 최종 본문 및 메타 요약문에 단일화된 1회 정제를 적용하여 중복 연산 방지 및 무결성 확보.
+---
+
+## 7. Google Search Central 2026 최신 기술 명세 표준화 (2026-10-23~)
+
+1. **콘텐츠 신선도(Freshness) 및 날짜 SSOT 단일 통합 (`src/lib/posts.ts`)**:
+   - `updatedAt` 필드를 Frontmatter 내 `updatedAt || upgradedAt`의 단일 진실 공급원(SSOT)으로 자동 통합 매핑.
+   - 구버전 백필 업그레이드(`upgradedAt`) 포스트가 사이트맵(`lastmod`), OpenGraph(`modifiedTime`), 구조화 데이터(`dateModified`), 화면 헤더(`Visible Byline Date`)에 즉각 연동되어 구글봇의 재크롤링 및 콘텐츠 갱신 감지 보장.
+
+2. **구글 사이트맵 2026 경량화 및 최신일 동적 바인딩 (`src/app/sitemap.ts`)**:
+   - 구글 검색센터 공식 명세(Google ignores `<priority>` and `<changefreq>`)에 따라 전 라우트에서 무의미한 `changeFrequency`와 `priority` 속성을 완전 제거하여 XML 페이로드 경량화.
+   - 전체 포스트의 최신 발행/수정일(`latestPostDate`)을 실시간 집계하여 홈(`/`) 및 블로그 목록(`/blog`)의 `lastModified`에 동적 바인딩.
+
+3. **구글 사이트 네임(Site Names) 표준 구조화 데이터 보강 (`src/app/layout.tsx`)**:
+   - Google Search Central `site-names` 가이드라인에 따라 전역 `@graph` 내 `WebSite` 스키마에 `"alternateName": "양주 건강·생활 정보 포털"` 속성 추가.
+
+4. **폐기된 FAQPage JSON-LD 제거 및 화면 Byline 수정일 일치화 (`src/app/(public)/blog/[slug]/page.tsx`)**:
+   - 구글 검색에서 공식 폐기(Deprecated)된 `FAQPage` 구조화 데이터 생성 로직 및 관련 미사용 import(`parseBlogPost`) 데드코드 소거 (독자 가독성을 위한 본문 시각적 UI는 온전히 보존).
+   - 구글 `publication-dates` 일치화 가이드라인에 따라 화면 상단 헤더에 `post.updatedAt && post.updatedAt !== post.date`일 때 수정일 Byline(`(업데이트 YYYY-MM-DD)`)을 표시하고 OpenGraph `modifiedTime`과 `dateModified`를 100% 동기화.
