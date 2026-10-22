@@ -26,7 +26,7 @@ function sanitizeCalendarDays(text, defaultYear = 2026, context = '') {
 
 /**
  * src/lib/markdown-standard.js
- * 양주 건강·생활 정보 포털 전사 단일 표준 마크다운 정규화 엔진 (Single Source of Truth)
+ * 의정부 건강·생활 정보 포털 전사 단일 표준 마크다운 정규화 엔진 (Single Source of Truth)
  * 
  * [헌법 원칙 준수: 표준 · 범용 · 콤팩트 · 통합 · 공유 · 공통]
  * - 순수 Universal JavaScript + JSDoc 표준: Node.js CLI 및 Next.js 런타임 양방향 100% 호환
@@ -77,7 +77,7 @@ function normalizeFrontmatter(data = {}) {
       .trim();
   }
 
-  // 1-2. 양주시 공식 9대 분야 카테고리 정규화
+  // 1-2. 의정부시 공식 9대 분야 카테고리 정규화
   if (cleanData.category) {
     const cats = Array.isArray(cleanData.category) ? cleanData.category : [cleanData.category];
     const catStr = cats.join(' ');
@@ -133,6 +133,10 @@ function repairLineBold(line) {
   // 2-2. 콜론 앞뒤 공백 및 볼드 분리
   text = text.replace(/\*\*\s*:\s*\*\*/g, '**: **');
   text = text.replace(/([가-힣0-9a-zA-Z])\*\*:\s*\*\*/g, '$1**: **');
+
+  // 2-2-1. 볼드-인용구 파손(**> 또는 ** >) 안전 소거 (정상 부등호 > 보존)
+  text = text.replace(/\*\*>+\s*/g, '**');
+  text = text.replace(/(^|[\s:>\(\[])\*\*\s+>+\s*/gm, (_m, p1) => p1 + '**');
 
   // 2-3. 따옴표 내부 볼드 정상화 ('**단어'** -> '**단어**')
   text = text.replace(/(?<=\s|^)\*\*'([^'\n*.]{1,50})'\*\*(?=\s|[.,?!:]|[가-힣]|$)/g, (_m, p1) => `'**${p1.trim()}**'`);
@@ -235,8 +239,8 @@ function normalizeMarkdownBody(rawBody, sourceLink = '') {
 
   // 3-4. 수묵화 시그니처 박스 표준화
   body = body.replace(
-    />\s*###\s*(?:양주\s*생활\s*꿀팁|양주\s*생활포털|행정\s*인사이트|실무\s*팁|실무TIP)[^\n]*/gi,
-    '> ### 양주 생활 꿀팁 & 행정 인사이트'
+    />\s*###\s*(?:의정부\s*생활\s*꿀팁|의정부\s*생활포털|행정\s*인사이트|실무\s*팁|실무TIP)[^\n]*/gi,
+    '> ### 의정부 생활 꿀팁 & 행정 인사이트'
   );
 
   // 3-5. 이모지 제거 (헤딩)
