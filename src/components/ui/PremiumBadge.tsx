@@ -30,7 +30,7 @@ export default function PremiumBadge({
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-[11px] sm:text-xs font-bold rounded-none shadow-[0_1px_2px_rgba(0,0,0,0.03)] border ${colorClass} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 text-[11px] sm:text-xs font-bold rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.03)] border ${colorClass} ${className}`}
       {...props}
     >
       {children}

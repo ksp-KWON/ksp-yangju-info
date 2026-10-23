@@ -260,11 +260,11 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
       {/* ── 5. [생활분야 모달] 8대 행정 카테고리 전체 그리드 ── */}
       <BottomSheet isOpen={openModal === 'categories'} onClose={closeModals} maxHeight="max-h-[85vh]">
         <div className="w-full flex flex-col">
-          <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-100 dark:border-zinc-800">
+          <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#e1dbd1]/80 dark:border-zinc-800">
             <h3 className="text-sm sm:text-base font-extrabold text-[#202124] dark:text-white">
               양주 8대 생활정보 카테고리
             </h3>
-            <span className="text-[10px] font-bold px-2 py-0.5 bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#f3efe8] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-[#e1dbd1] dark:border-zinc-700">
               분야별 가이드
             </span>
           </div>
@@ -279,10 +279,10 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
                     key={catName}
                     href={`/blog?category=${encodeURIComponent(catName)}`}
                     onClick={closeModals}
-                    className={`relative overflow-hidden flex items-center gap-2.5 p-3 rounded-none border transition-all group shadow-2xs ${
+                    className={`relative overflow-hidden flex items-center gap-2.5 p-3 rounded-xl border transition-all group shadow-2xs ${
                       isCurrentCat
                         ? 'bg-blue-50/80 dark:bg-blue-950/40 border-[var(--google-blue)] text-[var(--google-blue)] dark:text-[#8ab4f8]'
-                        : 'bg-white dark:bg-[#202124] border-gray-200/90 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 text-zinc-900 dark:text-zinc-100'
+                        : 'bg-[#fffdfa] dark:bg-[#202124] border-[#e1dbd1]/90 dark:border-zinc-800 hover:border-[#292722] dark:hover:border-zinc-600 text-zinc-900 dark:text-zinc-100'
                     }`}
                   >
                     <div className="absolute right-1 bottom-0 opacity-[0.05] dark:opacity-[0.08] text-zinc-900 dark:text-zinc-100 select-none pointer-events-none group-hover:scale-110 transition-transform duration-300 z-0">
@@ -312,18 +312,18 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
             </div>
           )}
 
-          <div className="mt-4 pt-3 border-t border-gray-100 dark:border-zinc-800 flex items-center gap-2">
+          <div className="mt-4 pt-3 border-t border-[#e1dbd1]/80 dark:border-zinc-800 flex items-center gap-2">
             <Link
               href="/blog"
               onClick={closeModals}
-              className="flex-1 py-2.5 px-3 bg-gray-50 dark:bg-zinc-800/80 hover:bg-gray-100 dark:hover:bg-zinc-800 text-center font-bold text-xs text-zinc-800 dark:text-zinc-200 border border-gray-200/80 dark:border-zinc-700 transition-colors"
+              className="flex-1 py-2.5 px-3 rounded-xl bg-[#faf8f4] dark:bg-zinc-800/80 hover:bg-[#ebe5da] dark:hover:bg-zinc-800 text-center font-bold text-xs text-zinc-800 dark:text-zinc-200 border border-[#e1dbd1]/90 dark:border-zinc-700 transition-colors"
             >
               전체글 목록 보기
             </Link>
             <Link
               href="/search"
               onClick={closeModals}
-              className="flex-1 py-2.5 px-3 bg-[var(--google-blue)] text-white text-center font-bold text-xs transition-opacity hover:opacity-90 shadow-sm"
+              className="flex-1 py-2.5 px-3 rounded-xl bg-[var(--google-blue)] text-white text-center font-bold text-xs transition-opacity hover:opacity-90 shadow-sm"
             >
               키워드 검색
             </Link>
@@ -332,7 +332,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
       </BottomSheet>
 
       {/* ── 6. 하단 5대 탭 바 ── */}
-      <nav className="lg:hidden fixed bottom-0 left-0 w-full h-[60px] bg-white/95 dark:bg-[#202124]/95 backdrop-blur-md border-t border-gray-200/90 dark:border-zinc-800 flex items-center justify-around px-1 z-[100] pb-[env(safe-area-inset-bottom)] transition-colors duration-300 shadow-md">
+      <nav className="lg:hidden fixed bottom-0 left-0 w-full h-[60px] bg-[#faf8f4]/95 dark:bg-[#202124]/95 backdrop-blur-md border-t border-[#e1dbd1]/80 dark:border-zinc-800 flex items-center justify-around px-1 z-[100] pb-[env(safe-area-inset-bottom)] transition-colors duration-300 shadow-md">
         {navTabs.map((tab) => {
           const isActive = tab.isOpen || tab.isRouteActive;
           return (
@@ -347,7 +347,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
               }`}
             >
               {isActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[var(--google-blue)] dark:bg-[#8ab4f8] rounded-none animate-in fade-in duration-200" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[var(--google-blue)] dark:bg-[#8ab4f8] rounded-full animate-in fade-in duration-200" />
               )}
               <AppIcon
                 name={tab.iconName}
@@ -370,7 +370,7 @@ export default function MobileBottomNav({ categories = [] }: MobileBottomNavProp
   return (
     <Suspense
       fallback={
-        <div className="lg:hidden fixed bottom-0 left-0 w-full h-[60px] bg-white/95 dark:bg-[#202124]/95 backdrop-blur-md border-t border-gray-200/90 dark:border-zinc-800 z-[100]" />
+        <div className="lg:hidden fixed bottom-0 left-0 w-full h-[60px] bg-[#faf8f4]/95 dark:bg-[#202124]/95 backdrop-blur-md border-t border-[#e1dbd1]/80 dark:border-zinc-800 z-[100]" />
       }
     >
       <NavContent categories={categories} />
