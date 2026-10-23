@@ -6,16 +6,16 @@
 @variant dark (.dark &);
 
 :root {
-  --background: #ffffff;
+  --background: #faf8f4;
   --foreground: #202124;
 
   /* Google Material Colors (보상스쿨 규격) */
-  --google-blue: #1a73e8;
+  --google-blue: #0369a1;
   --google-red: #ea4335;
   --google-yellow: #fbbc04;
   --google-green: #34a853;
-  --google-surface-variant: #f1f3f4;
-  --google-border: #dadce0;
+  --google-surface-variant: #f3efe8;
+  --google-border: #e1dbd1;
 }
 
 :root.dark {
@@ -147,3 +147,14 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── seoulcities.net 시그니처 에디토리얼 북커버 프레임 ── */
+.editorial-cover-frame {
+  border: 6px solid #fffdfa;
+  border-radius: 1.15rem;
+  box-shadow: 0 12px 28px rgba(50, 38, 24, 0.09);
+}
+.dark .editorial-cover-frame {
+  border-color: #27272a;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}

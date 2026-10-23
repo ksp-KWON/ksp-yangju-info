@@ -46,7 +46,7 @@ export default function PageHeaderBanner({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-none border border-gray-200/90 dark:border-zinc-800 bg-white dark:bg-[#202124] shadow-[0_2px_8px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-md p-6 sm:p-10 group transition-all duration-300 ${
+      className={`relative overflow-hidden rounded-2xl border border-[#e1dbd1]/90 dark:border-zinc-800 bg-[#fffdfa] dark:bg-[#202124] shadow-[0_6px_20px_rgba(50,38,24,0.04)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-md p-6 sm:p-10 group transition-all duration-300 ${
         isCenter ? 'text-center' : 'text-left'
       } ${className}`}
     >
@@ -60,7 +60,7 @@ export default function PageHeaderBanner({
       <div className={`relative z-10 space-y-3 ${isCenter ? 'max-w-2xl mx-auto' : ''}`}>
         {badgeText && (
           <div
-            className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider border rounded-none shadow-2xs ${BADGE_TONE_STYLES[badgeTone]}`}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-bold uppercase tracking-wider border rounded-full shadow-2xs ${BADGE_TONE_STYLES[badgeTone]}`}
           >
             {badgeIcon && (
               <AppIcon name={badgeIcon} size={14} strokeWidth={2} className={BADGE_ICON_COLORS[badgeTone]} />

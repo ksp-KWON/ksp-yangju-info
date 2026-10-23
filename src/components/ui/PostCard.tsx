@@ -144,7 +144,7 @@ export default function PostCard({ post, variant = 'grid' }: PostCardProps) {
               {(post.tags || []).slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="text-[11px] font-medium px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/80 dark:border-zinc-700/80 rounded-none"
+                  className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400 border border-[#e1dbd1]/80 dark:border-zinc-700/80"
                 >
                   #{tag}
                 </span>
@@ -152,13 +152,8 @@ export default function PostCard({ post, variant = 'grid' }: PostCardProps) {
             </div>
 
             <div className={`shrink-0 flex items-center gap-1 text-xs sm:text-sm font-bold ${theme.textMain}`}>
-              <span>자세히 보기</span>
-              <AppIcon
-                name="chevron-right"
-                size={14}
-                strokeWidth={2.5}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              <span>자세히 읽기</span>
+              <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
             </div>
           </div>
         </PremiumCard>
@@ -195,11 +190,21 @@ export default function PostCard({ post, variant = 'grid' }: PostCardProps) {
           </div>
         </div>
 
-        <div className={`mt-4 w-full text-xs sm:text-[12.5px] font-bold text-[#202124] dark:text-[#e8eaed] flex items-center justify-between transition-colors p-2.5 bg-gray-50/90 dark:bg-white/5 border border-gray-100 dark:border-zinc-800/80 group-hover:bg-[#e8f0fe]/60 dark:group-hover:bg-[#174ea6]/20 ${theme.titleHover} relative z-10`}>
-          <div className="flex items-center gap-2">
-            <span>글 읽기</span>
+        <div className="mt-4 pt-3 border-t border-gray-100 dark:border-zinc-800/80 flex items-center justify-between gap-2 relative z-10">
+          <div className="flex flex-wrap gap-1">
+            {(post.tags || []).slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400 border border-[#e1dbd1]/80 dark:border-zinc-700/80"
+              >
+                #{tag}
+              </span>
+            ))}
           </div>
-          <AppIcon name="chevron-right" size={14} strokeWidth={2.5} className="group-hover:translate-x-0.5 transition-transform" />
+          <div className={`shrink-0 flex items-center gap-1 text-xs font-bold ${theme.textMain}`}>
+            <span>자세히 읽기</span>
+            <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+          </div>
         </div>
       </PremiumCard>
     </Link>

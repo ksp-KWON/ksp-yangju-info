@@ -175,7 +175,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       </nav>
 
       {/* 메인 칼럼 아티클 (부모 SmartStickyLayout 73% 본문 폭에 100% 핏, 보상스쿨 동기화) */}
-      <article className="w-full bg-white dark:bg-[#202124] rounded-none shadow-[0_2px_8px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] border border-gray-200/90 dark:border-zinc-800 overflow-hidden relative">
+      <article className="w-full bg-[#fffdfa] dark:bg-[#202124] rounded-2xl shadow-[0_8px_28px_rgba(50,38,24,0.05)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] border border-[#e1dbd1]/90 dark:border-zinc-800 overflow-hidden relative">
         <ExpiredNoticeBanner expiresAt={post.expiresAt} sourceLink={sourceLink} />
         <div className="px-3.5 py-6 sm:px-8 sm:py-9 space-y-7">
           {/* 아티클 헤더 (구역 1: 카테고리/날짜 메타, 구역 2: H1 타이틀, 구역 3: 포스트 요약 리드문) */}
@@ -185,13 +185,13 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 post.category.map((cat) => (
                   <span
                     key={cat}
-                    className={`px-2.5 py-1 rounded-none font-bold border shadow-2xs ${getCategoryBadgeClass(cat)}`}
+                    className={`px-3 py-1 rounded-full font-bold border shadow-2xs ${getCategoryBadgeClass(cat)}`}
                   >
                     {cat.replace(/^[^\s]+\s/, '')}
                   </span>
                 ))
               ) : post.category ? (
-                <span className={`px-2.5 py-1 rounded-none font-bold border shadow-2xs ${getCategoryBadgeClass(post.category as string)}`}>
+                <span className={`px-3 py-1 rounded-full font-bold border shadow-2xs ${getCategoryBadgeClass(post.category as string)}`}>
                   {(post.category as string).replace(/^[^\s]+\s/, '')}
                 </span>
               ) : null}

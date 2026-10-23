@@ -43,7 +43,7 @@ export default function CivicServiceBanner({
   return (
     <div className={`w-full ${className}`}>
       <Link href={href} className="group block w-full select-none">
-        <div className="relative overflow-hidden rounded-none border border-gray-200/90 dark:border-zinc-800 bg-white dark:bg-[#202124] shadow-[0_0_20px_rgba(0,0,0,0.08)] dark:shadow-[0_0_20px_rgba(0,0,0,0.50)] hover:shadow-[0_0_40px_rgba(0,0,0,0.18),0_0_15px_rgba(0,0,0,0.10)] dark:hover:shadow-[0_0_40px_rgba(0,0,0,0.70),0_0_15px_rgba(0,0,0,0.50)] hover:-translate-y-1 hover:border-zinc-800 dark:hover:border-zinc-200 transition-all duration-300">
+        <div className="relative overflow-hidden rounded-2xl border border-[#e1dbd1]/90 dark:border-zinc-800 bg-[#fffdfa] dark:bg-[#202124] shadow-[0_0_20px_rgba(0,0,0,0.08)] dark:shadow-[0_0_20px_rgba(0,0,0,0.50)] hover:shadow-[0_0_40px_rgba(0,0,0,0.18),0_0_15px_rgba(0,0,0,0.10)] dark:hover:shadow-[0_0_40px_rgba(0,0,0,0.70),0_0_15px_rgba(0,0,0,0.50)] hover:-translate-y-1 hover:border-zinc-800 dark:hover:border-zinc-200 transition-all duration-300">
           {/* ── 0. 상단 심볼 그라데이션 공통 라인 ── */}
           <TopGradientLine color={themeColor} />
 
@@ -84,7 +84,7 @@ export default function CivicServiceBanner({
           <div className="relative z-10 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4 w-full">
             <div className="flex items-center gap-3.5 min-w-0">
               {/* 40px 규격 통일 스퀘어 아이콘 */}
-              <div className={`w-10 h-10 rounded-none flex items-center justify-center shrink-0 shadow-xs transition-colors duration-300 ${
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs transition-colors duration-300 ${
                 isGreen
                   ? 'bg-emerald-600 dark:bg-emerald-600 text-white border border-emerald-500/80 group-hover:bg-emerald-700'
                   : 'bg-blue-50 dark:bg-blue-950/50 text-[var(--google-blue)] dark:text-[#8ab4f8] border border-blue-200 dark:border-blue-800/80 group-hover:bg-[var(--google-blue)] group-hover:text-white'
@@ -95,7 +95,7 @@ export default function CivicServiceBanner({
               <div className="min-w-0">
                 {/* 1행: 카테고리 뱃지 + 실시간 상태 뱃지 (높이 100% 동일) */}
                 <div className="flex items-center gap-2">
-                  <span className={`px-2 py-0.5 text-[11px] font-bold rounded-none ${
+                  <span className={`px-2.5 py-0.5 text-[11px] font-bold rounded-full ${
                     isGreen
                       ? 'bg-emerald-700 text-white shadow-2xs'
                       : 'bg-[#e8f0fe] text-[var(--google-blue)] dark:bg-[#174ea6]/30 dark:text-[#8ab4f8] border border-[#d2e3fc]/80 dark:border-[#174ea6]/40'
@@ -132,7 +132,7 @@ export default function CivicServiceBanner({
 
             {/* 우측 바로가기 액션 버튼 (규격 100% 동일) */}
             <div className="flex justify-end sm:justify-center shrink-0">
-              <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-white text-xs font-bold rounded-none shadow-xs transition-colors ${
+              <span className={`inline-flex items-center gap-1.5 px-4 py-1.5 text-white text-xs font-bold rounded-full shadow-xs transition-colors ${
                 isGreen
                   ? 'bg-emerald-700 group-hover:bg-emerald-800'
                   : 'bg-[var(--google-blue)] group-hover:bg-[#1557b0]'

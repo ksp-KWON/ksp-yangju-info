@@ -104,7 +104,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
       {/* 🚀 [최상단] 최신 양주 생활 브리핑 위젯 (보상스쿨 Google Blue 스타일) */}
       {latestPosts.length > 0 && (
         <PremiumCard borderColor="blue" hoverEffect={false} watermarkIcon="sparkles" className="!p-0 overflow-hidden">
-          <div className="p-4 sm:p-5 bg-gradient-to-r from-blue-50/90 via-blue-50/30 to-transparent dark:from-blue-900/30 dark:via-blue-900/10 dark:to-transparent border-b border-blue-100 dark:border-blue-900/40 flex items-center justify-between gap-3 relative z-10">
+          <div className="p-4 sm:p-5 bg-gradient-to-r from-[#f3efe8]/90 via-[#faf8f4]/40 to-transparent dark:from-blue-900/30 dark:via-blue-900/10 dark:to-transparent border-b border-[#e1dbd1]/80 dark:border-blue-900/40 flex items-center justify-between gap-3 relative z-10">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-none bg-[var(--google-blue)] text-white flex items-center justify-center shrink-0 shadow-xs">
                 <AppIcon name="sparkles" size={17} strokeWidth={2.5} />
@@ -135,7 +135,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
             </PremiumButton>
           </div>
 
-          <div className="divide-y divide-gray-100 dark:divide-zinc-800/80 bg-white dark:bg-[#202124]">
+          <div className="divide-y divide-[#e1dbd1]/60 dark:divide-zinc-800/80 bg-[#fffdfa] dark:bg-[#202124]">
             {latestPosts.map((post) => {
               const postCategory = Array.isArray(post.category) ? post.category[0] : post.category || '생활안내';
               const cleanCategory = postCategory.replace(/^[^\s]+\s/, '');
@@ -147,7 +147,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-bold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 border border-sky-200 dark:border-sky-800">
+                      <span className="text-[11px] font-bold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/60 px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-sky-800">
                         {cleanCategory}
                       </span>
                       {post.subCategory && (
@@ -242,18 +242,18 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
               <button
                 type="button"
                 onClick={() => handleTabChange(catDef.name, '전체')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-none border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-full border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
                   currentTab === '전체'
-                    ? 'bg-[var(--google-blue)] text-white border-[var(--google-blue)] font-extrabold shadow-xs'
-                    : 'bg-white dark:bg-[#202124] text-zinc-700 dark:text-zinc-300 border-gray-200/90 dark:border-zinc-800 hover:border-[var(--google-blue)] hover:text-[var(--google-blue)] font-bold'
+                    ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 font-bold shadow-xs'
+                    : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722] font-medium'
                 }`}
               >
                 <span>전체보기</span>
                 <span
-                  className={`text-[10px] px-1 py-0.2 rounded-none font-bold ${
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                     currentTab === '전체'
-                      ? 'bg-white/20 text-white'
-                      : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'
+                      ? 'bg-white/20 text-white dark:bg-zinc-800 dark:text-zinc-200'
+                      : 'bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400'
                   }`}
                 >
                   {categoryPosts.length}
@@ -271,19 +271,19 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
                     key={sub.id}
                     type="button"
                     onClick={() => handleTabChange(catDef.name, sub.name)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-none border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-full border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
                       isSelected
-                        ? 'bg-[var(--google-blue)] text-white border-[var(--google-blue)] font-extrabold shadow-xs'
-                        : 'bg-white dark:bg-[#202124] text-zinc-700 dark:text-zinc-300 border-gray-200/90 dark:border-zinc-800 hover:border-[var(--google-blue)] hover:text-[var(--google-blue)] font-bold'
+                        ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 font-bold shadow-xs'
+                        : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722] font-medium'
                     }`}
                   >
                     <span>{sub.shortName}</span>
                     {subCount > 0 ? (
                       <span
-                        className={`text-[10px] px-1 py-0.2 rounded-none font-bold ${
+                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                           isSelected
-                            ? 'bg-white/20 text-white'
-                            : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'
+                            ? 'bg-white/20 text-white dark:bg-zinc-800 dark:text-zinc-200'
+                            : 'bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400'
                         }`}
                       >
                         {subCount}

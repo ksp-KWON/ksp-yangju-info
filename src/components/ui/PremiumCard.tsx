@@ -34,9 +34,9 @@ export default function PremiumCard({
     yellow: 'border-amber-200/90 dark:border-amber-900/50',
     purple: 'border-purple-200/90 dark:border-purple-900/50',
     indigo: 'border-indigo-200/90 dark:border-indigo-900/50',
-    charcoal: 'border-gray-200/90 dark:border-zinc-800',
-    ink: 'border-gray-200/90 dark:border-zinc-800',
-    default: 'border-gray-200/80 dark:border-zinc-800',
+    charcoal: 'border-[#e1dbd1]/90 dark:border-zinc-800',
+    ink: 'border-[#e1dbd1]/90 dark:border-zinc-800',
+    default: 'border-[#e1dbd1]/90 dark:border-zinc-800',
   };
 
   // 세련된 테마별 호버 글로우 & 보더 (보상스쿨 Google Material 규격)
@@ -88,7 +88,7 @@ export default function PremiumCard({
     default: 'bg-gray-400 dark:bg-zinc-400',
   };
 
-  const baseClass = `bg-white dark:bg-[#202124] p-4 sm:p-5 border ${baseBorders[borderColor] || baseBorders.default} shadow-[0_2px_8px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] transition-all duration-200 relative overflow-hidden rounded-none flex flex-col min-h-0 group ${
+  const baseClass = `bg-[#fffdfa] dark:bg-[#202124] p-4 sm:p-5 border ${baseBorders[borderColor] || baseBorders.default} shadow-[0_6px_20px_rgba(50,38,24,0.04)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] transition-all duration-200 relative overflow-hidden rounded-2xl flex flex-col min-h-0 group ${
     hoverEffect ? `${hoverBorders[borderColor] || hoverBorders.default} cursor-pointer` : ''
   } ${className}`;
 

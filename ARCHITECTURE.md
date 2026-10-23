@@ -128,3 +128,24 @@
 4. **폐기된 FAQPage JSON-LD 제거 및 화면 Byline 수정일 일치화 (`src/app/(public)/blog/[slug]/page.tsx`)**:
    - 구글 검색에서 공식 폐기(Deprecated)된 `FAQPage` 구조화 데이터 생성 로직 및 관련 미사용 import(`parseBlogPost`) 데드코드 소거 (독자 가독성을 위한 본문 시각적 UI는 온전히 보존).
    - 구글 `publication-dates` 일치화 가이드라인에 따라 화면 상단 헤더에 `post.updatedAt && post.updatedAt !== post.date`일 때 수정일 Byline(`(업데이트 YYYY-MM-DD)`)을 표시하고 OpenGraph `modifiedTime`과 `dateModified`를 100% 동기화.
+
+## 8. seoulcities.net 스타일 에디토리얼 로컬 가이드 UI/UX & 상단 GNB 큐레이션 시스템 (2026-10-24~)
+
+시민 친화적 가독성과 전문 에디토리얼 무드를 극대화하기 위해 `seoulcities.net` 스타일의 웜 페이퍼 디자인 및 상단 큐레이션 GNB 시스템을 구축:
+* **웜 페이퍼 에디토리얼 디자인 토큰**:
+  - 배경: `--background: #faf8f4;` (따뜻한 크림 아이보리 페이퍼)
+  - 본문: `--foreground: #292722;` (깊은 웜 차콜)
+  - 포인트: `--google-blue: #0369a1;` (에디토리얼 딥 스카이)
+  - 서피스 & 보더: `--google-surface-variant: #f3efe8;`, `--google-border: #e1dbd1;`
+  - `.editorial-cover-frame`: 6px 소프트 화이트 보더 + 부드러운 그림자 북커버 프레임
+* **상단 8대 알약형 GNB 헤더 (72px Sticky)**:
+  - 브랜드 2단 계층 레이아웃 (양주인 + YANGJU LOCAL GUIDE 영문 서브타이틀)
+  - 데스크탑 카테고리 직결 알약형 GNB 8개 (홈, 복지·지원금, 문화·행사, 일자리·생활, 교통·환경, 평생학습, 응급의료, 전체글)
+* **홈 에디토리얼 히어로 & 4대 상황별 북커버 플라이어**:
+  - NO. 01: 놓치면 아쉬운 혜택 (복지·돌봄, 웜 로즈)
+  - NO. 02: 함께 걷는 문화 일상 (문화·예술, 웜 스카이)
+  - NO. 03: 내일을 여는 배움터 (평생학습·강좌, 웜 앰버)
+  - NO. 04: 365일 안심 생활망 (응급의료, 웜 에메랄드)
+* **공통 UI 컴포넌트 에디토리얼 고도화**:
+  - `PremiumCard`, `PageHeaderBanner`, `CivicServiceBanner`, `blog/[slug]` 아티클에 `rounded-2xl`, 부드러운 웜 보더(`#e1dbd1/90`), `shadow-[0_6px_20px_rgba(50,38,24,0.04)]` 적용.
+  - 카테고리 탭, 세부 분야 칩, 태그 배지 일체에 `rounded-full` 알약형 및 에디토리얼 다크 필(`bg-[#292722] text-[#fffdfa]`) 통일.

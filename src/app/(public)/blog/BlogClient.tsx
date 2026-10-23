@@ -96,10 +96,10 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <Link
             href="/blog"
-            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-none shadow-2xs ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-full shadow-2xs ${
               !categoryParam && !tagParam && !subCategoryParam
-                ? 'bg-[var(--google-blue)] text-white border-[var(--google-blue)]'
-                : 'bg-white dark:bg-[#202124] text-zinc-700 dark:text-zinc-300 border-gray-200/90 dark:border-zinc-800 hover:border-[var(--google-blue)] hover:text-[var(--google-blue)]'
+                ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
+                : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
             }`}
           >
             <AppIcon name="list" size={14} strokeWidth={2} />
@@ -111,13 +111,13 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
               <Link
                 key={catName}
                 href={`/blog?category=${encodeURIComponent(catName)}`}
-                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-none shadow-2xs ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-full shadow-2xs ${
                   isSelected
-                    ? 'bg-[#e8f0fe] text-[var(--google-blue)] dark:bg-[#174ea6]/20 dark:text-[#8ab4f8] border-[#d2e3fc] dark:border-[#174ea6]/40'
-                    : 'bg-white dark:bg-[#202124] text-zinc-700 dark:text-zinc-300 border-gray-200/90 dark:border-zinc-800 hover:border-[var(--google-blue)] hover:text-[var(--google-blue)]'
+                    ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
+                    : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
                 }`}
               >
-                <AppIcon name={getCategoryIcon(catName)} size={14} strokeWidth={2} className={isSelected ? 'text-[var(--google-blue)] dark:text-[#8ab4f8]' : 'text-zinc-500'} />
+                <AppIcon name={getCategoryIcon(catName)} size={14} strokeWidth={2} className={isSelected ? 'text-[#fffdfa] dark:text-zinc-900' : 'text-zinc-500'} />
                 <span>{catName}</span>
               </Link>
             );
@@ -126,16 +126,16 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
 
         {/* 2-1. 선택된 카테고리의 하위 카테고리 칩 바 */}
         {activeCategoryDef && activeCategoryDef.subCategories.length > 0 && (
-          <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none border-t border-gray-100 dark:border-zinc-800/80">
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none border-t border-[#e1dbd1]/80 dark:border-zinc-800/80">
             <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 shrink-0 mr-1">
               세부 분야 :
             </span>
             <Link
               href={`/blog?category=${encodeURIComponent(categoryParam!)}`}
-              className={`px-2.5 py-1 text-[11px] font-bold whitespace-nowrap border rounded-none shadow-2xs transition-colors ${
+              className={`px-3 py-1 text-[11px] font-bold whitespace-nowrap border rounded-full shadow-2xs transition-colors ${
                 !subCategoryParam
-                  ? 'bg-[var(--google-blue)] text-white border-[var(--google-blue)]'
-                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700'
+                  ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
+                  : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
               }`}
             >
               전체 ({categoryCounts[categoryParam!] || 0})
@@ -150,15 +150,19 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
                 <Link
                   key={sub.id}
                   href={`/blog?category=${encodeURIComponent(categoryParam!)}&subCategory=${encodeURIComponent(sub.name)}`}
-                  className={`flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold whitespace-nowrap border rounded-none shadow-2xs transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold whitespace-nowrap border rounded-full shadow-2xs transition-colors ${
                     isSubSelected
-                      ? 'bg-[#e8f0fe] text-[var(--google-blue)] dark:bg-[#174ea6]/30 dark:text-[#8ab4f8] border-[#d2e3fc] dark:border-[#174ea6]/40'
-                      : 'bg-white dark:bg-[#202124] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-[var(--google-blue)] hover:text-[var(--google-blue)]'
+                      ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
+                      : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
                   }`}
                 >
                   <span>{sub.name}</span>
                   {subCount > 0 && (
-                    <span className="text-[9.5px] px-1 py-0.2 bg-zinc-200/70 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200">
+                    <span className={`text-[9.5px] px-1.5 py-0.2 rounded-full font-bold ${
+                      isSubSelected
+                        ? 'bg-white/20 text-white dark:bg-zinc-800 dark:text-zinc-200'
+                        : 'bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400'
+                    }`}>
                       {subCount}
                     </span>
                   )}
