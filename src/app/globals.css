@@ -148,13 +148,3 @@ body {
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── seoulcities.net 시그니처 에디토리얼 북커버 프레임 ── */
-.editorial-cover-frame {
-  border: 6px solid #fffdfa;
-  border-radius: 0px;
-  box-shadow: 0 12px 28px rgba(50, 38, 24, 0.09);
-}
-.dark .editorial-cover-frame {
-  border-color: #27272a;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-}
