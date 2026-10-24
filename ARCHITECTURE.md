@@ -146,3 +146,8 @@
 * **공통 UI 컴포넌트 에디토리얼 고도화 (샤프 모던 칼각 rounded-none 통일)**:
   - `PremiumCard`, `PageHeaderBanner`, `CivicServiceBanner`, `blog/[slug]` 아티클에 샤프한 직각(`rounded-none`), 부드러운 웜 보더(`#e1dbd1/90`), `shadow-[0_6px_20px_rgba(50,38,24,0.04)]` 적용.
   - 카테고리 탭, 세부 분야 칩, 태그 배지 일체에 샤프한 직각(`rounded-none`) 사각 탭/배지 및 에디토리얼 다크 필(`bg-[#292722] text-[#fffdfa]`) 통일. (단, 실시간 상태 표시용 초소형 원형 애니메이션 도트만 원형 유지)
+* **WCAG 2.1 AA 명도 대비(Contrast Ratio 6.6:1) 및 저대비 텍스트 표준화**:
+  - 라이트 모드 웜 페이퍼 배경(`#faf8f4` / `#fffdfa`) 위 가독성 보장을 위해 전사 저대비 텍스트 클래스(`text-zinc-400`, `text-zinc-500`, `text-gray-400` 등)를 `text-zinc-600`(명도 대비율 6.6:1)으로 일괄 상향 표준화.
+* **CQF 프론트엔드 UI Sharp-Edge (rounded-none) 결정론적 가드레일 (`scripts/check-quality.js`)**:
+  - `src/app` 및 `src/components` 하위 모든 UI 컴포넌트(`.tsx`, `.ts`, `.css`) 대상 비인가 `rounded-*` 클래스 유입을 전수 정밀 검사.
+  - 유일한 허용 예외: 회전 스피너(`animate-spin`) 및 초소형 상태 도트(`animate-ping`, `animate-pulse`, `w-1.5 h-1.5`, `w-2 h-2`)만 허용하며, 그 외 둥근 모서리 적발 시 즉시 `process.exit(1)`로 빌드 및 배포 원천 차단.
