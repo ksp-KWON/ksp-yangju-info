@@ -118,14 +118,14 @@ function main() {
   ];
 
   const roundedErrors = [];
-  const roundedRegex = /\brounded-(?!(?:none)\b)[a-zA-Z0-9\[\]_-]+/g;
+  const roundedRegex = /\brounded-(?!none\b)[a-zA-Z0-9\[\]_-]+/;
 
   uiFiles.forEach((file) => {
     const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
     lines.forEach((line, idx) => {
       if (roundedRegex.test(line)) {
         // 허용 예외: 회전 스피너 (animate-spin) 또는 초소형 상태 도트 (animate-ping, animate-pulse, w-1.5 h-1.5, w-2 h-2)
-        const isExempt = /animate-spin|animate-ping|animate-pulse|(?:w-1\.5|w-2|h-1\.5|h-2)/.test(line);
+        const isExempt = /\b(?:animate-spin|animate-ping|animate-pulse)\b|(?<![a-zA-Z0-9-])(?:w-1\.5|w-2|h-1\.5|h-2)(?![0-9/.a-zA-Z-])/.test(line);
         if (!isExempt) {
           roundedErrors.push({
             file: path.relative(rootDir, file),
