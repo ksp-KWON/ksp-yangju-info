@@ -117,7 +117,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
                     : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
                 }`}
               >
-                <AppIcon name={getCategoryIcon(catName)} size={14} strokeWidth={2} className={isSelected ? 'text-[#fffdfa] dark:text-zinc-900' : 'text-zinc-500'} />
+                <AppIcon name={getCategoryIcon(catName)} size={14} strokeWidth={2} className={isSelected ? 'text-[#fffdfa] dark:text-zinc-900' : 'text-zinc-600'} />
                 <span>{catName}</span>
               </Link>
             );
@@ -127,7 +127,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
         {/* 2-1. 선택된 카테고리의 하위 카테고리 칩 바 */}
         {activeCategoryDef && activeCategoryDef.subCategories.length > 0 && (
           <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none border-t border-[#e1dbd1]/80 dark:border-zinc-800/80">
-            <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 shrink-0 mr-1">
+            <span className="text-[11px] font-bold text-zinc-600 dark:text-zinc-400 shrink-0 mr-1">
               세부 분야 :
             </span>
             <Link
@@ -182,7 +182,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
         </div>
       ) : (
         <PremiumCard hoverEffect={false} className="p-12 text-center">
-          <AppIcon name="info" size={36} strokeWidth={1.5} className="mx-auto mb-3 text-zinc-400" />
+          <AppIcon name="info" size={36} strokeWidth={1.5} className="mx-auto mb-3 text-zinc-600" />
           <p className="text-base font-bold text-zinc-800 dark:text-zinc-200">
             해당 조건에 맞는 소식이 아직 등록되지 않았습니다.
           </p>
@@ -199,7 +199,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
 
 export default function BlogClient({ initialPosts }: { initialPosts: (PostMeta | PostData)[] }) {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-sm font-bold text-zinc-500">목록을 불러오는 중입니다...</div>}>
+    <Suspense fallback={<div className="p-12 text-center text-sm font-bold text-zinc-600">목록을 불러오는 중입니다...</div>}>
       <BlogClientContent initialPosts={initialPosts} />
     </Suspense>
   );

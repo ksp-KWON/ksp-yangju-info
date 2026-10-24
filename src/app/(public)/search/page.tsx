@@ -34,7 +34,7 @@ function InlineSearchForm({
       onSubmit={handleSubmit}
       className="mt-4 relative flex items-center bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 rounded-none shadow-xs p-1 focus-within:border-[var(--google-blue)] dark:focus-within:border-[#8ab4f8] transition-all"
     >
-      <div className="pl-3 pr-2 text-zinc-400 dark:text-zinc-500 shrink-0">
+      <div className="pl-3 pr-2 text-zinc-600 dark:text-zinc-500 shrink-0">
         <AppIcon name="search" size={18} strokeWidth={2} />
       </div>
       <input
@@ -48,7 +48,7 @@ function InlineSearchForm({
         <button
           type="button"
           onClick={() => setVal('')}
-          className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors mr-1 cursor-pointer shrink-0"
+          className="p-1.5 text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors mr-1 cursor-pointer shrink-0"
           aria-label="검색어 지우기"
         >
           <AppIcon name="close" size={16} strokeWidth={2} />
@@ -156,7 +156,7 @@ function SearchResults() {
 
         {/* 추천 키워드 칩 */}
         <div className="mt-4 flex items-center flex-wrap gap-1.5 pt-3.5 border-t border-gray-100 dark:border-zinc-800">
-          <span className="text-xs font-bold text-zinc-500 mr-1 flex items-center gap-1">
+          <span className="text-xs font-bold text-zinc-600 mr-1 flex items-center gap-1">
             <AppIcon name="zap" size={12} strokeWidth={2} className="text-amber-500" />
             추천 키워드:
           </span>
@@ -186,9 +186,9 @@ function SearchResults() {
         </div>
       ) : q ? (
         <PremiumCard hoverEffect={false} className="p-16 text-center">
-          <AppIcon name="search" size={40} strokeWidth={1.5} className="mx-auto text-zinc-400 mb-3" />
+          <AppIcon name="search" size={40} strokeWidth={1.5} className="mx-auto text-zinc-600 mb-3" />
           <h3 className="text-lg font-bold text-zinc-950 dark:text-white mb-1">검색 결과가 없습니다</h3>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto break-keep">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-sm mx-auto break-keep">
             단어의 철자가 정확한지 확인하시거나 위의 검색창에서 다른 유사 검색어로 다시 시도해 보세요.
           </p>
           <div className="mt-6 flex justify-center gap-3">
@@ -204,7 +204,7 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-sm font-bold text-zinc-500">검색 엔진 로딩 중...</div>}>
+    <Suspense fallback={<div className="p-12 text-center text-sm font-bold text-zinc-600">검색 엔진 로딩 중...</div>}>
       <SearchResults />
     </Suspense>
   );

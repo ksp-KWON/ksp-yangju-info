@@ -23,7 +23,7 @@ export default function NotFound() {
           >
             <AppIcon name="home" size={18} strokeWidth={2} className="mb-2 text-zinc-700 dark:text-zinc-300 group-hover/card:text-zinc-950 dark:group-hover/card:text-white" />
             <div className="text-xs font-bold text-zinc-900 dark:text-zinc-100">포털 홈</div>
-            <div className="text-[11px] text-zinc-500 font-medium">메인 화면</div>
+            <div className="text-[11px] text-zinc-600 font-medium">메인 화면</div>
           </Link>
 
           <Link

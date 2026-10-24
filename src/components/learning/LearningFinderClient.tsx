@@ -168,7 +168,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
       <div className="bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 p-4 sm:p-6 shadow-xs space-y-4">
         {/* 검색창 */}
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-600">
             <AppIcon name="search" size={18} />
           </div>
           <input
@@ -181,7 +181,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-zinc-600 cursor-pointer"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-600 hover:text-zinc-600 cursor-pointer"
             >
               <AppIcon name="close" size={16} />
             </button>
@@ -191,7 +191,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
         {/* 보상스쿨 퀵 칩 필터 */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">주요 테마</span>
+            <span className="text-xs font-bold text-zinc-600 uppercase tracking-wider">주요 테마</span>
             {selectedPlace && (
               <button
                 onClick={() => setSelectedPlace(null)}
@@ -227,7 +227,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
 
         {/* 동네 선택 탭 */}
         <div className="pt-2 border-t border-gray-100 dark:border-zinc-800 space-y-2">
-          <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">권역·동네별</span>
+          <span className="text-xs font-bold text-zinc-600 uppercase tracking-wider">권역·동네별</span>
           <div className="flex flex-wrap gap-1.5">
             {(Object.keys(DONG_GROUPS) as DongFilter[]).map((key) => (
               <button
@@ -247,7 +247,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
 
         {/* 뷰 모드 토글 (목록 보기 ⇄ 지도 보기) */}
         <div className="pt-3 border-t border-gray-100 dark:border-zinc-800 flex items-center justify-between">
-          <div className="text-xs text-zinc-500">
+          <div className="text-xs text-zinc-600">
             총 <strong className="text-[var(--google-blue)] font-bold">{filteredCourses.length}</strong>개의 실시간 강좌 ({formattedDate})
           </div>
           <div className="inline-flex rounded-none border border-gray-300 dark:border-zinc-700 p-0.5 bg-zinc-100 dark:bg-zinc-800">
@@ -306,7 +306,7 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
               ))}
             </KakaoMap>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-zinc-500">
+            <div className="w-full h-full flex items-center justify-center text-zinc-600">
               지도를 불러오는 중입니다...
             </div>
           )}
@@ -322,9 +322,9 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
       <div className="space-y-4">
         {filteredCourses.length === 0 ? (
           <div className="text-center py-16 bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 p-8">
-            <AppIcon name="search" size={36} className="mx-auto text-zinc-400 mb-3" />
+            <AppIcon name="search" size={36} className="mx-auto text-zinc-600 mb-3" />
             <h4 className="text-base font-bold text-zinc-900 dark:text-white">선택하신 조건의 강좌가 없습니다</h4>
-            <p className="text-xs text-zinc-500 mt-1">검색어를 변경하거나 필터를 초기화해 보세요.</p>
+            <p className="text-xs text-zinc-600 mt-1">검색어를 변경하거나 필터를 초기화해 보세요.</p>
             <button
               onClick={() => {
                 setSearchTerm('');
@@ -348,11 +348,11 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
                       <HighlightBadge color="emerald">접수중</HighlightBadge>
                       {course.isFree && <HighlightBadge color="cyan">무료</HighlightBadge>}
                       {course.isNightWeekend && <HighlightBadge color="amber">주말·야간</HighlightBadge>}
-                      <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+                      <span className="text-[11px] font-medium text-zinc-600 dark:text-zinc-400">
                         {course.dong}
                       </span>
                     </div>
-                    <span className="text-[11px] text-zinc-400 font-mono">#{course.num}</span>
+                    <span className="text-[11px] text-zinc-600 font-mono">#{course.num}</span>
                   </div>
 
                   {/* 강좌 제목 (클릭 시 상세페이지 이동) */}
@@ -363,19 +363,19 @@ export default function LearningFinderClient({ initialCourses, updatedAt }: Lear
                   {/* 상세 메타 정보 */}
                   <div className="text-xs space-y-1.5 text-zinc-600 dark:text-zinc-400 pt-1 border-t border-gray-100 dark:border-zinc-800/80">
                     <div className="flex items-center gap-2">
-                      <span className="w-14 text-zinc-400 shrink-0">교육기관</span>
+                      <span className="w-14 text-zinc-600 shrink-0">교육기관</span>
                       <strong className="text-zinc-800 dark:text-zinc-200 truncate">{course.org}</strong>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-14 text-zinc-400 shrink-0">교육기간</span>
+                      <span className="w-14 text-zinc-600 shrink-0">교육기간</span>
                       <span className="truncate">{course.eduPeriod}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-14 text-zinc-400 shrink-0">신청기간</span>
+                      <span className="w-14 text-zinc-600 shrink-0">신청기간</span>
                       <span className="truncate">{course.applyPeriod}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-14 text-zinc-400 shrink-0">모집정원</span>
+                      <span className="w-14 text-zinc-600 shrink-0">모집정원</span>
                       <span className="font-bold text-[var(--google-blue)] dark:text-[#8ab4f8]">{course.capacity}</span>
                     </div>
                   </div>

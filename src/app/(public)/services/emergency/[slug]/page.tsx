@@ -131,15 +131,15 @@ export default async function EmergencyPlaceDetailPage({ params }: PlacePageProp
           </div>
           <dl className="space-y-2.5 text-xs sm:text-sm">
             <div className="flex items-center justify-between">
-              <dt className="text-zinc-500 dark:text-zinc-400 font-medium">평일 진료/영업</dt>
+              <dt className="text-zinc-600 dark:text-zinc-400 font-medium">평일 진료/영업</dt>
               <dd className="font-extrabold text-zinc-900 dark:text-zinc-100">{place.hours.weekday}</dd>
             </div>
             <div className="flex items-center justify-between">
-              <dt className="text-zinc-500 dark:text-zinc-400 font-medium">주말(토·일요일)</dt>
+              <dt className="text-zinc-600 dark:text-zinc-400 font-medium">주말(토·일요일)</dt>
               <dd className="font-extrabold text-zinc-900 dark:text-zinc-100">{place.hours.weekend}</dd>
             </div>
             <div className="flex items-center justify-between">
-              <dt className="text-zinc-500 dark:text-zinc-400 font-medium">공휴일 운영</dt>
+              <dt className="text-zinc-600 dark:text-zinc-400 font-medium">공휴일 운영</dt>
               <dd className="font-extrabold text-zinc-900 dark:text-zinc-100">{place.hours.holiday}</dd>
             </div>
           </dl>
@@ -155,18 +155,18 @@ export default async function EmergencyPlaceDetailPage({ params }: PlacePageProp
           </div>
           <dl className="space-y-2.5 text-xs sm:text-sm">
             <div className="flex flex-col gap-0.5">
-              <dt className="text-zinc-500 dark:text-zinc-400 font-medium">도로명 주소</dt>
+              <dt className="text-zinc-600 dark:text-zinc-400 font-medium">도로명 주소</dt>
               <dd className="font-bold text-zinc-900 dark:text-zinc-100">{place.address}</dd>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <dt className="text-zinc-500 dark:text-zinc-400 font-medium">대표 전화</dt>
+              <dt className="text-zinc-600 dark:text-zinc-400 font-medium">대표 전화</dt>
               <dd className="font-extrabold text-zinc-900 dark:text-zinc-100">
                 <a href={`tel:${place.tel}`} className="hover:underline">{place.tel}</a>
               </dd>
             </div>
             {place.parkingInfo && (
               <div className="flex items-center justify-between">
-                <dt className="text-zinc-500 dark:text-zinc-400 font-medium">주차 안내</dt>
+                <dt className="text-zinc-600 dark:text-zinc-400 font-medium">주차 안내</dt>
                 <dd className="font-bold text-zinc-900 dark:text-zinc-100">{place.parkingInfo}</dd>
               </div>
             )}
@@ -192,7 +192,7 @@ export default async function EmergencyPlaceDetailPage({ params }: PlacePageProp
 
             {place.departments && place.departments.length > 0 && (
               <div className="pt-3 border-t border-gray-100 dark:border-zinc-800">
-                <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400 block mb-2">주요 진료과목</span>
+                <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400 block mb-2">주요 진료과목</span>
                 <div className="flex flex-wrap gap-1.5">
                   {place.departments.map((dept, idx) => (
                     <span
@@ -223,13 +223,13 @@ export default async function EmergencyPlaceDetailPage({ params }: PlacePageProp
               className="p-3.5 bg-white dark:bg-[#202124] border border-gray-200/90 dark:border-zinc-800 hover:border-[var(--google-blue)] hover:shadow-[0_12px_40px_rgba(26,115,232,0.18)] shadow-[0_2px_8px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:-translate-y-0.5 transition-all group flex flex-col justify-between"
             >
               <div>
-                <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 border border-zinc-200 dark:border-zinc-700">
+                <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 border border-zinc-200 dark:border-zinc-700">
                   {other.typeName}
                 </span>
                 <h5 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-white mt-1.5 truncate group-hover:underline">
                   {other.name}
                 </h5>
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
+                <p className="text-[11px] text-zinc-600 dark:text-zinc-400 truncate mt-0.5">
                   {other.address}
                 </p>
               </div>

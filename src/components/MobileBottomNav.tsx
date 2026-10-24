@@ -307,7 +307,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
               })}
             </div>
           ) : (
-            <div className="p-6 text-center text-xs text-gray-400">
+            <div className="p-6 text-center text-xs text-zinc-600">
               카테고리 목록을 불러오는 중...
             </div>
           )}
@@ -343,7 +343,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
               className={`relative flex flex-col items-center justify-center w-full h-full transition-all active:scale-95 cursor-pointer ${
                 isActive
                   ? 'text-[var(--google-blue)] dark:text-[#8ab4f8] font-bold'
-                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
               }`}
             >
               {isActive && (

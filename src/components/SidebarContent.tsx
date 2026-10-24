@@ -164,10 +164,10 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[9.5px] text-zinc-400 dark:text-zinc-500 font-medium">
+                    <span className="text-[9.5px] text-zinc-600 dark:text-zinc-500 font-medium">
                       {cat.subCategories.length}개 분야
                     </span>
-                    <div className={`text-zinc-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+                    <div className={`text-zinc-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
                       <AppIcon name="chevron-down" size={13} strokeWidth={2.5} />
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
                           target="_blank"
                           rel="noopener noreferrer"
                           title="시청 공식 누리집 새창열림"
-                          className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 shrink-0 p-0.5"
+                          className="text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-200 shrink-0 p-0.5"
                         >
                           <AppIcon name="external-link" size={10} strokeWidth={2} />
                         </a>
@@ -212,7 +212,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
                         href={cat.officialUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10.5px] text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 flex items-center gap-0.5"
+                        className="text-[10.5px] text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-300 flex items-center gap-0.5"
                       >
                         <span>시청 직결</span>
                         <AppIcon name="external-link" size={9} strokeWidth={2} />
@@ -238,7 +238,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
             </div>
             <Link
               href="/blog"
-              className="text-[10px] font-bold text-zinc-500 hover:text-[var(--google-blue)] dark:text-zinc-400 dark:hover:text-[#8ab4f8] transition-colors"
+              className="text-[10px] font-bold text-zinc-600 hover:text-[var(--google-blue)] dark:text-zinc-400 dark:hover:text-[#8ab4f8] transition-colors"
             >
               전체보기 &gt;
             </Link>
@@ -248,14 +248,14 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
               <li key={post.slug} className="py-2.5 first:pt-0 last:pb-0">
                 <Link href={`/blog/${post.slug}`} className="group block space-y-1">
                   <div className="flex items-start gap-2">
-                    <span className="text-xs font-black text-zinc-400 group-hover:text-[var(--google-blue)] dark:group-hover:text-[#8ab4f8] w-3.5 shrink-0 pt-0.5 transition-colors">
+                    <span className="text-xs font-black text-zinc-600 group-hover:text-[var(--google-blue)] dark:group-hover:text-[#8ab4f8] w-3.5 shrink-0 pt-0.5 transition-colors">
                       {idx + 1}
                     </span>
                     <h4 className="text-xs font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-[var(--google-blue)] dark:group-hover:text-[#8ab4f8] line-clamp-2 leading-snug break-keep transition-colors flex-1">
                       {post.title}
                     </h4>
                   </div>
-                  <div className="flex items-center gap-1 text-[10px] text-zinc-400 pl-5.5">
+                  <div className="flex items-center gap-1 text-[10px] text-zinc-600 pl-5.5">
                     <AppIcon name="calendar" size={10} strokeWidth={2} />
                     <span>{post.date}</span>
                   </div>
@@ -285,7 +285,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
                 href={`/blog?tag=${encodeURIComponent(tag)}`}
                 className="flex items-center gap-0.5 px-2.5 py-1 rounded-none bg-[#fffdfa] dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-[#e1dbd1]/90 dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722] hover:bg-[#ebe5da]/50 dark:hover:bg-zinc-700 transition-all font-medium"
               >
-                <span className="text-zinc-400 dark:text-zinc-500">#</span>
+                <span className="text-zinc-600 dark:text-zinc-500">#</span>
                 {tag}
               </Link>
             ))}
@@ -325,7 +325,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
           <AppIcon name="phone" size={14} strokeWidth={2.5} className="text-zinc-700 dark:text-zinc-300" />
           <span className="text-xs font-extrabold text-zinc-950 dark:text-white">양주시 대표 콜센터</span>
         </div>
-        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+        <p className="text-[11px] text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
           시정 문의 및 생활 민원 안내 (평일 09:00 ~ 18:00)
         </p>
         <a
@@ -333,7 +333,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
           className="mt-2.5 inline-flex items-center justify-between w-full p-2.5 rounded-none bg-[#faf8f4] dark:bg-zinc-800 hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-700 border border-[#e1dbd1]/90 dark:border-zinc-700 text-xs font-bold text-zinc-950 dark:text-white transition-colors"
         >
           <span>031-8082-2114</span>
-          <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-normal">전화연결 &gt;</span>
+          <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-normal">전화연결 &gt;</span>
         </a>
       </div>
     </div>

@@ -21,7 +21,7 @@ export default function SidebarTagMore({ tags }: Props) {
               href={`/blog?tag=${encodeURIComponent(tag)}`}
               className="flex items-center gap-1 px-2.5 py-1 rounded-none bg-zinc-50 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-gray-200/80 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 transition-all text-xs font-medium"
             >
-              <span className="text-zinc-400 dark:text-zinc-500">#</span>
+              <span className="text-zinc-600 dark:text-zinc-500">#</span>
               {tag}
             </Link>
           ))}
@@ -41,7 +41,7 @@ export default function SidebarTagMore({ tags }: Props) {
         <AppIcon
           name="chevron-down"
           size={14}
-          className={`text-zinc-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+          className={`text-zinc-600 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
           strokeWidth={2.5}
         />
       </button>

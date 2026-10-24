@@ -119,7 +119,7 @@ export default function PostCard({ post, variant = 'grid' }: PostCardProps) {
               <PremiumBadge color={theme.badgeColor}>
                 {mainCategory}
               </PremiumBadge>
-              <time className="text-xs font-medium text-zinc-400 dark:text-zinc-500 flex items-center gap-1 shrink-0">
+              <time className="text-xs font-medium text-zinc-600 dark:text-zinc-500 flex items-center gap-1 shrink-0">
                 <AppIcon name="calendar" size={13} strokeWidth={1.5} />
                 <span>{post.date}</span>
               </time>
@@ -175,7 +175,7 @@ export default function PostCard({ post, variant = 'grid' }: PostCardProps) {
             <PremiumBadge color={theme.badgeColor}>
               {mainCategory}
             </PremiumBadge>
-            <time className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 flex items-center gap-1">
+            <time className="text-[11px] font-medium text-zinc-600 dark:text-zinc-500 flex items-center gap-1">
               <AppIcon name="calendar" size={13} />
               {post.date}
             </time>

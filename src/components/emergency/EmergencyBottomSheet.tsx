@@ -26,7 +26,7 @@ export default function EmergencyBottomSheet({ item, activeTab, onClose }: Botto
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-none text-zinc-400 hover:text-zinc-700 dark:hover:text-white transition-colors"
+            className="p-1 rounded-none text-zinc-600 hover:text-zinc-700 dark:hover:text-white transition-colors"
           >
             <AppIcon name="close" size={18} />
           </button>

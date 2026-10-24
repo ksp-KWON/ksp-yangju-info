@@ -57,7 +57,7 @@ export default function PrivacyPage() {
             </p>
           </section>
 
-      <div className="mt-8 text-xs text-zinc-400 dark:text-zinc-500 border-t border-gray-100 dark:border-zinc-800 pt-4">
+      <div className="mt-8 text-xs text-zinc-600 dark:text-zinc-500 border-t border-gray-100 dark:border-zinc-800 pt-4">
         본 개인정보처리방침은 사이트 개설일부터 적용됩니다.
       </div>
     </LegalPageLayout>

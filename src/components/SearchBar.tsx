@@ -41,7 +41,7 @@ export default function SearchBar() {
         className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100/90 hover:bg-zinc-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700/80 border border-gray-200 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-500 rounded-none transition-all cursor-pointer shadow-2xs"
         aria-label="통합 검색 열기"
       >
-        <AppIcon name="search" size={14} strokeWidth={2} className="text-zinc-500 dark:text-zinc-400" />
+        <AppIcon name="search" size={14} strokeWidth={2} className="text-zinc-600 dark:text-zinc-400" />
         <span className="hidden sm:inline">통합 검색...</span>
       </button>
 
@@ -75,7 +75,7 @@ export default function SearchBar() {
                   <button
                     type="button"
                     onClick={() => setQuery('')}
-                    className="p-1 mr-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                    className="p-1 mr-1 text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                     aria-label="검색어 지우기"
                   >
                     <AppIcon name="close" size={16} strokeWidth={2} />
@@ -86,7 +86,7 @@ export default function SearchBar() {
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-none text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
+                  className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-none text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
                   aria-label="닫기"
                 >
                   <AppIcon name="close" size={20} strokeWidth={2} />

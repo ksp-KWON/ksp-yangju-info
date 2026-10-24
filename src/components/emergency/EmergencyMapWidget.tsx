@@ -80,7 +80,7 @@ export default function EmergencyMapWidget({ isWidget = false, defaultTab = 'er'
                 className={`flex-1 py-2.5 text-xs sm:text-sm font-bold text-center border-b-2 transition-colors flex items-center justify-center gap-1.5 ${
                   activeTab === 'er'
                     ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white bg-zinc-50/80 dark:bg-zinc-800/40'
-                    : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                    : 'border-transparent text-zinc-600 hover:text-zinc-800 dark:hover:text-zinc-200'
                 }`}
               >
                 <AppIcon name="hospital" size={15} />
@@ -91,7 +91,7 @@ export default function EmergencyMapWidget({ isWidget = false, defaultTab = 'er'
                 className={`flex-1 py-2.5 text-xs sm:text-sm font-bold text-center border-b-2 transition-colors flex items-center justify-center gap-1.5 ${
                   activeTab === 'pharmacy'
                     ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white bg-zinc-50/80 dark:bg-zinc-800/40'
-                    : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                    : 'border-transparent text-zinc-600 hover:text-zinc-800 dark:hover:text-zinc-200'
                 }`}
               >
                 <AppIcon name="stethoscope" size={15} />
@@ -100,7 +100,7 @@ export default function EmergencyMapWidget({ isWidget = false, defaultTab = 'er'
             </div>
           )}
 
-          <div className="mt-2.5 pt-2 border-t border-gray-100 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="mt-2.5 pt-2 border-t border-gray-100 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs text-zinc-600 dark:text-zinc-400">
             <span>실시간 병상·운영 여부는 아래 공식 사이트에서 확인하세요</span>
             <div className="flex items-center gap-3">
               <a
@@ -127,7 +127,7 @@ export default function EmergencyMapWidget({ isWidget = false, defaultTab = 'er'
 
       <div className="flex-1 relative overflow-hidden">
         {loading ? (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-900 text-zinc-500 gap-3">
+          <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-900 text-zinc-600 gap-3">
             <div className="w-8 h-8 rounded-full border-2 border-zinc-400 border-t-zinc-900 dark:border-t-white animate-spin" />
             <p className="text-xs font-bold">지도를 불러오는 중입니다...</p>
           </div>

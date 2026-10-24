@@ -170,46 +170,46 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             <HighlightBadge color="emerald">{course.status}</HighlightBadge>
             {course.isFree && <HighlightBadge color="cyan">무료</HighlightBadge>}
             {course.isNightWeekend && <HighlightBadge color="amber">주말·야간</HighlightBadge>}
-            <span className="text-xs font-bold text-zinc-500">{course.category}</span>
+            <span className="text-xs font-bold text-zinc-600">{course.category}</span>
           </div>
-          <span className="text-xs font-mono text-zinc-400">강좌번호 #{course.num}</span>
+          <span className="text-xs font-mono text-zinc-600">강좌번호 #{course.num}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
-            <span className="text-zinc-400 block mb-1">교육기간</span>
+            <span className="text-zinc-600 block mb-1">교육기간</span>
             <strong className="text-sm text-zinc-900 dark:text-zinc-100 block">{course.eduPeriod}</strong>
-            <span className="text-zinc-500 mt-0.5 block">{course.time || '일정 공지 참조'}</span>
+            <span className="text-zinc-600 mt-0.5 block">{course.time || '일정 공지 참조'}</span>
           </div>
 
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
-            <span className="text-zinc-400 block mb-1">수강료 및 재료비</span>
+            <span className="text-zinc-600 block mb-1">수강료 및 재료비</span>
             <strong className="text-sm text-[var(--google-blue)] dark:text-[#8ab4f8] block">{course.fee || (course.isFree ? '무료' : '유료')}</strong>
-            <span className="text-zinc-500 mt-0.5 block">재료비 : {course.materialFee || '강의계획서 참조'}</span>
+            <span className="text-zinc-600 mt-0.5 block">재료비 : {course.materialFee || '강의계획서 참조'}</span>
           </div>
 
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
-            <span className="text-zinc-400 block mb-1">모집인원 및 대상</span>
+            <span className="text-zinc-600 block mb-1">모집인원 및 대상</span>
             <strong className="text-sm text-emerald-600 dark:text-emerald-400 block">{course.capacity}</strong>
-            <span className="text-zinc-500 mt-0.5 block">권장 대상 : {course.target}</span>
+            <span className="text-zinc-600 mt-0.5 block">권장 대상 : {course.target}</span>
           </div>
 
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
-            <span className="text-zinc-400 block mb-1">인터넷 접수기간</span>
+            <span className="text-zinc-600 block mb-1">인터넷 접수기간</span>
             <strong className="text-sm text-zinc-900 dark:text-zinc-100 block">{course.applyPeriod}</strong>
-            <span className="text-zinc-500 mt-0.5 block">선착순 온라인 접수</span>
+            <span className="text-zinc-600 mt-0.5 block">선착순 온라인 접수</span>
           </div>
 
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
-            <span className="text-zinc-400 block mb-1">교육장소</span>
+            <span className="text-zinc-600 block mb-1">교육장소</span>
             <strong className="text-sm text-zinc-900 dark:text-zinc-100 block">{course.org}</strong>
-            <span className="text-zinc-500 mt-0.5 block truncate">{course.address}</span>
+            <span className="text-zinc-600 mt-0.5 block truncate">{course.address}</span>
           </div>
 
           <div className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-none border border-zinc-100 dark:border-zinc-700/60">
-            <span className="text-zinc-400 block mb-1">문의처</span>
+            <span className="text-zinc-600 block mb-1">문의처</span>
             <strong className="text-sm text-zinc-900 dark:text-zinc-100 block">{course.tel || '031-8082-7390'}</strong>
-            <span className="text-zinc-500 mt-0.5 block">양주시 평생학습관</span>
+            <span className="text-zinc-600 mt-0.5 block">양주시 평생학습관</span>
           </div>
         </div>
       </PremiumCard>

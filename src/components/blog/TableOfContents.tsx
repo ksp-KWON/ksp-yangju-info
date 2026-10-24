@@ -20,7 +20,7 @@ export default function TableOfContents({
   if (!toc.length) return null;
 
   const headerRight = (
-    <span className="text-[11px] font-bold text-zinc-500">클릭 시 이동</span>
+    <span className="text-[11px] font-bold text-zinc-600">클릭 시 이동</span>
   );
 
   const icon = <AppIcon name="list" size={16} strokeWidth={2.5} className="text-zinc-900 dark:text-zinc-100" />;
@@ -45,7 +45,7 @@ export default function TableOfContents({
                     : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:text-zinc-950 dark:hover:text-white font-medium'
                 }`}
               >
-                <span className={`text-xs ${isActive ? 'font-bold text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 font-medium'}`}>
+                <span className={`text-xs ${isActive ? 'font-bold text-zinc-900 dark:text-zinc-100' : 'text-zinc-600 font-medium'}`}>
                   0{idx + 1}.
                 </span>
                 <span className="break-keep flex-1 leading-snug">{item.text}</span>

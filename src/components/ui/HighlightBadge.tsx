@@ -17,23 +17,23 @@ export interface HighlightBadgeProps extends React.HTMLAttributes<HTMLSpanElemen
 export const HIGHLIGHT_CLASSES: Record<HighlightVariant, string> = {
   // 1. 에메랄드 파스텔 (지원금, 혜택, 감면, 무료, 환급 등 긍정적 시정 혜택)
   emerald:
-    'bg-emerald-50 text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-md',
+    'bg-emerald-50 text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-none',
 
   // 2. 스카이 파스텔 (신청, 접수, 절차, 일정, 온라인, 창구 등 행동 요령)
   sky:
-    'bg-sky-50 text-sky-900 dark:bg-sky-950/50 dark:text-sky-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-md',
+    'bg-sky-50 text-sky-900 dark:bg-sky-950/50 dark:text-sky-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-none',
 
   // 3. 앰버 파스텔 (주의, 필수, 구비서류, 지참, 확인 등 헛걸음 방지)
   amber:
-    'bg-amber-50 text-amber-900 dark:bg-amber-950/50 dark:text-amber-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-md',
+    'bg-amber-50 text-amber-900 dark:bg-amber-950/50 dark:text-amber-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-none',
 
   // 4. 로즈 파스텔 (불가, 제외, 기한만료, 중단, 주의사항, 응급)
   rose:
-    'bg-rose-50 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-md',
+    'bg-rose-50 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300 font-bold px-1.5 py-0.5 mx-0.5 rounded-none',
 
   // 5. 징크 파스텔 (자격 요건, 행정기관명, 일반 공통 묵향)
   zinc:
-    'bg-zinc-100 text-zinc-950 dark:bg-zinc-800/80 dark:text-zinc-200 font-bold px-1.5 py-0.5 mx-0.5 rounded-md',
+    'bg-zinc-100 text-zinc-950 dark:bg-zinc-800/80 dark:text-zinc-200 font-bold px-1.5 py-0.5 mx-0.5 rounded-none',
 };
 
 /**

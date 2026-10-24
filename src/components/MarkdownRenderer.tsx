@@ -171,7 +171,7 @@ export const sharedComponents: Components & Record<string, React.ComponentType<{
   ),
   li: ({ children }) => (
     <li className="flex items-start gap-2 pl-0 leading-[1.8] break-keep font-normal text-zinc-800 dark:text-zinc-200">
-      <span className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400 mt-1.5 shrink-0 select-none leading-none font-bold">
+      <span className="text-[10px] sm:text-[11px] text-zinc-600 dark:text-zinc-400 mt-1.5 shrink-0 select-none leading-none font-bold">
         ▪
       </span>
       <span className="flex-1 min-w-0">{children}</span>
@@ -302,11 +302,11 @@ export const sharedComponents: Components & Record<string, React.ComponentType<{
   },
 
   calculator: () => null,
-  red: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#d93025] dark:text-[#f28b82] bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 mx-0.5 rounded-md font-bold">{children}</strong>,
-  orange: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#e37400] dark:text-[#fde293] bg-orange-50 dark:bg-orange-900/20 px-1.5 py-0.5 mx-0.5 rounded-md font-bold">{children}</strong>,
-  green: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#137333] dark:text-[#81c995] bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 mx-0.5 rounded-md font-bold">{children}</strong>,
-  blue: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#1A73E8] dark:text-[#8ab4f8] bg-blue-50 dark:bg-blue-900/20 px-1.5 py-0.5 mx-0.5 rounded-md font-bold">{children}</strong>,
-  purple: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#9333ea] dark:text-[#c084fc] bg-purple-50 dark:bg-purple-900/20 px-1.5 py-0.5 mx-0.5 rounded-md font-bold">{children}</strong>,
+  red: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#d93025] dark:text-[#f28b82] bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 mx-0.5 rounded-none font-bold">{children}</strong>,
+  orange: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#e37400] dark:text-[#fde293] bg-orange-50 dark:bg-orange-900/20 px-1.5 py-0.5 mx-0.5 rounded-none font-bold">{children}</strong>,
+  green: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#137333] dark:text-[#81c995] bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 mx-0.5 rounded-none font-bold">{children}</strong>,
+  blue: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#1A73E8] dark:text-[#8ab4f8] bg-blue-50 dark:bg-blue-900/20 px-1.5 py-0.5 mx-0.5 rounded-none font-bold">{children}</strong>,
+  purple: ({ children }: { children?: React.ReactNode }) => <strong className="text-[#9333ea] dark:text-[#c084fc] bg-purple-50 dark:bg-purple-900/20 px-1.5 py-0.5 mx-0.5 rounded-none font-bold">{children}</strong>,
 
   relatedbox: ({ children }: { children?: React.ReactNode }) => (
     <PremiumCard borderColor="charcoal" hoverEffect={true} className="my-10 group">

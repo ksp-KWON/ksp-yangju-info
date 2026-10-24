@@ -261,7 +261,7 @@ export default function BlogPostClient({ content, title, sourceLink, tags = [], 
                 href={`/blog?tag=${encodeURIComponent(tag)}`}
                 className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-zinc-100/90 hover:bg-zinc-900 text-zinc-700 hover:text-white dark:bg-zinc-800/90 dark:hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-zinc-950 border border-zinc-200/90 dark:border-zinc-700 transition-all rounded-none group cursor-pointer shadow-2xs"
               >
-                <span className="text-zinc-400 group-hover:text-zinc-300 dark:group-hover:text-zinc-600 font-bold">#</span>
+                <span className="text-zinc-600 group-hover:text-zinc-300 dark:group-hover:text-zinc-600 font-bold">#</span>
                 <span>{tag}</span>
               </Link>
             ))}

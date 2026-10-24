@@ -80,7 +80,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
           <h4 className="text-sm sm:text-base font-extrabold text-zinc-950 dark:text-white tracking-tight leading-snug break-keep">
             놓치기 아까운 양주 생활 정보, 가족·지인에게 알려주세요
           </h4>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 font-normal leading-relaxed">
+          <p className="text-xs text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed">
             헛걸음 방지 팁과 핵심 신청 요강을 카카오톡으로 간편하게 공유할 수 있습니다.
           </p>
         </div>

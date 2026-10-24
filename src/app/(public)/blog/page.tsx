@@ -29,7 +29,7 @@ function BlogFallback() {
   return (
     <div className="py-20 text-center">
       <div className="inline-block w-8 h-8 border-4 border-zinc-900 dark:border-zinc-100 border-t-transparent rounded-full animate-spin mb-4" />
-      <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">양주 생활 소식을 불러오는 중입니다...</p>
+      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">양주 생활 소식을 불러오는 중입니다...</p>
     </div>
   );
 }

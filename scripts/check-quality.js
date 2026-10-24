@@ -96,6 +96,58 @@ function main() {
     process.exit(1);
   }
 
+  // ── [신규 CQF 프론트엔드 칼각 (rounded-none) 무결성 가드레일] ──
+  const rootDir = path.resolve(__dirname, '..');
+  function walkFiles(dir) {
+    let results = [];
+    if (!fs.existsSync(dir)) return results;
+    for (const f of fs.readdirSync(dir)) {
+      const p = path.join(dir, f);
+      if (fs.statSync(p).isDirectory()) {
+        results = results.concat(walkFiles(p));
+      } else if (/\.(tsx|ts|css)$/.test(f)) {
+        results.push(p);
+      }
+    }
+    return results;
+  }
+
+  const uiFiles = [
+    ...walkFiles(path.join(rootDir, 'src', 'app')),
+    ...walkFiles(path.join(rootDir, 'src', 'components'))
+  ];
+
+  const roundedErrors = [];
+  const roundedRegex = /\brounded-(?!(?:none)\b)[a-zA-Z0-9\[\]_-]+/g;
+
+  uiFiles.forEach((file) => {
+    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    lines.forEach((line, idx) => {
+      if (roundedRegex.test(line)) {
+        // 허용 예외: 회전 스피너 (animate-spin) 또는 초소형 상태 도트 (animate-ping, animate-pulse, w-1.5 h-1.5, w-2 h-2)
+        const isExempt = /animate-spin|animate-ping|animate-pulse|(?:w-1\.5|w-2|h-1\.5|h-2)/.test(line);
+        if (!isExempt) {
+          roundedErrors.push({
+            file: path.relative(rootDir, file),
+            line: idx + 1,
+            snippet: line.trim()
+          });
+        }
+      }
+    });
+  });
+
+  if (roundedErrors.length > 0) {
+    console.error('❌ [CQF 칼각 위반] rounded-none이 아닌 둥근 모서리 클래스가 적발되었습니다:');
+    roundedErrors.forEach((err) => {
+      console.error(`  - ${err.file}:${err.line} -> ${err.snippet}`);
+    });
+    process.exit(1);
+  }
+
+  console.log('✅ UI Sharp-Edge (rounded-none) guardrail verified.');
+
+
   console.log('✅ All Yangjuin blog posts passed quality checks (Rock-Solid Verified).');
 }
 

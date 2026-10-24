@@ -196,7 +196,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 </span>
               ) : null}
               <div className="flex items-center gap-2.5 ml-auto">
-                <time dateTime={post.date} className="text-zinc-500 dark:text-zinc-400 font-medium tracking-wide flex items-center gap-1">
+                <time dateTime={post.date} className="text-zinc-600 dark:text-zinc-400 font-medium tracking-wide flex items-center gap-1">
                   <AppIcon name="calendar" size={14} strokeWidth={2} />
                   <span>{post.date}</span>
                 </time>

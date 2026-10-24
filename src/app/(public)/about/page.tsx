@@ -17,7 +17,7 @@ export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto px-2 sm:px-4 py-6 sm:py-10 space-y-8">
       {/* 1. 상단 브레드크럼 */}
-      <nav className="flex text-xs text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+      <nav className="flex text-xs text-zinc-600 dark:text-zinc-400" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1.5 font-medium">
           <li>
             <Link href="/" className="hover:text-zinc-950 dark:hover:text-white transition-colors flex items-center gap-1">
@@ -26,7 +26,7 @@ export default function AboutPage() {
             </Link>
           </li>
           <li>
-            <span className="mx-1 text-zinc-400">/</span>
+            <span className="mx-1 text-zinc-600">/</span>
           </li>
           <li className="text-zinc-900 dark:text-white font-bold">플랫폼 소개</li>
         </ol>
