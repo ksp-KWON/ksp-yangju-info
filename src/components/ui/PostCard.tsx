@@ -144,7 +144,7 @@ export default function PostCard({ post, variant = 'grid' }: PostCardProps) {
               {(post.tags || []).slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400 border border-[#e1dbd1]/80 dark:border-zinc-700/80"
+                  className="text-[11px] font-medium px-2.5 py-0.5 rounded-none bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400 border border-[#e1dbd1]/80 dark:border-zinc-700/80"
                 >
                   #{tag}
                 </span>
@@ -195,7 +195,7 @@ export default function PostCard({ post, variant = 'grid' }: PostCardProps) {
             {(post.tags || []).slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400 border border-[#e1dbd1]/80 dark:border-zinc-700/80"
+                className="text-[10px] font-medium px-2 py-0.5 rounded-none bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400 border border-[#e1dbd1]/80 dark:border-zinc-700/80"
               >
                 #{tag}
               </span>

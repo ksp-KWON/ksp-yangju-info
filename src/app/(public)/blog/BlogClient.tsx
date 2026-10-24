@@ -96,7 +96,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <Link
             href="/blog"
-            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-full shadow-2xs ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-none shadow-2xs ${
               !categoryParam && !tagParam && !subCategoryParam
                 ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
                 : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
@@ -111,7 +111,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
               <Link
                 key={catName}
                 href={`/blog?category=${encodeURIComponent(catName)}`}
-                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-full shadow-2xs ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all border rounded-none shadow-2xs ${
                   isSelected
                     ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
                     : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
@@ -132,7 +132,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
             </span>
             <Link
               href={`/blog?category=${encodeURIComponent(categoryParam!)}`}
-              className={`px-3 py-1 text-[11px] font-bold whitespace-nowrap border rounded-full shadow-2xs transition-colors ${
+              className={`px-3 py-1 text-[11px] font-bold whitespace-nowrap border rounded-none shadow-2xs transition-colors ${
                 !subCategoryParam
                   ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
                   : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
@@ -150,7 +150,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
                 <Link
                   key={sub.id}
                   href={`/blog?category=${encodeURIComponent(categoryParam!)}&subCategory=${encodeURIComponent(sub.name)}`}
-                  className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold whitespace-nowrap border rounded-full shadow-2xs transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold whitespace-nowrap border rounded-none shadow-2xs transition-colors ${
                     isSubSelected
                       ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 shadow-xs'
                       : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722]'
@@ -158,7 +158,7 @@ function BlogClientContent({ initialPosts }: { initialPosts: (PostMeta | PostDat
                 >
                   <span>{sub.name}</span>
                   {subCount > 0 && (
-                    <span className={`text-[9.5px] px-1.5 py-0.2 rounded-full font-bold ${
+                    <span className={`text-[9.5px] px-1.5 py-0.2 rounded-none font-bold ${
                       isSubSelected
                         ? 'bg-white/20 text-white dark:bg-zinc-800 dark:text-zinc-200'
                         : 'bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400'

@@ -264,7 +264,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
             <h3 className="text-sm sm:text-base font-extrabold text-[#202124] dark:text-white">
               양주 8대 생활정보 카테고리
             </h3>
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#f3efe8] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-[#e1dbd1] dark:border-zinc-700">
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-none bg-[#f3efe8] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-[#e1dbd1] dark:border-zinc-700">
               분야별 가이드
             </span>
           </div>
@@ -279,7 +279,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
                     key={catName}
                     href={`/blog?category=${encodeURIComponent(catName)}`}
                     onClick={closeModals}
-                    className={`relative overflow-hidden flex items-center gap-2.5 p-3 rounded-xl border transition-all group shadow-2xs ${
+                    className={`relative overflow-hidden flex items-center gap-2.5 p-3 rounded-none border transition-all group shadow-2xs ${
                       isCurrentCat
                         ? 'bg-blue-50/80 dark:bg-blue-950/40 border-[var(--google-blue)] text-[var(--google-blue)] dark:text-[#8ab4f8]'
                         : 'bg-[#fffdfa] dark:bg-[#202124] border-[#e1dbd1]/90 dark:border-zinc-800 hover:border-[#292722] dark:hover:border-zinc-600 text-zinc-900 dark:text-zinc-100'
@@ -316,14 +316,14 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
             <Link
               href="/blog"
               onClick={closeModals}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-[#faf8f4] dark:bg-zinc-800/80 hover:bg-[#ebe5da] dark:hover:bg-zinc-800 text-center font-bold text-xs text-zinc-800 dark:text-zinc-200 border border-[#e1dbd1]/90 dark:border-zinc-700 transition-colors"
+              className="flex-1 py-2.5 px-3 rounded-none bg-[#faf8f4] dark:bg-zinc-800/80 hover:bg-[#ebe5da] dark:hover:bg-zinc-800 text-center font-bold text-xs text-zinc-800 dark:text-zinc-200 border border-[#e1dbd1]/90 dark:border-zinc-700 transition-colors"
             >
               전체글 목록 보기
             </Link>
             <Link
               href="/search"
               onClick={closeModals}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-[var(--google-blue)] text-white text-center font-bold text-xs transition-opacity hover:opacity-90 shadow-sm"
+              className="flex-1 py-2.5 px-3 rounded-none bg-[var(--google-blue)] text-white text-center font-bold text-xs transition-opacity hover:opacity-90 shadow-sm"
             >
               키워드 검색
             </Link>
@@ -347,7 +347,7 @@ function NavContent({ categories = [] }: { categories?: string[] }) {
               }`}
             >
               {isActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[var(--google-blue)] dark:bg-[#8ab4f8] rounded-full animate-in fade-in duration-200" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[var(--google-blue)] dark:bg-[#8ab4f8] rounded-none animate-in fade-in duration-200" />
               )}
               <AppIcon
                 name={tab.iconName}

@@ -23,7 +23,7 @@ export default async function Home() {
       <section className="space-y-4">
         {/* 상단 에디토리얼 타이틀 영역 */}
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#fffdfa] dark:bg-zinc-800 border border-[#e1dbd1] dark:border-zinc-700 px-3.5 py-1 text-[11px] font-bold tracking-wider text-sky-700 dark:text-sky-300">
+          <div className="inline-flex items-center gap-1.5 rounded-none bg-[#fffdfa] dark:bg-zinc-800 border border-[#e1dbd1] dark:border-zinc-700 px-3.5 py-1 text-[11px] font-bold tracking-wider text-sky-700 dark:text-sky-300">
             <AppIcon name="sparkles" size={13} strokeWidth={2.2} />
             <span>YANGJU LOCAL GUIDE · 양주 생활 큐레이션</span>
           </div>
@@ -48,7 +48,7 @@ export default async function Home() {
                 <span>NO. 01</span>
               </div>
               <div className="my-auto py-2 text-center flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-white/70 dark:bg-zinc-900/50 text-rose-700 dark:text-rose-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-none bg-white/70 dark:bg-zinc-900/50 text-rose-700 dark:text-rose-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
                   <AppIcon name="bank" size={20} strokeWidth={2.2} />
                 </div>
                 <h3 className="font-serif font-bold text-base sm:text-lg text-rose-950 dark:text-white leading-tight">
@@ -76,7 +76,7 @@ export default async function Home() {
                 <span>NO. 02</span>
               </div>
               <div className="my-auto py-2 text-center flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-white/70 dark:bg-zinc-900/50 text-sky-700 dark:text-sky-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-none bg-white/70 dark:bg-zinc-900/50 text-sky-700 dark:text-sky-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
                   <AppIcon name="party-popper" size={20} strokeWidth={2.2} />
                 </div>
                 <h3 className="font-serif font-bold text-base sm:text-lg text-sky-950 dark:text-white leading-tight">
@@ -104,7 +104,7 @@ export default async function Home() {
                 <span>NO. 03</span>
               </div>
               <div className="my-auto py-2 text-center flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-white/70 dark:bg-zinc-900/50 text-amber-700 dark:text-amber-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-none bg-white/70 dark:bg-zinc-900/50 text-amber-700 dark:text-amber-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
                   <AppIcon name="book" size={20} strokeWidth={2.2} />
                 </div>
                 <h3 className="font-serif font-bold text-base sm:text-lg text-amber-950 dark:text-white leading-tight">
@@ -132,7 +132,7 @@ export default async function Home() {
                 <span>NO. 04</span>
               </div>
               <div className="my-auto py-2 text-center flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-white/70 dark:bg-zinc-900/50 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-none bg-white/70 dark:bg-zinc-900/50 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
                   <AppIcon name="hospital" size={20} strokeWidth={2.2} />
                 </div>
                 <h3 className="font-serif font-bold text-base sm:text-lg text-emerald-950 dark:text-white leading-tight">

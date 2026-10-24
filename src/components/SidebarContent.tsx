@@ -31,40 +31,40 @@ const EXTERNAL_QUICK_LINKS = [
     title: '문화관광 포털',
     badge: '축제·명소',
     icon: 'compass' as const,
-    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-xl bg-indigo-50/80 hover:bg-indigo-100/80 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/50 border border-indigo-200/80 dark:border-indigo-800/80 transition-colors group/tour',
+    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-none bg-indigo-50/80 hover:bg-indigo-100/80 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/50 border border-indigo-200/80 dark:border-indigo-800/80 transition-colors group/tour',
     iconBoxClass: 'bg-indigo-600 text-white',
     titleClass: 'text-indigo-950 dark:text-indigo-200',
-    badgeClass: 'text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-900/50 rounded-full',
+    badgeClass: 'text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-900/50 rounded-none',
   },
   {
     href: 'https://www.yangju.go.kr/health/index.do',
     title: '양주시 보건소',
     badge: '예방·진료',
     icon: 'heart' as const,
-    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-xl bg-rose-50/80 hover:bg-rose-100/80 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200/80 dark:border-rose-800/80 transition-colors group/health',
+    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-none bg-rose-50/80 hover:bg-rose-100/80 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200/80 dark:border-rose-800/80 transition-colors group/health',
     iconBoxClass: 'bg-rose-600 text-white',
     titleClass: 'text-rose-950 dark:text-rose-200',
-    badgeClass: 'text-rose-700 dark:text-rose-300 bg-rose-100/70 dark:bg-rose-900/50 rounded-full',
+    badgeClass: 'text-rose-700 dark:text-rose-300 bg-rose-100/70 dark:bg-rose-900/50 rounded-none',
   },
   {
     href: 'https://www.yangju.go.kr/www/contents.do?key=390',
     title: '읍·면·동 행정복지센터',
     badge: '생활민원',
     icon: 'landmark' as const,
-    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-xl bg-sky-50/80 hover:bg-sky-100/80 dark:bg-sky-950/40 dark:hover:bg-sky-900/50 border border-sky-200/80 dark:border-sky-800/80 transition-colors group/csc',
+    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-none bg-sky-50/80 hover:bg-sky-100/80 dark:bg-sky-950/40 dark:hover:bg-sky-900/50 border border-sky-200/80 dark:border-sky-800/80 transition-colors group/csc',
     iconBoxClass: 'bg-sky-600 text-white',
     titleClass: 'text-sky-950 dark:text-sky-200',
-    badgeClass: 'text-sky-700 dark:text-sky-300 bg-sky-100/70 dark:bg-sky-900/50 rounded-full',
+    badgeClass: 'text-sky-700 dark:text-sky-300 bg-sky-100/70 dark:bg-sky-900/50 rounded-none',
   },
   {
     href: 'https://www.yangju.go.kr/edu/index.do',
     title: '평생학습포털',
     badge: '시민강좌',
     icon: 'book' as const,
-    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-xl bg-amber-50/80 hover:bg-amber-100/80 dark:bg-amber-950/40 dark:hover:bg-amber-900/50 border border-amber-200/80 dark:border-amber-800/80 transition-colors group/edu',
+    containerClass: 'flex items-center justify-between gap-2 p-2 rounded-none bg-amber-50/80 hover:bg-amber-100/80 dark:bg-amber-950/40 dark:hover:bg-amber-900/50 border border-amber-200/80 dark:border-amber-800/80 transition-colors group/edu',
     iconBoxClass: 'bg-amber-600 text-white',
     titleClass: 'text-amber-950 dark:text-amber-200',
-    badgeClass: 'text-amber-700 dark:text-amber-400 bg-amber-100/70 dark:bg-amber-900/50 rounded-full',
+    badgeClass: 'text-amber-700 dark:text-amber-400 bg-amber-100/70 dark:bg-amber-900/50 rounded-none',
   },
 ];
 
@@ -91,7 +91,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
               양주 생활 퀵메뉴
             </h3>
           </div>
-          <span className="bg-[#f3efe8] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#e1dbd1] dark:border-zinc-700">
+          <span className="bg-[#f3efe8] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-bold px-2 py-0.5 rounded-none border border-[#e1dbd1] dark:border-zinc-700">
             분야별 탐색
           </span>
         </div>
@@ -101,17 +101,17 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
           {/* 1. 24시간 응급실·병원 지도 (에메랄드) */}
           <Link
             href="/services/emergency"
-            className="flex items-center justify-between gap-2 p-2 rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 border border-emerald-200/80 dark:border-emerald-800/80 transition-colors group/em"
+            className="flex items-center justify-between gap-2 p-2 rounded-none bg-emerald-50/80 hover:bg-emerald-100/80 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 border border-emerald-200/80 dark:border-emerald-800/80 transition-colors group/em"
           >
             <div className="flex items-center gap-2 min-w-0">
-              <div className="p-1 bg-emerald-600 text-white rounded-lg shrink-0">
+              <div className="p-1 bg-emerald-600 text-white rounded-none shrink-0">
                 <AppIcon name="hospital" size={13} strokeWidth={2.5} />
               </div>
               <span className="text-xs font-bold text-emerald-950 dark:text-emerald-200 truncate">
                 24시간 응급실·병원 지도
               </span>
             </div>
-            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-900/60 px-2 py-0.5 rounded-full shrink-0 flex items-center gap-0.5">
+            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-900/60 px-2 py-0.5 rounded-none shrink-0 flex items-center gap-0.5">
               <span>실시간</span>
               <AppIcon name="chevron-right" size={10} strokeWidth={2.5} />
             </span>
@@ -126,7 +126,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
               className={link.containerClass}
             >
               <div className="flex items-center gap-2 min-w-0">
-                <div className={`p-1 ${link.iconBoxClass} rounded-lg shrink-0`}>
+                <div className={`p-1 ${link.iconBoxClass} rounded-none shrink-0`}>
                   <AppIcon name={link.icon} size={13} strokeWidth={2.5} />
                 </div>
                 <span className={`text-xs font-bold ${link.titleClass} truncate`}>
@@ -155,7 +155,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
                   className="w-full flex items-center justify-between gap-2 py-1.5 px-1 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-colors text-left group/btn"
                 >
                   <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <div className="p-1 bg-[#f3efe8] dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 group-hover/btn:bg-[var(--google-blue)] group-hover/btn:text-white rounded-lg transition-colors shrink-0">
+                    <div className="p-1 bg-[#f3efe8] dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 group-hover/btn:bg-[var(--google-blue)] group-hover/btn:text-white rounded-none transition-colors shrink-0">
                       <AppIcon name={cat.icon} size={13} strokeWidth={2.5} />
                     </div>
                     <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 group-hover/btn:text-[var(--google-blue)] dark:group-hover/btn:text-[#8ab4f8] truncate block">
@@ -175,11 +175,11 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
 
                 {/* 아코디언 확장 영역 (하위 카테고리 칩 및 링크) */}
                 {isOpen && (
-                  <div className="mt-1 mb-2 p-2.5 rounded-xl bg-[#faf8f4] dark:bg-zinc-900/70 border border-[#e1dbd1]/90 dark:border-zinc-800 space-y-1">
+                  <div className="mt-1 mb-2 p-2.5 rounded-none bg-[#faf8f4] dark:bg-zinc-900/70 border border-[#e1dbd1]/90 dark:border-zinc-800 space-y-1">
                     {cat.subCategories.map((sub) => (
                       <div
                         key={sub.id}
-                        className="flex items-center justify-between gap-1.5 py-1 px-2 rounded-lg hover:bg-white dark:hover:bg-zinc-800 transition-colors text-[11.5px]"
+                        className="flex items-center justify-between gap-1.5 py-1 px-2 rounded-none hover:bg-white dark:hover:bg-zinc-800 transition-colors text-[11.5px]"
                       >
                         <Link
                           href={`/blog?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
@@ -274,7 +274,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
               <AppIcon name="pin" size={14} strokeWidth={2.5} className="text-zinc-900 dark:text-zinc-100" />
               <h3 className="text-xs font-extrabold text-zinc-950 dark:text-white tracking-tight">인기 키워드 태그</h3>
             </div>
-            <span className="bg-[#f3efe8] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 text-[9.5px] font-bold px-2 py-0.5 rounded-full border border-[#e1dbd1] dark:border-zinc-700">
+            <span className="bg-[#f3efe8] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 text-[9.5px] font-bold px-2 py-0.5 rounded-none border border-[#e1dbd1] dark:border-zinc-700">
               추천
             </span>
           </div>
@@ -283,7 +283,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
               <Link
                 key={tag}
                 href={`/blog?tag=${encodeURIComponent(tag)}`}
-                className="flex items-center gap-0.5 px-2.5 py-1 rounded-full bg-[#fffdfa] dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-[#e1dbd1]/90 dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722] hover:bg-[#ebe5da]/50 dark:hover:bg-zinc-700 transition-all font-medium"
+                className="flex items-center gap-0.5 px-2.5 py-1 rounded-none bg-[#fffdfa] dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-[#e1dbd1]/90 dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722] hover:bg-[#ebe5da]/50 dark:hover:bg-zinc-700 transition-all font-medium"
               >
                 <span className="text-zinc-400 dark:text-zinc-500">#</span>
                 {tag}
@@ -295,13 +295,13 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
       )}
 
       {/* ── 4. 보상스쿨 연계 : 양주 시민 무료 사고·상해 보상 진단 ── */}
-      <div className="p-4 rounded-2xl border border-blue-200 dark:border-blue-900/50 bg-gradient-to-br from-blue-900 via-indigo-950 to-zinc-950 text-white shadow-sm relative overflow-hidden group">
+      <div className="p-4 rounded-none border border-blue-200 dark:border-blue-900/50 bg-gradient-to-br from-blue-900 via-indigo-950 to-zinc-950 text-white shadow-sm relative overflow-hidden group">
         <div className="flex items-center justify-between mb-1.5">
           <div className="flex items-center gap-1.5">
             <AppIcon name="scale" size={14} strokeWidth={2.5} className="text-blue-300" />
             <span className="text-xs font-extrabold text-white">시민 무료 보상 진단</span>
           </div>
-          <span className="text-[10px] font-bold text-blue-200 bg-blue-500/20 px-2 py-0.5 rounded-full border border-blue-400/30">
+          <span className="text-[10px] font-bold text-blue-200 bg-blue-500/20 px-2 py-0.5 rounded-none border border-blue-400/30">
             보상스쿨 연계
           </span>
         </div>
@@ -312,7 +312,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
           href="https://claim-works.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2.5 inline-flex items-center justify-between w-full p-2.5 rounded-xl bg-[var(--google-blue)] hover:bg-blue-600 border border-blue-400/40 text-xs font-bold text-white transition-colors"
+          className="mt-2.5 inline-flex items-center justify-between w-full p-2.5 rounded-none bg-[var(--google-blue)] hover:bg-blue-600 border border-blue-400/40 text-xs font-bold text-white transition-colors"
         >
           <span>보상스쿨 1:1 상담 바로가기</span>
           <AppIcon name="chevron-right" size={12} strokeWidth={2.5} />
@@ -320,7 +320,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
       </div>
 
       {/* ── 5. 양주시 공식 행정 직통 안내 배너 ── */}
-      <div className="p-4 rounded-2xl border border-[#e1dbd1]/90 dark:border-zinc-800 bg-[#fffdfa] dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-sm">
+      <div className="p-4 rounded-none border border-[#e1dbd1]/90 dark:border-zinc-800 bg-[#fffdfa] dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-sm">
         <div className="flex items-center gap-2 mb-1">
           <AppIcon name="phone" size={14} strokeWidth={2.5} className="text-zinc-700 dark:text-zinc-300" />
           <span className="text-xs font-extrabold text-zinc-950 dark:text-white">양주시 대표 콜센터</span>
@@ -330,7 +330,7 @@ export default function SidebarContent({ tags = [], recentPosts = [] }: SidebarC
         </p>
         <a
           href="tel:031-8082-2114"
-          className="mt-2.5 inline-flex items-center justify-between w-full p-2.5 rounded-xl bg-[#faf8f4] dark:bg-zinc-800 hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-700 border border-[#e1dbd1]/90 dark:border-zinc-700 text-xs font-bold text-zinc-950 dark:text-white transition-colors"
+          className="mt-2.5 inline-flex items-center justify-between w-full p-2.5 rounded-none bg-[#faf8f4] dark:bg-zinc-800 hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-700 border border-[#e1dbd1]/90 dark:border-zinc-700 text-xs font-bold text-zinc-950 dark:text-white transition-colors"
         >
           <span>031-8082-2114</span>
           <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-normal">전화연결 &gt;</span>

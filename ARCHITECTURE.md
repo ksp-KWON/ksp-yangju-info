@@ -137,15 +137,15 @@
   - 본문: `--foreground: #292722;` (깊은 웜 차콜)
   - 포인트: `--google-blue: #0369a1;` (에디토리얼 딥 스카이)
   - 서피스 & 보더: `--google-surface-variant: #f3efe8;`, `--google-border: #e1dbd1;`
-  - `.editorial-cover-frame`: 6px 소프트 화이트 보더 + 부드러운 그림자 북커버 프레임
-* **상단 8대 알약형 GNB 헤더 (72px Sticky)**:
+  - `.editorial-cover-frame`: 6px 소프트 화이트 직각 보더(`border-radius: 0px;`) + 부드러운 그림자 하드커버 매거진 프레임
+* **상단 8대 샤프 사각 GNB 헤더 (72px Sticky)**:
   - 브랜드 2단 계층 레이아웃 (양주인 + YANGJU LOCAL GUIDE 영문 서브타이틀)
-  - 데스크탑 카테고리 직결 알약형 GNB 8개 (홈, 복지·지원금, 문화·행사, 일자리·생활, 교통·환경, 평생학습, 응급의료, 전체글)
+  - 데스크탑 카테고리 직결 직각 GNB 8개 (홈, 복지·지원금, 문화·행사, 일자리·생활, 교통·환경, 평생학습, 응급의료, 전체글)
 * **홈 에디토리얼 히어로 & 4대 상황별 북커버 플라이어**:
   - NO. 01: 놓치면 아쉬운 혜택 (복지·돌봄, 웜 로즈)
   - NO. 02: 함께 걷는 문화 일상 (문화·예술, 웜 스카이)
   - NO. 03: 내일을 여는 배움터 (평생학습·강좌, 웜 앰버)
   - NO. 04: 365일 안심 생활망 (응급의료, 웜 에메랄드)
-* **공통 UI 컴포넌트 에디토리얼 고도화**:
-  - `PremiumCard`, `PageHeaderBanner`, `CivicServiceBanner`, `blog/[slug]` 아티클에 `rounded-2xl`, 부드러운 웜 보더(`#e1dbd1/90`), `shadow-[0_6px_20px_rgba(50,38,24,0.04)]` 적용.
-  - 카테고리 탭, 세부 분야 칩, 태그 배지 일체에 `rounded-full` 알약형 및 에디토리얼 다크 필(`bg-[#292722] text-[#fffdfa]`) 통일.
+* **공통 UI 컴포넌트 에디토리얼 고도화 (샤프 모던 칼각 rounded-none 통일)**:
+  - `PremiumCard`, `PageHeaderBanner`, `CivicServiceBanner`, `blog/[slug]` 아티클에 샤프한 직각(`rounded-none`), 부드러운 웜 보더(`#e1dbd1/90`), `shadow-[0_6px_20px_rgba(50,38,24,0.04)]` 적용.
+  - 카테고리 탭, 세부 분야 칩, 태그 배지 일체에 샤프한 직각(`rounded-none`) 사각 탭/배지 및 에디토리얼 다크 필(`bg-[#292722] text-[#fffdfa]`) 통일. (단, 실시간 상태 표시용 초소형 원형 애니메이션 도트만 원형 유지)

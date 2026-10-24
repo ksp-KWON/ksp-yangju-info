@@ -147,7 +147,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-bold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/60 px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-sky-800">
+                      <span className="text-[11px] font-bold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/60 px-2.5 py-0.5 rounded-none border border-sky-200 dark:border-sky-800">
                         {cleanCategory}
                       </span>
                       {post.subCategory && (
@@ -242,7 +242,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
               <button
                 type="button"
                 onClick={() => handleTabChange(catDef.name, '전체')}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-full border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-none border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
                   currentTab === '전체'
                     ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 font-bold shadow-xs'
                     : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722] font-medium'
@@ -250,7 +250,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
               >
                 <span>전체보기</span>
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                  className={`text-[10px] px-1.5 py-0.2 rounded-none font-bold ${
                     currentTab === '전체'
                       ? 'bg-white/20 text-white dark:bg-zinc-800 dark:text-zinc-200'
                       : 'bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400'
@@ -271,7 +271,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
                     key={sub.id}
                     type="button"
                     onClick={() => handleTabChange(catDef.name, sub.name)}
-                    className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-full border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-none border transition-all cursor-pointer whitespace-nowrap shadow-2xs ${
                       isSelected
                         ? 'bg-[#292722] text-[#fffdfa] border-[#292722] dark:bg-white dark:text-zinc-900 font-bold shadow-xs'
                         : 'bg-[#fffdfa] dark:bg-[#202124] text-[#5b554e] dark:text-zinc-300 border-[#e1dbd1] dark:border-zinc-800 hover:border-[#292722] hover:text-[#292722] font-medium'
@@ -280,7 +280,7 @@ export default function CivicCategorySection({ posts }: CivicCategorySectionProp
                     <span>{sub.shortName}</span>
                     {subCount > 0 ? (
                       <span
-                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                        className={`text-[10px] px-1.5 py-0.2 rounded-none font-bold ${
                           isSelected
                             ? 'bg-white/20 text-white dark:bg-zinc-800 dark:text-zinc-200'
                             : 'bg-[#f3efe8] dark:bg-zinc-800 text-[#5b554e] dark:text-zinc-400'

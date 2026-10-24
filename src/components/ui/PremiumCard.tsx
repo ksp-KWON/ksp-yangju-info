@@ -88,7 +88,7 @@ export default function PremiumCard({
     default: 'bg-gray-400 dark:bg-zinc-400',
   };
 
-  const baseClass = `bg-[#fffdfa] dark:bg-[#202124] p-4 sm:p-5 border ${baseBorders[borderColor] || baseBorders.default} shadow-[0_6px_20px_rgba(50,38,24,0.04)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] transition-all duration-200 relative overflow-hidden rounded-2xl flex flex-col min-h-0 group ${
+  const baseClass = `bg-[#fffdfa] dark:bg-[#202124] p-4 sm:p-5 border ${baseBorders[borderColor] || baseBorders.default} shadow-[0_6px_20px_rgba(50,38,24,0.04)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] transition-all duration-200 relative overflow-hidden rounded-none flex flex-col min-h-0 group ${
     hoverEffect ? `${hoverBorders[borderColor] || hoverBorders.default} cursor-pointer` : ''
   } ${className}`;
 

@@ -74,49 +74,49 @@ export default function PublicLayout({
           <nav aria-label="주요 메뉴" className="hidden lg:flex items-center gap-0.5 mx-4">
             <Link
               href="/"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               홈
             </Link>
             <Link
               href="/blog?category=복지·돌봄"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               복지·지원금
             </Link>
             <Link
               href="/blog?category=문화·예술"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               문화·행사
             </Link>
             <Link
               href="/blog?category=일자리·생활"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               일자리·생활
             </Link>
             <Link
               href="/blog?category=교통·주차"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               교통·환경
             </Link>
             <Link
               href="/services/learning"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               평생학습
             </Link>
             <Link
               href="/services/emergency"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               응급의료
             </Link>
             <Link
               href="/blog"
-              className="inline-flex min-h-9 items-center rounded-full px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
+              className="inline-flex min-h-9 items-center rounded-none px-3 text-[13px] font-semibold text-[#5b554e] dark:text-zinc-300 transition-colors hover:bg-[#ebe5da]/70 dark:hover:bg-zinc-800 hover:text-[#292722] dark:hover:text-white whitespace-nowrap"
             >
               전체글
             </Link>
@@ -127,7 +127,7 @@ export default function PublicLayout({
             <SearchBar />
             <Link
               href="/blog"
-              className="lg:hidden p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-[#ebe5da]/60 dark:hover:bg-zinc-800 transition-all rounded-full flex items-center justify-center cursor-pointer"
+              className="lg:hidden p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-[#ebe5da]/60 dark:hover:bg-zinc-800 transition-all rounded-none flex items-center justify-center cursor-pointer"
               aria-label="전체글"
               title="전체글 목록"
             >
