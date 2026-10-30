@@ -68,5 +68,15 @@
     "file": "2026-10-24-2026-yangju-si-gimbeomjun-gyosu-chocheong-jeonmunga-teukgang.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-30"
+  },
+  {
+    "file": "2026-10-31-yangju-si-baekseok-eup-hanuga-jeongyuksikdang-maejang-wichi.md",
+    "reason": "INSUFFICIENT_NEW_MATERIAL",
+    "skippedAt": "2026-10-31"
+  },
+  {
+    "file": "2026-10-26-2026-yangju-nari-farm-ipjanggwon-jiryuhyeong-yangju-sarangsa.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-31"
   }
 ]
