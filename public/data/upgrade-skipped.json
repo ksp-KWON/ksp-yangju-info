@@ -48,5 +48,25 @@
     "file": "2026-10-21-2026-yangju-sibogeonso-dongbu-health-saenghwal-support-sente.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-22"
+  },
+  {
+    "file": "2026-10-24-yangju-hyugeso-ilsanbanghyang-ssalhodugwaja-panmae-wichi-mic.md",
+    "reason": "INSUFFICIENT_NEW_MATERIAL",
+    "skippedAt": "2026-10-30"
+  },
+  {
+    "file": "2026-10-27-je2hoe-najeonmisuljeon-gaechoe-annae.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-30"
+  },
+  {
+    "file": "2026-10-25-yangju-garaebisijang-muryo-juchajang-iyong-annae-gwangjeok-b.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-30"
+  },
+  {
+    "file": "2026-10-24-2026-yangju-si-gimbeomjun-gyosu-chocheong-jeonmunga-teukgang.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-30"
   }
 ]
