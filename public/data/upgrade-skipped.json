@@ -78,5 +78,30 @@
     "file": "2026-10-26-2026-yangju-nari-farm-ipjanggwon-jiryuhyeong-yangju-sarangsa.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-31"
+  },
+  {
+    "file": "2026-10-29-2026-yangju-sarangkadeu-koria-geuraendeu-peseutibeol-chuga-k.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-31"
+  },
+  {
+    "file": "2026-10-27-yangju-si-gajoksenteo-appawa-janyeo-peurogeuraem-papa-soneun.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-31"
+  },
+  {
+    "file": "2026-10-23-yangju-si-boninseomyeong-sasilhwakinseo-balgeup-bangbeop-mic.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-31"
+  },
+  {
+    "file": "2026-10-29-yangju-namuchaekbang-mich-goeupdongkeopichaekbang-wichi-mich.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-31"
+  },
+  {
+    "file": "2026-10-25-yangju-si-jangheung-jakeun-library-iyong-annae-wichi-mich-hy.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-10-31"
   }
 ]
