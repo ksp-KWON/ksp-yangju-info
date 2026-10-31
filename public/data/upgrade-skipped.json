@@ -103,5 +103,20 @@
     "file": "2026-10-25-yangju-si-jangheung-jakeun-library-iyong-annae-wichi-mich-hy.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-10-31"
+  },
+  {
+    "file": "2026-10-23-dongjeolgi-chwiyakgyecheung-dosigaseu-gonggeupjungdan-yuyeje.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-31-yangju-si-nammyeon-ijunseonsaengsadang-mich-bohosu-gaeul-san.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-24-yangju-siripmisulchangjakseutyudio-777gaelreori-jeongabin-ga.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
   }
 ]
