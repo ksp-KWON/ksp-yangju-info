@@ -143,5 +143,20 @@
     "file": "2026-10-27-yangju-bulgoksan-dotori-yuasupcheheomwon-iyong-annae-mich-ju.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-26-2027haknyeondo-yangju-si-susidaeip-mouimyeonjeop-mich-myeonj.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-10-28-yangju-si-pyeongsaenghakseupgwan-wichi-mich-jucha-iyong-anna.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-10-29-yangju-si-dajanyeogajeong-minganhalineopso-hyeonhwang-mich-i.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-02"
   }
 ]
