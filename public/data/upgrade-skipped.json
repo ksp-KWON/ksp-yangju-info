@@ -118,5 +118,30 @@
     "file": "2026-10-24-yangju-siripmisulchangjakseutyudio-777gaelreori-jeongabin-ga.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-22-yangju-siripmisulchangjakseutyudio-777rejideonseu-muryo-jeon.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-26-2026-yangju-si-habangi-juyosanggwon-hwalseonghwa-event-iljeo.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-24-2026-yangju-nari-park-cheonilhong-gaeulpeseuta-iljeong-mich.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-25-2026-yangju-cheonilhong-gaeul-peseuta-geotgi-chaelrinji-cham.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
+  },
+  {
+    "file": "2026-10-27-yangju-bulgoksan-dotori-yuasupcheheomwon-iyong-annae-mich-ju.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-01"
   }
 ]
