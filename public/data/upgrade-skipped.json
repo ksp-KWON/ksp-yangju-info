@@ -183,5 +183,25 @@
     "file": "2026-11-02-je13hoe-yangju-hanmaeum-geotgi-festival-gaechoe-gyeolgwa-mic.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-10-25-yangju-eunhyeonmyeon-seojeongdae-masjip-ppongseukkaseu-mich.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-03"
+  },
+  {
+    "file": "2026-10-23-2026-jangheung-misulgwanyeohaeng-tonghapiyonggwon-sincheong.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-03"
+  },
+  {
+    "file": "2026-10-30-2026-yangju-chaek-ilgneun-tema-park-bukpikeunik-event-hugi-m.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-03"
+  },
+  {
+    "file": "2026-10-29-2026-yangju-si-youth-gibonsodeuk-4bungi-sincheong-jagyeok-mi.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-03"
   }
 ]
