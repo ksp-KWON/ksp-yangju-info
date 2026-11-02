@@ -158,5 +158,30 @@
     "file": "2026-10-29-yangju-si-dajanyeogajeong-minganhalineopso-hyeonhwang-mich-i.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-10-25-yangju-si-dadungekadeu-aep-seobiseu-jongryo-mich-gyeonggi-tt.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-10-26-2026-yangju-si-seobu-health-saenghwal-support-senteo-seulgir.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-10-28-gyeonggi-do-5070-yangju-si-mini-jobs-bakramhoe-gaechoe-iljeo.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-10-22-yangju-okjeong-dong-gajok-oesik-jangso-chucheon-wonmidam-mic.md",
+    "reason": "INSUFFICIENT_NEW_MATERIAL",
+    "skippedAt": "2026-11-02"
+  },
+  {
+    "file": "2026-11-02-je13hoe-yangju-hanmaeum-geotgi-festival-gaechoe-gyeolgwa-mic.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-02"
   }
 ]
