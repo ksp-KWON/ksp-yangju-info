@@ -213,5 +213,25 @@
     "file": "2026-11-05-yangju-jangheung-jogak-park-ipjangryo-mich-muryoipjang-benef.md",
     "reason": "LLM_GENERATION_FAILED",
     "skippedAt": "2026-11-05"
+  },
+  {
+    "file": "2026-11-07-yangju-ilyeongyuwonji-gaeul-danpung-punggyeong-mich-wichi-an.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-07"
+  },
+  {
+    "file": "2026-11-07-2026-yangju-hoeamsaji-segyeyusan-education-sincheong-bangbeo.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-07"
+  },
+  {
+    "file": "2026-11-07-2026-yangju-si-pyeongsaenghakseupgwan-5070-sinieo-geumyung-e.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-07"
+  },
+  {
+    "file": "2026-11-06-2026-yangju-si-gyooeharu-seutaempeutueo-chamyeo-bangbeop-mic.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-07"
   }
 ]
