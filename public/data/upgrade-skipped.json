@@ -238,5 +238,10 @@
     "file": "2026-11-09-2027nyeon-yangju-si-youth-senteo-unyeong-suyojosa-chamyeo-ba.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-11-10"
+  },
+  {
+    "file": "2026-11-11-yangju-jinrojinhaksenteo-seonggyungwandaehakgyo-kaempeoseu-t.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-12"
   }
 ]
