@@ -243,5 +243,15 @@
     "file": "2026-11-11-yangju-jinrojinhaksenteo-seonggyungwandaehakgyo-kaempeoseu-t.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-11-12"
+  },
+  {
+    "file": "2026-11-12-2027nyeon-yangju-si-disabled-mich-jeosodeukcheung-sports-gan.md",
+    "reason": "INSUFFICIENT_NEW_MATERIAL",
+    "skippedAt": "2026-11-13"
+  },
+  {
+    "file": "2026-11-12-yangju-nadeuli-koseu-imgane-hotteok-mich-ruteu-keopi-iyong-a.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-13"
   }
 ]
