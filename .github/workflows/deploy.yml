@@ -41,7 +41,7 @@ jobs:
           fetch-depth: 1
 
       - name: Node.js 24 설정
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: 'npm'
@@ -146,7 +146,7 @@ jobs:
           ref: main
 
       - name: Node.js 24 설정
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: 'npm'
