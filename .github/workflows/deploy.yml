@@ -2,8 +2,8 @@ name: 양주인 통합 자동화 파이프라인
 
 on:
   schedule:
-    # 매시간 정각 24시간 실행
-    - cron: '0 * * * *'
+    # 매시간 27분 실행 (정각 글로벌 크론 피크/500 에러 회피)
+    - cron: '27 * * * *'
   push:
     branches:
       - main
@@ -110,8 +110,19 @@ jobs:
 
           if ! git diff --cached --quiet; then
             git commit -m "auto: 양주 시정 새소식 자동 발행 업데이트 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
-            git pull --rebase origin main
-            git push origin main
+            PUSHED=false
+            for i in 1 2 3; do
+              if git pull --rebase origin main && git push origin main; then
+                PUSHED=true
+                break
+              fi
+              echo "⚠️ git push 일시 오류 (시도 $i/3) — 10초 후 재시도..."
+              sleep 10
+            done
+            if [ "$PUSHED" != "true" ]; then
+              echo "❌ 3회 재시도 후에도 git push 실패"
+              exit 1
+            fi
             echo "✅ 커밋 & 푸시 완료"
           else
             echo "ℹ️ 변경사항 없음 — 커밋 건너뜀"
