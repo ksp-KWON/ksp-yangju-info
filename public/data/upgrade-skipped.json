@@ -253,5 +253,10 @@
     "file": "2026-11-12-yangju-nadeuli-koseu-imgane-hotteok-mich-ruteu-keopi-iyong-a.md",
     "reason": "REGRESSION_GUARD_TRIGGERED",
     "skippedAt": "2026-11-13"
+  },
+  {
+    "file": "2026-11-13-2028-daeipgaepyeon-yangju-hakbumo-ipsiseolmyeonghoe-gaechoe.md",
+    "reason": "REGRESSION_GUARD_TRIGGERED",
+    "skippedAt": "2026-11-14"
   }
 ]
