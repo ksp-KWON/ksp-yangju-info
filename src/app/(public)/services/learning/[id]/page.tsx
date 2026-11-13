@@ -62,9 +62,19 @@ export async function generateMetadata({ params }: CoursePageProps): Promise<Met
     };
   }
 
+  const isRichCourse = Boolean(course.intro && course.intro.trim().length >= 80);
+
   return {
     title: `${course.title} - 수강신청·교육일정·장소 안내 | 양주 건강·생활 정보 포털`,
     description: `${course.org}(${course.dong})에서 진행되는 ${course.title} 강좌의 교육기간(${course.eduPeriod}), 수강료(${course.fee || '무료'}), 모집인원(${course.capacity}), 주차별 커리큘럼 및 신청 방법입니다.`,
+    ...(!isRichCourse
+      ? {
+          robots: {
+            index: false,
+            follow: true,
+          },
+        }
+      : {}),
     alternates: {
       canonical: `${SITE_URL}/services/learning/${course.id}`,
     },

@@ -11,6 +11,7 @@ export type PostData = {
   content: string;
   published?: boolean;
   expiresAt?: string;
+  isIndexable?: boolean;
 };
 
 export type PostMeta = Omit<PostData, 'content'>;

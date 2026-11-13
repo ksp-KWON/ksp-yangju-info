@@ -58,15 +58,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: SITE_LAUNCH_DATE,
   }));
 
-  // 3. 블로그 상세 페이지들 (실제 포스트 발행일 및 수정일 반영)
-  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+  // 3. 블로그 상세 페이지들 (심층 가이드 품질 기준 통과 포스트만 색인 제출)
+  const indexablePosts = posts.filter((post) => post.isIndexable !== false);
+  const postRoutes: MetadataRoute.Sitemap = indexablePosts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: post.updatedAt || post.date || SITE_LAUNCH_DATE,
   }));
 
-  // 4. 양주 평생학습 실시간 강좌 상세 페이지 (전수 색인)
-  const { courses } = getLearningData();
-  const learningRoutes: MetadataRoute.Sitemap = courses.map((c) => ({
+  // 4. 양주 평생학습 실시간 강좌 상세 페이지 (상세 커리큘럼 intro가 충실한 강좌만 색인 제출)
+  const { courses } = getLearningData<{ id: string; intro?: string }>();
+  const richCourses = courses.filter((c) => Boolean(c.intro && c.intro.trim().length >= 80));
+  const learningRoutes: MetadataRoute.Sitemap = richCourses.map((c) => ({
     url: `${baseUrl}/services/learning/${c.id}`,
     lastModified: SITE_LAUNCH_DATE,
   }));

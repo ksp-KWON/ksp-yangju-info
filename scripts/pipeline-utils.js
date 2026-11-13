@@ -48,7 +48,7 @@ if (fs.existsSync(envPath)) {
 
 // ── 공통 상수 ────────────────────────────────────────────────────────────────
 const POSTS_DIR = path.join(process.cwd(), 'src/content/posts');
-const MIN_SOURCE_CHARS = 100;
+const MIN_SOURCE_CHARS = 350;
 
 /**
  * HTML 엔티티 및 기호 복원 표준 함수 (수집 시 텍스트 깨짐 및 노이즈 원천 차단)

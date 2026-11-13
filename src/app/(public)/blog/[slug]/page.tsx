@@ -32,6 +32,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description,
+    ...(post.isIndexable === false
+      ? {
+          robots: {
+            index: false,
+            follow: true,
+          },
+        }
+      : {}),
     alternates: {
       canonical: url,
     },

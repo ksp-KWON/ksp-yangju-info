@@ -227,6 +227,16 @@ async function generateAndSavePost(targetItem, tierLabel) {
   const finalSummary = sanitizeImNotAiSummary(plan.frontmatter.summary);
   const finalBody = sanitizeImNotAiBody(content.markdownContent);
 
+  // [사후 본문 분량 품질 게이트] 애드센스 '가치가 별로 없는 콘텐츠(Thin Content)' 방지를 위해 최소 1,000자 미만 단신 발행 차단
+  const MIN_GENERATED_BODY_CHARS = 1000;
+  if (finalBody.trim().length < MIN_GENERATED_BODY_CHARS) {
+    console.warn(`  ❌ [본문 분량 품질 게이트] "${finalTitle}" (본문 ${finalBody.trim().length}자 < ${MIN_GENERATED_BODY_CHARS}자) -> 단신 발행 차단 및 스킵`);
+    if (targetItem.link && !isFallbackOrEmptyUrl(targetItem.link)) {
+      saveSkippedUrl(targetItem.link);
+    }
+    return null;
+  }
+
   const saved = saveMarkdownPost(fileName, {
     title: finalTitle,
     date: getKSTDateString() + 'T09:00:00+09:00',

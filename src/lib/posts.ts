@@ -38,6 +38,21 @@ export function formatDate(dateVal: unknown): string {
 // 빌드 및 런타임 디스크 I/O 최적화를 위한 인메모리 캐시
 let cachedPosts: PostData[] | null = null;
 
+// Google AdSense / Search Console 색인 품질 게이트 (본문 1,200자 이상 & 단순 미담·동정 단신 배제)
+const MIN_INDEXABLE_BODY_CHARS = 1200;
+const PHOTO_OP_KEYWORDS = [
+  '김장', '기탁', '성금', '전달식', '자매결연', '새마을부녀회',
+  '바자회', '일일찻집', '사랑릴레이', '이불 기부', '고추장', '군사훈련',
+];
+
+export function isIndexablePost(title: string, content: string): boolean {
+  const cleanLen = (content || '').trim().length;
+  if (cleanLen < MIN_INDEXABLE_BODY_CHARS) return false;
+  const t = title || '';
+  if (PHOTO_OP_KEYWORDS.some((kw) => t.includes(kw))) return false;
+  return true;
+}
+
 function parsePostMetadata(slug: string, matterResult: matter.GrayMatterFile<string>): PostData {
   const dateStr = formatDate(matterResult.data.date);
   const rawUpdated = matterResult.data.updatedAt || matterResult.data.upgradedAt;
@@ -68,6 +83,7 @@ function parsePostMetadata(slug: string, matterResult: matter.GrayMatterFile<str
     published: matterResult.data.published !== false,
     content: matterResult.content,
     expiresAt: expiresAtStr,
+    isIndexable: isIndexablePost(matterResult.data.title || '', matterResult.content || ''),
   };
 }
 
@@ -120,9 +136,16 @@ export function getSortedPostsData(includeUnpublished = false): PostMeta[] {
       sourceLink: post.sourceLink,
       published: post.published,
       expiresAt: post.expiresAt,
+      isIndexable: post.isIndexable,
     }));
 
+  // 2계층 큐레이션 정렬: 심층 가이드(isIndexable: true)를 최상단에 우선 배치하고, 동일 계층 내에서는 최신순 정렬
   return allPostsData.sort((a, b) => {
+    const idxA = a.isIndexable !== false ? 1 : 0;
+    const idxB = b.isIndexable !== false ? 1 : 0;
+    if (idxA !== idxB) {
+      return idxB - idxA;
+    }
     if (a.date < b.date) {
       return 1;
     } else {
