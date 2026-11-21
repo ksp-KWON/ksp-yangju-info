@@ -128,7 +128,7 @@ jobs:
             echo "ℹ️ 변경사항 없음 — 커밋 건너뜀"
           fi
 
-  # ── [2단계] 빌드 & 배포 & 이메일 발송 ─────────────────────────────────────
+  # ── [2단계] 빌드 & 배포 (주간 요약 메일은 weekly-digest.yml 매주 월요일 12시 발송) ──
   deploy:
     needs: [generate]
     if: |
@@ -167,19 +167,3 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-      - name: 배포 완료 브리핑 이메일 발송
-        if: needs.generate.outputs.new_posts_count > 0 && env.GMAIL_USER != ''
-        continue-on-error: true
-        uses: dawidd6/action-send-mail@67ce3558d613188179559c61d3565140cf389968 # v22
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.GMAIL_USER }}
-          password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: ${{ needs.generate.outputs.subject }}
-          to: ${{ secrets.GMAIL_USER }}
-          from: 양주인 포털 <${{ secrets.GMAIL_USER }}>
-          html_body: ${{ needs.generate.outputs.html_body }}
-        env:
-          GMAIL_USER: ${{ secrets.GMAIL_USER }}

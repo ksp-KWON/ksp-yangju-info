@@ -1,0 +1,51 @@
+name: 양주인 주간 발행 리포트 이메일
+
+on:
+  schedule:
+    # 매주 월요일 낮 12:03 KST (= UTC 월요일 03:03)
+    - cron: '3 3 * * 1'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  weekly-digest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: 저장소 체크아웃 (7일 이력 포함)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node.js 24 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 최근 7일 발행 요약 생성
+        id: digest
+        run: node scripts/build-weekly-digest.js
+
+      - name: 주간 리포트 이메일 발송
+        if: env.GMAIL_USER != ''
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@67ce3558d613188179559c61d3565140cf389968 # v22
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: ${{ steps.digest.outputs.subject }}
+          to: ${{ secrets.GMAIL_USER }}
+          from: 양주인 포털 <${{ secrets.GMAIL_USER }}>
+          html_body: ${{ steps.digest.outputs.html_body }}
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
